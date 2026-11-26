@@ -123,7 +123,7 @@ cortex_ttl_archive(days=30) 会归栏 1892/2614 = 72% chunks
 |---|---|
 | 2026-08-19 16:55 | f53a88c commit: 恢复 cortex_remember/recall alias user_id 透传 (commit hash) |
 | 2026-08-19 17:00 | 8.2 deploy + 8/8 MCP 端到端验证 |
-| 2026-08-19 17:30 | (a) batch retag: 2538 chunks → user_id=tianxingjian-shared |
+| 2026-08-19 17:30 | (a) batch retag: 2538 chunks → user_id=<user_id> |
 | 2026-08-19 22:30 | (C) (D) 清理 28 e2e session_summary + 18 orphan core_profile |
 | 2026-08-19 22:55 | 部署 daily + weekly cron, apply 默认 disabled |
 | 2026-08-19 23:05 | weekly apply 第一次跑 (按 time-driven 30d), 发现会归栏 72% chunks |

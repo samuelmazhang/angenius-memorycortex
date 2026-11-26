@@ -176,7 +176,7 @@ def _tool_conflict_upsert(content: str, source_key: str, importance: int = 7,
     Note: bucket key is ``(metadata.user_id, source_key)``. With
     ``user_id=None`` the V5.4 SQL lookup compares against empty string and
     will never match, so SUPERSEDE never fires. Pass a non-empty
-    ``user_id`` (e.g. ``"tianxingjian-shared"``) to get real
+    ``user_id`` (e.g. ``"<user_id>"``) to get real
     conflict-resolve behavior.
 
     History: 2026-08-20 — replaced the previous ``remember()``-based stub

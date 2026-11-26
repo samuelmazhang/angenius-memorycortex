@@ -14,7 +14,7 @@ deps resolve):
 
     cd /a/Application/Hermes-Agent/Program/hermes-agent
     ./venv/Scripts/python.exe -m pytest \
-        /e/MyDevelop/AnGenius-Agent/memory-cortex/connector/hermes/tests/test_memory_tool_e2e.py \
+        ./connector/hermes/tests/test_memory_tool_e2e.py \
         -p no:cacheprovider -q
 
 Env:

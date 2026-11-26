@@ -1058,7 +1058,7 @@ permanent）端到端可用：hermes 用 tier=short 写会拿到 7 天 TTL，cle
 ### 目录清理 (cleanup)
 
 - 移除 66 个 V4/V3 时代遗留文件 (sqlite/chroma 老代码、已合并的迁移脚本、过时的 docker-compose 配置)
-- 单一源代码目录落地：仅 `/mnt/e/MyDevelop/AnGenius-Agent/memory-cortex/`
+- 单一源代码目录落地：仅 `./AnGenius-Agent/memory-cortex/`
 - 历史保留于 git，可通过 `git log --follow <file>` 找回
 
 ### Deleted (69 files, 21,462 lines)

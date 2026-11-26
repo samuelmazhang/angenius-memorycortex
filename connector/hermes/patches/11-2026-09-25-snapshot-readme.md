@@ -46,7 +46,7 @@
 
 ```bash
 # 1) 把 3 个 connector 文件拷回 hermes-agent/tools/
-cd /e/MyDevelop/Angenius-Agent/memory-cortex/connector/hermes
+cd ./connector/hermes
 cp memory_tool.py          "A:/Application/Hermes-Agent/Program/hermes-agent/tools/memory_tool.py"
 cp cortex_memory_backend.py "A:/Application/Hermes-Agent/Program/hermes-agent/tools/cortex_memory_backend.py"
 # session_summarizer 用专属安装脚本(还会改 agent_init 等)
@@ -54,11 +54,11 @@ python scripts/install_session_summarizer.py sync
 
 # 2) 在 hermes-agent 仓里 apply 5 个 patch
 cd "A:/Application/Hermes-Agent/Program/hermes-agent"
-git apply /e/MyDevelop/Angenius-Agent/memory-cortex/connector/hermes/patches/06-agent_init-mem-config-direct-load.patch
-git apply /e/MyDevelop/Angenius-Agent/memory-cortex/connector/hermes/patches/07-cli-cortex-takeover-cli-flag.patch
-git apply /e/MyDevelop/Angenius-Agent/memory-cortex/connector/hermes/patches/08-doctor_state-cortex-status.patch
-git apply /e/MyDevelop/Angenius-Agent/memory-cortex/connector/hermes/patches/09-memory_tool_store-cortex-gate-inversion.patch
-git apply /e/MyDevelop/Angenius-Agent/memory-cortex/connector/hermes/patches/10-test_memory_tool-cortex-takeover-tests.patch
+git apply ./connector/hermes/patches/06-agent_init-mem-config-direct-load.patch
+git apply ./connector/hermes/patches/07-cli-cortex-takeover-cli-flag.patch
+git apply ./connector/hermes/patches/08-doctor_state-cortex-status.patch
+git apply ./connector/hermes/patches/09-memory_tool_store-cortex-gate-inversion.patch
+git apply ./connector/hermes/patches/10-test_memory_tool-cortex-takeover-tests.patch
 
 # 3) 验证
 python -c "from tools.memory_tool import MemoryStore; ms = MemoryStore(); print(ms._is_cortex_available())"

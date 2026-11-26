@@ -91,7 +91,7 @@ $ pytest server/tests/test_hnsw_v6_5.py server/tests/test_embedding_v6_5.py serv
   3. task-dir commit (chore)
   4. mcp-graph CLI finish
 - **claude-code 跑 5 分钟还没写出 test 文件 → 主 hermes 接管补** (pitfall E 加强)
-- **依赖装到 hermes venv (C:\Users\...\pythoncore-3.14-64\)** 记 audit
+- **依赖装到 hermes venv (~\pythoncore-3.14-64\)** 记 audit
 - **worktree 创建后立即 `git merge main`** (P29 修)
 - **`.sprint/` 不要加 force add 到 worktree commit** (但 task-dir commit 时可以 force)
 

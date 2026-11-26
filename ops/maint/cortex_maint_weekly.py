@@ -18,7 +18,7 @@ Calls (in order):
     6. cortex_compress_run (max_count=0)        — no-op
     7. cortex_rumination_run — DRY: just print stats, don't run
     8. cortex_conflict_scan (dry_run=true)
-    9. cortex_consolidate_facts (user_id=tianxingjian-shared, just LIST)
+    9. cortex_consolidate_facts (user_id=<user_id>, just LIST)
 
   APPLY mode (--mode=apply, opt-in):
     -- Content-driven ONLY (per user decision 2026-08-19):
@@ -28,7 +28,7 @@ Calls (in order):
     1. cortex_merge_duplicates (threshold=0.95) — content-similarity dedup
     2. cortex_compress_run (max_count=50) — long-content compression
     3. cortex_conflict_scan (dry_run=False) — supersede by content conflict
-    4. cortex_consolidate_run (user_id=tianxingjian-shared, min_confidence=0.7)
+    4. cortex_consolidate_run (user_id=<user_id>, min_confidence=0.7)
     5. cortex_rumination_run (min_cluster_size=5) — LLM pattern detection
 
 Output:
@@ -76,12 +76,12 @@ def run_dry(client, name):
 
     # 4) consolidate facts (just list)
     ok, res = safe_call(client, "cortex_consolidate_facts",
-                        {"user_id": "tianxingjian-shared", "min_confidence": 0.5},
+                        {"user_id": "<user_id>", "min_confidence": 0.5},
                         script_name=name)
     if ok and isinstance(res, dict):
         items = res.get("facts", res.get("results", []))
         if isinstance(items, list):
-            print(f"  consolidate_facts: {len(items)} facts for tianxingjian-shared")
+            print(f"  consolidate_facts: {len(items)} facts for <user_id>")
     else:
         print(f"  consolidate_facts: {res}")
 
@@ -155,9 +155,9 @@ def run_apply(client, name):
                         script_name=name)
     print(f"  rumination_run: {json.dumps(res, ensure_ascii=False)[:200] if ok else res}")
 
-    # 5) consolidate run for tianxingjian-shared — apply extracted facts to user core
+    # 5) consolidate run for <user_id> — apply extracted facts to user core
     ok, res = safe_call(client, "cortex_consolidate_run",
-                        {"user_id": "tianxingjian-shared", "min_confidence": 0.7},
+                        {"user_id": "<user_id>", "min_confidence": 0.7},
                         script_name=name)
     print(f"  consolidate_run: {json.dumps(res, ensure_ascii=False)[:200] if ok else res}")
 

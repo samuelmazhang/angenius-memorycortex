@@ -12,7 +12,7 @@
 - Hermes对接：`/root/.hermes/scripts/hermes_memory.py` 已更新对接新服务
 - 自动备份：
   - 备份脚本：`./backup.sh`
-  - 备份路径：`/mnt/e/MyDevelop/Angenius-Agent/memory-cortex/backups/`
+  - 备份路径：`./Angenius-Agent/memory-cortex/backups/`
   - 自动备份：每天凌晨3点运行，保留7天备份，区分不同实例ID
   - 实例ID规则：`hermes_wsl_主机名`
 

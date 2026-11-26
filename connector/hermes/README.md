@@ -117,7 +117,7 @@ hermes is at `A:\Application\Hermes-Agent\Program\hermes-agent\.`
 After editing a connector file in the repo, **sync it into the hermes tools dir**:
 
 ```bash
-REPO=/e/MyDevelop/AnGenius-Agent/memory-cortex
+REPO=.
 HERMES=/a/Application/Hermes-Agent/Program/hermes-agent/tools
 
 cp "$REPO/connector/hermes/memory_tool.py"          "$HERMES/memory_tool.py"

@@ -18,7 +18,7 @@ import urllib.error
 from pathlib import Path
 
 CORTEX_URL = os.environ.get("MEMORY_CORTEX_URL", "http://127.0.0.1:1880")
-USER_ID = "tianxingjian-shared"
+USER_ID = "<user_id>"
 ENTRY_DELIMITER = "\n§\n"
 
 # Correct target→source mapping (mirror of _TARGET_TO_SOURCE in

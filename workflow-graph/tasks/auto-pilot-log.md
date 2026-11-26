@@ -19,7 +19,7 @@
 - mcp__mcp_graph__node add priority 字段 daemon 拒绝 4 次 (MCP error -32602)
 - daemon unreachable after 3 failures, auto-retry in 50s
 - **fallback**: 用户提示"用 mcp-graph CLI"
-- /c/Users/Administrator/AppData/Roaming/npm/mcp-graph 找到, 成功 add node
+- ~/AppData/Roaming/npm/mcp-graph 找到, 成功 add node
 - **P-new (待加红线)**: mcp-graph CLI 是 MCP client 断连的官方 fallback
 
 ### Pitfall R 检查

@@ -6,7 +6,7 @@
 - **risk-4 mitigation**: 5 轮 fix loop 不 escalate 跳过
 
 ## 03:01 — MCP client 断连
-- **决策**: 立即切 mcp-graph CLI (`/c/Users/Administrator/AppData/Roaming/npm/mcp-graph`)
+- **决策**: 立即切 mcp-graph CLI (`~/AppData/Roaming/npm/mcp-graph`)
 - **原因**: MCP client `mcp__mcp_graph__node add` 4 次失败, daemon unreachable after 3 failures
 - **新红线 P28 (待加)**: mcp-graph CLI 是 MCP client 断连的官方 fallback
 

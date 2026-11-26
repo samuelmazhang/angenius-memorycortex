@@ -8,7 +8,7 @@ now the **only** memory backend for the hermes memory tool.
 
 ## What was removed
 
-- `/c/Users/Administrator/.minimax/agents/mavis/memory/MEMORY.md`
+- `~/.minimax/agents/mavis/memory/MEMORY.md`
   (9263 bytes, 114 lines, last modified 2026-08-22)
   -- BootstrapBlazor component reference table
 - `USER.md` was already absent (no action needed)

@@ -76,7 +76,7 @@ main 现在含 Phase 1: #2 + #A.1 + #3 (3/9 done)。
    **fix**: auto-pilot 状态机加: "claude-code 跑 >10 分钟 + 工作树新增 ≥5 文件 + test 文件空 → 主 hermes 接手"
 
 2. **MCP client 断连**: `mcp__mcp_graph__node add` 4 次失败, daemon unreachable。
-   **fix**: 用 `mcp-graph` CLI (`/c/Users/Administrator/AppData/Roaming/npm/mcp-graph`) 作 fallback。
+   **fix**: 用 `mcp-graph` CLI (`~/AppData/Roaming/npm/mcp-graph`) 作 fallback。
    **新红线 P28**: mcp-graph CLI 是 MCP client 断连的官方 fallback。
 
 3. **worktree 创建时机的 race condition**: #3 worktree 基于 main HEAD (805ce27) 创建,**不含 #2 + #A.1**。
@@ -102,7 +102,7 @@ main 现在含 Phase 1: #2 + #A.1 + #3 (3/9 done)。
 2. **claude-code 跑 10 分钟 stall → 主 hermes 接手补 test + report**, 不 kill (复用代码)
 3. **MCP client 断连 → 立即切 mcp-graph CLI** (P28)
 4. **test 用 AST 静态分析** (避免 import 触发依赖链 + term uvicorn 误判)
-5. **依赖装到 hermes venv (C:\Users\...\pythoncore-3.14-64\)**, 记 audit (P-R)
+5. **依赖装到 hermes venv (~\pythoncore-3.14-64\)**, 记 audit (P-R)
 6. **每个 task 完成后 必 merge + commit + finish_task**, 才推下一个 (Pitfall M)
 
 ## 反思文档存档

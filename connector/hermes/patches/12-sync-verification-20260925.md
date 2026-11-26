@@ -20,7 +20,7 @@
 
 ```
 commit a1ae6dbd6dec715b53e115c34552c57d410cf9ce
-Author: Claude (hermes sync) <claude@hermes.local>
+Author: Claude (hermes sync) <author@example.com>
 Date:   Fri Sep 25 23:12:23 2026 +0800
 
     chore(hermes): sync local V6.3.1 cortex-takeover patches (memory_tool + 5 support files + 2 untracked)

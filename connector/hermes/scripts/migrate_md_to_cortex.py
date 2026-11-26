@@ -15,7 +15,7 @@ import urllib.error
 from pathlib import Path
 
 CORTEX_URL = os.environ.get("MEMORY_CORTEX_URL", "http://127.0.0.1:1880")
-USER_ID = "tianxingjian-shared"  # matches existing cortex records
+USER_ID = "<user_id>"  # matches existing cortex records
 SOURCE = "hermes-md-migration-2026-08-23"
 ENTRY_DELIMITER = "\n§\n"
 

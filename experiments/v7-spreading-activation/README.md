@@ -82,7 +82,7 @@ experiments/v7-spreading-activation/
 
 ```bash
 # 1. 跑 grid search
-cd /e/MyDevelop/AnGenius-Agent/memory-cortex
+cd .
 python experiments/v7-spreading-activation/v7_grid_search.py --n-queries 100
 
 # 2. 跑权重搜索
