@@ -1058,7 +1058,7 @@ permanent）端到端可用：hermes 用 tier=short 写会拿到 7 天 TTL，cle
 ### 目录清理 (cleanup)
 
 - 移除 66 个 V4/V3 时代遗留文件 (sqlite/chroma 老代码、已合并的迁移脚本、过时的 docker-compose 配置)
-- 单一源代码目录落地：仅 `./AnGenius-Agent/memory-cortex/`
+- 单一源代码目录落地：仅 `./Example-Agent/memory-cortex/`
 - 历史保留于 git，可通过 `git log --follow <file>` 找回
 
 ### Deleted (69 files, 21,462 lines)
@@ -1200,7 +1200,7 @@ permanent）端到端可用：hermes 用 tier=short 写会拿到 7 天 TTL，cle
 
 #### 双轨迹编码 (Dual-Trace Encoding)
 - `MemoryChunk` / `MemoryChunkCreate` 新增 `source_context` 字段
-- 向量化前拼接场景：`"在讨论 [DragonQuant 升级任务] 时，用户确认 P0 拍板"`
+- 向量化前拼接场景：`"在讨论 [QuantPlatform 升级任务] 时，用户确认 P0 拍板"`
 - `chroma_store._enrich_content()` 场景拼接
 - `chroma_store.add_chunk()` / `reindex()` 使用 enriched text 向量化
 - `chroma_store.search()` 返回 `_original_content`（展示用）+ `enriched_content`（调试用）

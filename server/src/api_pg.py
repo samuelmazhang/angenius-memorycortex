@@ -203,7 +203,7 @@ def get_nomic_model():
 # P2-C3 fix (2026-08-13): LRU cache for query embeddings.
 # Same query text -> same vector. 409 audit records show avg query 93 chars
 # (7.1% >500), rec.recall/conversation frequently re-encodes phrases like
-# "DragonQuant" / "recent context". Cache key is (model_version, text) so
+# "QuantPlatform" / "recent context". Cache key is (model_version, text) so
 # mpnet-cached and nomic-v1.5-cached vectors don't collide (different dims).
 _EMBED_CACHE = {}
 _EMBED_CACHE_MAX = 512
@@ -6018,7 +6018,7 @@ def _sched_record_tag_shared_relations(chunk_id: str) -> int:
     Two chunks are 'tag-shared' if they have >=2 overlapping tags. Threshold
     chosen because cortex chunks typically carry 1-5 tags; requiring >=2
     shared tags eliminates false positives where two chunks happen to share
-    a common tag like "dragonquant" or "cortex" without semantic overlap.
+    a common tag like "quantplatform" or "cortex" without semantic overlap.
 
     Reads chunk's own tags once, then finds other chunks whose tag array
     shares >=2 elements with this chunk's tags. Inserts (memory_id_1,

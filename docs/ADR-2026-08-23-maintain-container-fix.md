@@ -41,9 +41,9 @@ Two problems:
 
 2. **`PG_HOST=127.0.0.1` was hardcoded to an IP address.**
    Even when the operator tried to fix the connection
-   target by pointing it at the external `dragonquant-postgres`
-   container by service name (`dragonquant-postgres`), that
-   image uses the `dragonquant` user, not `postgres`, so
+   target by pointing it at the external `quantplatform-postgres`
+   container by service name (`quantplatform-postgres`), that
+   image uses the `quantplatform` user, not `postgres`, so
    `password authentication failed for user "postgres"`.
 
 So the container never worked after the original 2026-09-02

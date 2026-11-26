@@ -63,7 +63,7 @@
 ### 2.1 架构基线
 
 ```
-Hermes Agent / DragonQuant SDK / MCP clients
+Hermes Agent / QuantPlatform SDK / MCP clients
         │
         ├── built-in memory tool + CORTEX_TAKEOVER
         │       └── connector/hermes/cortex_memory_backend.py

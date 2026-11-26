@@ -1,7 +1,7 @@
 # Cortex vs Hermes native MEMORY.md / USER.md
 
 - Date: 2026-08-23
-- Author: Angenius Agent
+- Author: ExampleOrg Agent
 - Question: how does cortex compare to the original hermes-native
   file-backed memory (MEMORY.md / USER.md) it replaced?
 

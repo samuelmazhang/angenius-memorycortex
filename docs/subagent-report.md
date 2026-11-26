@@ -14,7 +14,7 @@ DELETE 28 cortex probe/stub noise chunks + PATCH 3 imp99-empty data bugs + write
 | DELETE | Extra e2e-memtool (regex, NOT in spec) | 15/15 | ✅ 404 verified |
 | **DELETE total** | | **31** | ✅ |
 | PATCH | D. imp=99 data bugs (spec) | 3/3 | ✅ imp=1 + quarantine verified |
-| KEEP (sampled) | 5 quarantined ADR + 30 DragonQuant Bench + 25 memory_tool | 60 sampled | ✅ all intact |
+| KEEP (sampled) | 5 quarantined ADR + 30 QuantPlatform Bench + 25 memory_tool | 60 sampled | ✅ all intact |
 | ADR | `docs/ADR-2026-09-11-266-sprint116-cortex-noise-cleanup.md` | 1 file | ✅ written |
 | commit | chore(connector): Sprint116 cortex noise cleanup - DELETE 28 probe/stub chunks + PATCH 3 imp99-empty data bugs | `371f09f` | ✅ |
 | push | origin main (force-with-lease after hash-fill amend) | done | ✅ remote HEAD = `371f09f1da957609a53686c6be5bb896599866e7` |
@@ -24,7 +24,7 @@ DELETE 28 cortex probe/stub noise chunks + PATCH 3 imp99-empty data bugs + write
 - BEFORE: `/list total = 2605`, `/health chunks = 2634`
 - AFTER:  `/list total = 2574` (Δ -31), `/health chunks = 2603` (Δ -31)
 - imp=99 remaining: 0
-- KEEP sources intact: 30 DragonQuant Bench 评测集, 25 memory_tool, 5 quarantined ADR (Layer 2 + NAVIGATION + INDEX + Spawn Protocol + playwright prohibition)
+- KEEP sources intact: 30 QuantPlatform Bench 评测集, 25 memory_tool, 5 quarantined ADR (Layer 2 + NAVIGATION + INDEX + Spawn Protocol + playwright prohibition)
 
 ## Spec count drift (D-style honest)
 
@@ -50,7 +50,7 @@ So: **16 spec DELETE + 15 regex-found DELETE = 31 total**, not 28. The 3-count d
 - commit + push origin main
 
 ### Not done
-- Did NOT touch DragonQuant repo (per spec "不 commit DragonQuant repo")
+- Did NOT touch QuantPlatform repo (per spec "不 commit QuantPlatform repo")
 - Did NOT modify connector .py / .cs source code (READ-ONLY per multi-cli skill §0.2)
 - Did NOT PATCH server-side `api_pg.py` importance validation (cortex server bug, not this subagent's scope; should go via cortex-fix-deploy skill next sprint)
 - Did NOT grep `mem_20260813_06*` batch to find imp=99 root cause source — noted in ADR as TODO next sprint

@@ -105,8 +105,8 @@ self.metadata_store.save_forgetting_log(
 | 主题派生 | `rumination` → `memory` | rumination (177) 是 memory (13) 的具体化过程 |
 | 主题派生 | `memory_entry` → `memory` | memory_entry (71) 是 memory 的一种 entry 类型 |
 | 主题派生 | `pitfall` → `heuristic` | pitfall (8) 是 heuristic (7) 的一种 |
-| 实现 vs 抽象 | `dragonquant` → `quantagent` | quantagent (8) 是 DragonQuant (10) + dragonquant (20) 的抽象 |
-| 实现 vs 抽象 | `DragonQuant` → `dragonquant` | 大小写合并 |
+| 实现 vs 抽象 | `quantplatform` → `quantagent` | quantagent (8) 是 QuantPlatform (10) + quantplatform (20) 的抽象 |
+| 实现 vs 抽象 | `QuantPlatform` → `quantplatform` | 大小写合并 |
 | 派生会话 | `hermes_session_end` → `session_end` | hermes_session_end (9) 是 session_end (75) 的特定实现 |
 | 派生会话 | `session-summary` → `session-extract` | session-summary (5) 是 session-extract (175) 的具体产物 |
 
@@ -124,8 +124,8 @@ self.metadata_store.save_forgetting_log(
 
 | child | parent | level |
 |---|---|---|
-| DragonQuant | dragonquant | 1 |
-| dragonquant | quantagent | 1 |
+| QuantPlatform | quantplatform | 1 |
+| quantplatform | quantagent | 1 |
 | fastapi | python | 1 (已有) |
 | hermes_session_end | session_end | 1 |
 | javascript | frontend | 1 (已有) |
@@ -220,8 +220,8 @@ $ sqlite3 data/metadata/memory.db "SELECT last_run, last_result FROM forgetting_
 ```bash
 $ curl /taxonomy/relations
 总数: 11
-   DragonQuant → dragonquant
-   dragonquant → quantagent
+   QuantPlatform → quantplatform
+   quantplatform → quantagent
    hermes_session_end → session_end
    memory_entry → memory
    pitfall → heuristic

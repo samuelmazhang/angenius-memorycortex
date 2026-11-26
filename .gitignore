@@ -48,7 +48,7 @@ workflow-graph/*
 !workflow-graph/tasks/
 !workflow-graph/tasks/**
 
-# 跨项目污染: DragonQuant Identity wave-任务 (2026-08-24 from c:\wt-id-wave*)
+# 跨项目污染: QuantPlatform Identity wave-任务 (2026-08-24 from c:\wt-id-wave*)
 # 来自其他项目的 subagent 工作目录, 不属于 cortex 仓库
 workflow-graph/tasks/identity-wt-id-*/
 

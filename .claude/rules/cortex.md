@@ -89,7 +89,7 @@ connector/claude/
 - `type`: `general | knowledge | preference | skill | fact | project |
    session_summary | tool_experience | environment-fingerprint | test |
    context`
-- `tags`: free-form, often `["DragonQuant", "Sprint-100-105-FINAL", "ADR-..."]`
+- `tags`: free-form, often `["QuantPlatform", "Sprint-100-105-FINAL", "ADR-..."]`
 - `importance`: 1–10, drives tier + TTL (≤3=7d, ≤5=30d, ≤7=180d, ≥8=permanent)
 - `source`: `claude-code | claude-code-hook | user | hermes_memory | ...`
 

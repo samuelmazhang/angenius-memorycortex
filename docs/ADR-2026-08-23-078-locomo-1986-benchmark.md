@@ -2,7 +2,7 @@
 
 - Status: Accepted (results documented, recommendations open)
 - Date: 2026-08-23
-- Author: Angenius Agent (analysis), based on user-supplied LOCOMO data
+- Author: ExampleOrg Agent (analysis), based on user-supplied LOCOMO data
 - Depends on: ADR-077 (Nomic v1.5 deploy) + `_locomo_*` test harness
 
 ## 背景 (Context)

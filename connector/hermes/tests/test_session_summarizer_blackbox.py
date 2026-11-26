@@ -79,7 +79,7 @@ def mark() -> str:
 class TestCreateSessionSummary:
     def test_create_session_summary_basic(self, mark):
         """create_session_summary() returns a chunk dict with an id."""
-        content = f"test-session-summary-{mark} about DragonQuant v0.36"
+        content = f"test-session-summary-{mark} about QuantPlatform v0.36"
         chunk = cmb.create_session_summary(
             content=content,
             importance=7,
@@ -150,7 +150,7 @@ class TestSummarizerCortexIntegration:
                 self.cortex_backfilled = []
             def get_messages(self, session_id):
                 return [
-                    {"role": "user", "content": "I want to sync DragonQuant v0.36 financial reports"},
+                    {"role": "user", "content": "I want to sync QuantPlatform v0.36 financial reports"},
                     {"role": "assistant", "content": "OK, using Baostock single-process"},
                     {"role": "user", "content": "yes, avoid Baostock IP blacklist"},
                 ]
@@ -179,7 +179,7 @@ class TestSummarizerCortexIntegration:
         )
         parsed = result["parsed"]
         assert len(parsed.get("facts", [])) >= 1
-        assert "DragonQuant" in " ".join(parsed.get("facts", []))
+        assert "QuantPlatform" in " ".join(parsed.get("facts", []))
 
 
 # ============================================================================

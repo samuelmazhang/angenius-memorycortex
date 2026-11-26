@@ -6,19 +6,19 @@
 | **日期** | 2026-07-22 (迁移日, 原始 ADR 2026-07-14) |
 | **Sprint** | v10.31 E3 Cortex Takeover |
 | **影响域** | Hermes Memory Cortex (跨 session 语义记忆) |
-| **原 ADR 位置** | DragonQuant.Web.SaaS `docs/04-技术设计/ADR-2026-07-14-052-v10.31-Hygiene-Sprint-Cortex-Takeover.md` |
-| **拆分原因** | ADR-052 是 v10.31 混合 ADR (含 5 decisions): STATUS.md hygiene + mcp-graph hygiene + Cortex Takeover + .gitignore + ADR-INDEX。本文件仅保留 Cortex Takeover 部分 (§4 + §12)。其他 4 个 decisions 仍留在 DragonQuant 原 ADR-052 内。 |
+| **原 ADR 位置** | QuantPlatform.Web.SaaS `docs/04-技术设计/ADR-2026-07-14-052-v10.31-Hygiene-Sprint-Cortex-Takeover.md` |
+| **拆分原因** | ADR-052 是 v10.31 混合 ADR (含 5 decisions): STATUS.md hygiene + mcp-graph hygiene + Cortex Takeover + .gitignore + ADR-INDEX。本文件仅保留 Cortex Takeover 部分 (§4 + §12)。其他 4 个 decisions 仍留在 QuantPlatform 原 ADR-052 内。 |
 
 ---
 
 ## 1. 迁移说明
 
-ADR-052 整体是 v10.31 sprint 收口叙事,5 个 decisions 中只有 **Decision 3 (Cortex 完全接管)** 属于 cortex 范畴。其他 4 个 decisions (STATUS.md hygiene / mcp-graph backlog / .gitignore / ADR-INDEX) 属于 DragonQuant 项目 hygiene,留 DragonQuant。
+ADR-052 整体是 v10.31 sprint 收口叙事,5 个 decisions 中只有 **Decision 3 (Cortex 完全接管)** 属于 cortex 范畴。其他 4 个 decisions (STATUS.md hygiene / mcp-graph backlog / .gitignore / ADR-INDEX) 属于 QuantPlatform 项目 hygiene,留 QuantPlatform。
 
 按用户规则 "cortex 内容放 memory-cortex",**只把 Cortex 部分迁过来**,不拆原 ADR。
 
 **关联**:
-- 原 ADR-052 (DragonQuant, 5 decisions 混合)
+- 原 ADR-052 (QuantPlatform, 5 decisions 混合)
 - ADR-063 (2026-07-22 v4.2.0 ChromaDB reindex numpy fix, 同在 memory-cortex)
 - ADR-052 §12 Scope Clarification (Hermes Memory Cortex vs mcp-graph 命名区分)
 
@@ -81,7 +81,7 @@ ADR-052 整体是 v10.31 sprint 收口叙事,5 个 decisions 中只有 **Decisio
 - §9 Verification: `cortex_memory_backend.py 存在` + `memory_tool.py cortex 引用 98 处` — **指 Hermes Memory Cortex**
 
 **本 ADR 不修复 / 不声称**:
-- mcp-graph backlog 节点对齐属 **§3 Decision 2** (DragonQuant 项目 hygiene,跟 Cortex 接管无关)
+- mcp-graph backlog 节点对齐属 **§3 Decision 2** (QuantPlatform 项目 hygiene,跟 Cortex 接管无关)
 - "Cortex 长记迁移"属 **§11 v10.32+ 候选**,不在本次 ADR 实施范围
 - v10.31 E1 实际做的"mcp-graph batch_add governance nodes" 是 Hygiene 工作 (E1-T1 到 T5),**不是 Cortex 接管**
 
@@ -93,7 +93,7 @@ ADR-052 整体是 v10.31 sprint 收口叙事,5 个 decisions 中只有 **Decisio
 
 ## 2. 与原 ADR-052 的关系
 
-原 ADR-052 (DragonQuant) 仍保留 §1 Context / §2 STATUS.md hygiene / §3 mcp-graph backlog / §5 .gitignore / §6 ADR-INDEX / §7 Consequences / §8 Alternatives / §9 Verification / §10 Traceability / §11 推荐候选 段。
+原 ADR-052 (QuantPlatform) 仍保留 §1 Context / §2 STATUS.md hygiene / §3 mcp-graph backlog / §5 .gitignore / §6 ADR-INDEX / §7 Consequences / §8 Alternatives / §9 Verification / §10 Traceability / §11 推荐候选 段。
 
 **本文件 = 原 ADR-052 §4 Decision 3 (Cortex Takeover) + §12 Scope Clarification**。其他段落跟 cortex 无关,留原处。
 

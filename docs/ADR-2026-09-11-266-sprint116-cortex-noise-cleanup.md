@@ -118,10 +118,10 @@ PATCH payload: `{"importance": 1, "tags": ["quarantine", "data-bug", "imp99-empt
   - `mem_20260905_050045_375493_86e98e` (Layer 2)
   - `mem_20260905_043659_541017_4263c7` (Spawn Protocol)
   - `mem_20260829_074402_380236_283158` (playwright prohibition)
-- ❌ **没有动 DragonQuant Bench 评测集** (30 个 src=`DragonQuant Bench 评测集 ...` 真基准数据) — spec 说 10 个实测 30 个,**所有 30 个均 KEEP**
+- ❌ **没有动 QuantPlatform Bench 评测集** (30 个 src=`QuantPlatform Bench 评测集 ...` 真基准数据) — spec 说 10 个实测 30 个,**所有 30 个均 KEEP**
 - ❌ **没有动 source=`memory_tool` 25 个 legacy memory writes** — 真知识,不动
 - ❌ **没有改 connector repo 任何 .py 业务代码** — READ-ONLY on source per 多 cli skill §0.2
-- ❌ **没有 commit DragonQuant repo** — 只 commit connector repo
+- ❌ **没有 commit QuantPlatform repo** — 只 commit connector repo
 - ❌ **没有动 `mem_20260802_152934_450724_94576c`** (e2e-memtool 字面 280 字符真内容)
 - ❌ **没有 grep `content LIKE '%e2e-memtool%'`** (子串匹配会误伤 3 条真笔记 per ADR-261 教训), 只用了开头 `^e2e-memtool-` + 长度 < 30 字符的严格 pattern
 - ❌ **没有查找 imp=99 根因的 source grep** — 下次 sprint 的事 (上面 TODO)
@@ -145,7 +145,7 @@ PATCH 3 (imp 99→1, tags+quarantine)
 AFTER  total: 2574 (delta = -31, 0 误差)
 imp=99 remaining: 0
 KEEP 5 quarantined ADR: intact
-KEEP 30 DragonQuant Bench: intact
+KEEP 30 QuantPlatform Bench: intact
 KEEP 25 memory_tool: intact
 KEEP 1 mem_20260802_152934_450724_94576c (e2e-memtool-提到真内容): intact
 ```
@@ -155,14 +155,14 @@ KEEP 1 mem_20260802_152934_450724_94576c (e2e-memtool-提到真内容): intact
 - `/health` chunks 计数 2603 (V6.5.1 reports `chunks` 是 PG 实际行数; `/list total` 是 list endpoint 视角, 2574) — 两者都符合预期
 - 每个 DELETE 都有 GET 404 验证 (per multi-cli skill §0.2 "不 fake pass rate")
 - 每个 PATCH 都有 GET 验证 `importance=1` + `quarantine` in tags
-- 0 个 KEEP 误伤 (抽样 5 quarantined ADR + 全部 30 DragonQuant Bench + 25 memory_tool)
+- 0 个 KEEP 误伤 (抽样 5 quarantined ADR + 全部 30 QuantPlatform Bench + 25 memory_tool)
 - commit + push origin main 完成 (见下)
 
 ## 风险 (Risks)
 
 - **没有 git history 还原机制**: cortex memory chunks 不在 git 里, PG DELETE 行就永久消失。**但这次目标就是永久删除噪声**,符合 spec 意图
 - **PATCH 3 个的 quarantine 是 soft, 7 天后被 forgetting 删**: 如果未来想保留 data-bug 证据,需手动 `PATCH importance=8` 或 `tags -= 'quarantine'`
-- **subagent 没有 dragonquant 8.2 直连** (per skill 偏好 5.5),无法直接 docker exec 验证 PG 表; 只信 cortex HTTP API 响应 (这是预期路径)
+- **subagent 没有 quantplatform 8.2 直连** (per skill 偏好 5.5),无法直接 docker exec 验证 PG 表; 只信 cortex HTTP API 响应 (这是预期路径)
 
 ## 后续 ops 建议
 

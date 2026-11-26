@@ -114,16 +114,16 @@ decided_by ∈ {'auto', 'manual'}
 - 集成验证:
   ```
   curl -X POST $CORTEX/conflict/upsert -H 'Content-Type: application/json' -d '{
-    "content": "DragonQuant 项目部署在 127.0.0.1",
-    "source_key": "dragonquant_deploy_host",
+    "content": "QuantPlatform 项目部署在 127.0.0.1",
+    "source_key": "quantplatform_deploy_host",
     "user_id": "u_001",
     "confidence": 0.95,
     "importance": 7
   }'
   # 第二次同样 source_key 但不同 content + confidence=0.9 → 应 supersede
   curl -X POST $CORTEX/conflict/upsert -H 'Content-Type: application/json' -d '{
-    "content": "DragonQuant 项目部署在 127.0.0.1 (已迁移)",
-    "source_key": "dragonquant_deploy_host",
+    "content": "QuantPlatform 项目部署在 127.0.0.1 (已迁移)",
+    "source_key": "quantplatform_deploy_host",
     "user_id": "u_001",
     "confidence": 0.9,
     "importance": 7

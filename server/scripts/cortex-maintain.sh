@@ -20,8 +20,8 @@
 #   - First:  --entrypoint bash ran python3 directly, bypassing the Postgres
 #             startup in entrypoint.sh -- crash loop on "Connection refused"
 #             at 127.0.0.1:5432.
-#   - Second: pointed PG_HOST at the dragonquant-postgres container
-#             (uses a `dragonquant` user, not `postgres') -- auth fail.
+#   - Second: pointed PG_HOST at the quantplatform-postgres container
+#             (uses a `quantplatform` user, not `postgres') -- auth fail.
 #   - Third:  --entrypoint correctly used entrypoint.sh, but bind-mounted a
 #             fresh empty volume -- schema was not created on first boot
 #             because api_pg doesn't auto-bootstrap schema.sql. Furthermore,

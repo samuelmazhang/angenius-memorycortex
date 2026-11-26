@@ -17,7 +17,7 @@ repo can be picked up without rebuilding the docker image.
 ### Update cortex code (api_pg.py, memory_*.py, etc.)
 
 ```bash
-cd ./AnGenius-Agent/memory-cortex-clean
+cd ./Example-Agent/memory-cortex-clean
 git pull                                     # get latest code
 docker restart memory-cortex                 # 10-sec restart, data preserved
 curl -s http://localhost:1880/health         # verify it's running
@@ -70,7 +70,7 @@ Rebuild only when you change:
 - OS-level deps
 
 ```bash
-cd ./AnGenius-Agent/memory-cortex-clean
+cd ./Example-Agent/memory-cortex-clean
 docker build -f server/docker/unified/Dockerfile -t memory-cortex-stack:5.2.0 ../..
 bash server/scripts/run_docker_stack_unified.sh  # restarts with new image
 ```
@@ -90,7 +90,7 @@ docker inspect memory-cortex -f '{{json .Mounts}}' | python3 -m json.tool
 
 # Confirm container sees the same files as host
 docker exec memory-cortex cat /app/src/api_pg.py | wc -l
-wc -l ./AnGenius-Agent/memory-cortex-clean/server/src/api_pg.py
+wc -l ./Example-Agent/memory-cortex-clean/server/src/api_pg.py
 # Should be identical line counts
 
 # E2E test

@@ -6,7 +6,7 @@ version: 1.0.0
 
 # Cortex Memory — OpenCode Agent Skill
 
-Long-term semantic memory for opencode agents, backed by [Memory Cortex](https://github.com/AnGenius-Group/memory-cortex).
+Long-term semantic memory for opencode agents, backed by [Memory Cortex](https://github.com/Example-Group/memory-cortex).
 
 ## What this skill provides
 

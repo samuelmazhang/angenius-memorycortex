@@ -37,7 +37,7 @@ Helper `_sched_record_tag_shared_relations(chunk_id)`:
      uses GIN index when available).
   3. Python counts actual overlap. Threshold: >=2 shared tags (cortex chunks
      typically 1-5 tags, so 2-shared eliminates noise from generic tags
-     like 'dragonquant' or 'cortex').
+     like 'quantplatform' or 'cortex').
   4. INSERT INTO memory_relations (memory_id_1, memory_id_2,
      relation_type='tag-shared', strength=overlap_count)
      ON CONFLICT DO UPDATE SET strength = EXCLUDED.strength.

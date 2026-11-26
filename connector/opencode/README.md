@@ -1,6 +1,6 @@
 # OpenCode Connector for Cortex
 
-Long-term semantic memory integration for **opencode agents**, backed by [Memory Cortex](https://github.com/AnGenius-Group/memory-cortex).
+Long-term semantic memory integration for **opencode agents**, backed by [Memory Cortex](https://github.com/Example-Group/memory-cortex).
 
 > **Status:** V1.0.0 MVP. Connects opencode to a Cortex server via HTTP.
 

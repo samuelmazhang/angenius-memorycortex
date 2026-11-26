@@ -2,7 +2,7 @@
 
 - Status: Accepted
 - Date: 2026-08-19
-- Author: 天行健 (<user>) + Angenius Agent
+- Author: 天行健 (<user>) + ExampleOrg Agent
 - Supersedes: 无 (新决策，ADR-065/066 的时间驱动清理策略在此 ADR 下被显式约束)
 - Depends on: ADR-068 (cortex-conflict-resolve V5.4) + V6.3.1 MCP 端点
 

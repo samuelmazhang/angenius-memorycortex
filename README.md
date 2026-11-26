@@ -309,7 +309,7 @@ ssh <user>@127.0.0.1 '
 3. **Embedding model not in image** — v5.2.0 image does NOT include the ONNX model. First deploy on a fresh VM requires manual `docker cp` of `paraphrase-multilingual-MiniLM-L12-v2/` to `/root/.hermes/plugins/memory-cortex/models/`.
 4. **`/health` says healthy but `/search` returns 500** — the `get_embedding_model()` call runs lazily on first `/search`. If model file is missing, search dies. Always include `docker logs memory-cortex --tail 20` check after deploy.
 5. **Container backup files persist across container restart** — `*.bak.*` files inside the container are NOT in the image layer, so they survive `docker restart` and even `docker stop/start`. They only disappear on `docker rm` + recreate.
-6. **Old deploy script pointed to a non-existent GitLab repo** (`AngeniusGroup/hermes-memory-cortex.git`) — replaced in commit `977129a` with the Gitea URL. The version in `/opt/cortex-deploy/cortex-deploy.sh` after this commit is the working one.
+6. **Old deploy script pointed to a non-existent GitLab repo** (`ExampleGroup/hermes-memory-cortex.git`) — replaced in commit `977129a` with the Gitea URL. The version in `/opt/cortex-deploy/cortex-deploy.sh` after this commit is the working one.
 
 ### Smoke test (post-deploy, ~10s)
 

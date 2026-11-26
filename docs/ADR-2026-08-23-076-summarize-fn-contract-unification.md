@@ -2,7 +2,7 @@
 
 - Status: Accepted
 - Date: 2026-08-23
-- Author: Angenius Agent (执行) + 天行健 (决策)
+- Author: ExampleOrg Agent (执行) + 天行健 (决策)
 - Supersedes: 无 (新决策,不影响其他 ADR)
 - Depends on: ADR-068 (cortex-conflict-resolve) + V6.5.0 Phase 1 #C (summarize_chunks) + V6.5.0 Phase 2 #9 (RAPTOR build_tree)
 

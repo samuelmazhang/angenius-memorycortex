@@ -111,7 +111,7 @@ psql -c "TRUNCATE access_stats;"
 
 # 2) 跑 5 次 search 命中同一 chunk
 for i in 1..5; do
-    curl -X POST localhost:1880/search -d '{"query":"DragonQuant Cortex 热度","boost_relevance":true}' > /dev/null
+    curl -X POST localhost:1880/search -d '{"query":"QuantPlatform Cortex 热度","boost_relevance":true}' > /dev/null
 done
 
 # 3) 验证
