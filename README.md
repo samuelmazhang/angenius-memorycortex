@@ -31,7 +31,7 @@ memory-cortex/                                      ← single canonical source
 │   ├── scripts/run_docker_stack_unified.sh        # V5 launcher: bind-mounts + container start
 │   └── tests/e2e_smoke.py                         # 48-test E2E suite
 ├── connector/                                      # Outbound adapters to agent runtimes
-│   ├── arcadia/                                     # arcadia-agent integration
+│   ├── example-agent/                                     # example-agent integration
 │   ├── claude/                                     # Claude Code integration (recall/session-end hooks)
 │   ├── opencode/                                   # OpenCode integration (loader + memory tool)
 │   └── workbuddy/                                  # WorkBuddy integration (MCP + SKILL.md contract)
@@ -106,15 +106,15 @@ PG_HOST=localhost PG_PORT=5432 python3 -m server.src.api_pg
 # Container-less mode for local dev (assumes a local PG at :5432 with same schema)
 ```
 
-## Connecting from arcadia-agent
+## Connecting from example-agent
 
-arcadia-agent talks to cortex via `~/.arcadia/arcadia-agent/tools/cortex_memory_backend.py`
-(simpler than `connector/arcadia/` which is kept as a reference template only).
+example-agent talks to cortex via `~/.example-agent/example-agent/tools/cortex_memory_backend.py`
+(simpler than `connector/example-agent/` which is kept as a reference template only).
 
-Set `MEMORY_CORTEX_URL=http://localhost:1880` in `/root/.arcadia/.env` (or wherever the
-env is loaded from). Restart arcadia-agent for the env change to take effect.
+Set `MEMORY_CORTEX_URL=http://localhost:1880` in `/root/.example-agent/.env` (or wherever the
+env is loaded from). Restart example-agent for the env change to take effect.
 
-The `connector/arcadia/` directory contains the same logic for documentation/reference.
+The `connector/example-agent/` directory contains the same logic for documentation/reference.
 
 ## Cross-machine image transport
 
@@ -153,7 +153,7 @@ Agent runtimes connect via `connector/<runtime>/`. WorkBuddy mounts
 `connector/workbuddy/` as a skill and registers the `/mcp/` endpoint in
 `~/.workbuddy/mcp.json`; see `connector/workbuddy/README.md`.
 
-## Agent memory (arcadia ↔ cortex)
+## Agent memory (agent ↔ cortex)
 
 Cortex is now the full agent-memory layer, not just a KV store. Three-tier memory
 (short/medium/long/permanent driven by importance → TTL), agentic `recall`,
@@ -219,7 +219,7 @@ Recover with `git log --follow <file>` if needed.
                                                 │   source: /app/src/api_pg.py      │
                                                 │    (NOT bind-mounted; replaced    │
                                                 │     by `docker cp` on each deploy)│
-                                                │   model: /root/.arcadia/.../MiniLM │
+                                                │   model: /root/.example-agent/.../MiniLM │
                                                 │    (NOT in image; copied once     │
                                                 │     by `docker cp` bootstrap)     │
                                                 │   data: PG (postgres in same      │
@@ -235,7 +235,7 @@ Recover with `git log --follow <file>` if needed.
 | SSH to VM | `ssh <user>@127.0.0.1` | sudo is password-less for `<user>` |
 | Bootstrap `work/` repo | `cd /opt/cortex-deploy && git clone http://<user>:<token>@127.0.0.1:16080/<user>/Memory-Cortex.git work` | Gitea token from user settings |
 | Set work origin | `cd work && git remote set-url origin <Gitea HTTP URL>` | once per bootstrap |
-| Bootstrap embed model | `docker cp <local MiniLM dir> memory-cortex:/root/.arcadia/plugins/memory-cortex/models/` | done once per VM |
+| Bootstrap embed model | `docker cp <local MiniLM dir> memory-cortex:/root/.example-agent/plugins/memory-cortex/models/` | done once per VM |
 
 ### Day-to-day deploy (after prerequisites)
 
@@ -306,10 +306,10 @@ ssh <user>@127.0.0.1 '
 
 1. **Gitea token in URL gets eaten by shell** — embed token in `GITEA_URL=` constant, not inline `git clone`.
 2. **HTTP vs HTTPS on Gitea port 16080** — `https://` triggers TLS handshake failure; use `http://` explicitly.
-3. **Embedding model not in image** — v5.2.0 image does NOT include the ONNX model. First deploy on a fresh VM requires manual `docker cp` of `paraphrase-multilingual-MiniLM-L12-v2/` to `/root/.arcadia/plugins/memory-cortex/models/`.
+3. **Embedding model not in image** — v5.2.0 image does NOT include the ONNX model. First deploy on a fresh VM requires manual `docker cp` of `paraphrase-multilingual-MiniLM-L12-v2/` to `/root/.example-agent/plugins/memory-cortex/models/`.
 4. **`/health` says healthy but `/search` returns 500** — the `get_embedding_model()` call runs lazily on first `/search`. If model file is missing, search dies. Always include `docker logs memory-cortex --tail 20` check after deploy.
 5. **Container backup files persist across container restart** — `*.bak.*` files inside the container are NOT in the image layer, so they survive `docker restart` and even `docker stop/start`. They only disappear on `docker rm` + recreate.
-6. **Old deploy script pointed to a non-existent GitLab repo** (`ExampleGroup/arcadia-memory-cortex.git`) — replaced in commit `977129a` with the Gitea URL. The version in `/opt/cortex-deploy/cortex-deploy.sh` after this commit is the working one.
+6. **Old deploy script pointed to a non-existent GitLab repo** (`ExampleGroup/example-memory-cortex.git`) — replaced in commit `977129a` with the Gitea URL. The version in `/opt/cortex-deploy/cortex-deploy.sh` after this commit is the working one.
 
 ### Smoke test (post-deploy, ~10s)
 
@@ -341,7 +341,7 @@ AFTER=$(ssh <user>@127.0.0.1 "docker exec memory-cortex psql -U postgres -d post
 | `/opt/memory-cortex/server/src/api_pg.py` | — | **stale** — old deploy script copied here, ignored by container |
 | — | `/app/src/api_pg.py` | the live code (real path inside container) |
 | — | `/app/src/api_pg.py.bak.<TS>` | rollback targets (kept inside container) |
-| — | `/root/.arcadia/.../MiniLM/` | ONNX model (one-time bootstrap) |
+| — | `/root/.example-agent/.../MiniLM/` | ONNX model (one-time bootstrap) |
 
 ---
 
