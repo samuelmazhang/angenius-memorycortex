@@ -3,7 +3,7 @@
   - backlog empty since 2026-08-23T04:19:48Z (~21h+ ago); monitor cron owns next-dispatch per P38/P33/P35 split
   - checker scope = stall → kill+redispatch only (P30/P34) — no stall to act on
 - carry-forward:
-  - index.jsonl 10 stale `in_progress` entries (bookkeeping cleanup for main-hermes, out of cron scope)
+  - index.jsonl 10 stale `in_progress` entries (bookkeeping cleanup for main-arcadia, out of cron scope)
   - direction-9 STALL_REPORT.md historical from 12:40, resolved, do NOT re-kill
   - auto-pilot loop dormant ~21h, expected
 
@@ -31,7 +31,7 @@
   - backlog empty, monitor cron owns next-dispatch per P38/P33/P35 split
   - checker scope = stall → kill+redispatch only (P30/P34) — no stall to act on
 - carry-forward (unchanged from prior ticks):
-  - index.jsonl 10 stale `in_progress` entries (bookkeeping cleanup for main-hermes, out of cron scope)
+  - index.jsonl 10 stale `in_progress` entries (bookkeeping cleanup for main-arcadia, out of cron scope)
   - direction-9 STALL_REPORT.md historical from 12:40, resolved, do NOT re-kill
   - auto-pilot loop dormant ~21h+, expected
 
@@ -51,7 +51,7 @@
   - v6.5.0-phase-2-direction-6: 0 files, age=784min (~13h04m)
   - v6.5.0-phase-1-direction-9: 0 files, age=759min (~12h39m)
   - v6.5.0-phase-2-direction-NEW3: 0 files, age=791min (~13h11m)
-  - memory-cortex (main): 2 files (hermes untracked local edits), age=502min
+  - memory-cortex (main): 2 files (arcadia untracked local edits), age=502min
   - mcpg-wt-node_e0fcb00af751-…: 0 files, fresh=False (auto-pilot shadow)
   - test-cli-check3 / test-task-integration: 0 files, frozen
 - in-scope fresh-activity probe (last 6m since prior tick): NONE — every worktree dir mtime unchanged
@@ -65,7 +65,7 @@
   - backlog empty, monitor cron owns next-dispatch per P38/P33/P35 split
   - checker scope = stall → kill+redispatch only (P30/P34) — no stall to act on
 - carry-forward (unchanged from prior ticks):
-  - index.jsonl 10 stale `in_progress` entries (bookkeeping cleanup for main-hermes, out of cron scope)
+  - index.jsonl 10 stale `in_progress` entries (bookkeeping cleanup for main-arcadia, out of cron scope)
   - direction-9 STALL_REPORT.md historical from 12:40, resolved, do NOT re-kill
   - auto-pilot loop dormant ~8h+ (since 17:31Z), expected
 
@@ -123,7 +123,7 @@
   - monitor cron owns next-dispatch per P38/P33/P35 split
   - checker scope = stall → kill+redispatch only (P30/P34) — no stall to act on
 - carry-forward (unchanged from prior ticks):
-  - index.jsonl 10 stale `in_progress` entries (bookkeeping cleanup for main-hermes, out of cron scope)
+  - index.jsonl 10 stale `in_progress` entries (bookkeeping cleanup for main-arcadia, out of cron scope)
   - direction-9 STALL_REPORT.md historical from 12:40, resolved, do NOT re-kill
   - auto-pilot loop dormant ~21h+, expected
 - tool-fallback note: this tick ran via `mcp__filesystem__read_text_file` + `mcp__filesystem__write_file` (terminal/execute_code blocked by Modal sandbox credential error); upstream monitor cron already logged the same fallback at 2026-08-24 in auto-pilot-monitor.md.
@@ -133,7 +133,7 @@
 ## 02:40 — checker tick #38 (cron)
 - claude PIDs: [] (process action=list empty; 0 in-scope subprocesses; terminal/execute_code blocked by Modal sandbox credential error, same as #37)
 - worktrees (11): all frozen since 2026-08-23T17:31Z — unchanged from prior ticks
-  - v6.5.0-phase-1-direction-3: 4 task files (decision-log/dispatch-prompt/main-hermes-verification/spec.md + artifacts/), no report.md, age=22h+
+  - v6.5.0-phase-1-direction-3: 4 task files (decision-log/dispatch-prompt/main-arcadia-verification/spec.md + artifacts/), no report.md, age=22h+
   - v6.5.0-phase-1-direction-4: 0 files, no report.md, age=14h+
   - v6.5.0-phase-1-direction-5: 0 files, **DONE** (commits 4c68004/ccd40d4 per monitor), age=22h+
   - v6.5.0-phase-1-direction-A2: 0 files, no report.md, age=14h+
@@ -142,12 +142,12 @@
   - v6.5.0-phase-1-direction-C: 0 files, no report.md, age=13h+
   - v6.5.0-phase-1-implementation: 0 files, no report.md, age=22h+
   - v6.5.0-phase-2-direction-6: 0 files, no report.md, age=13h+
-  - v6.5.0-phase-1-direction-9: 4 task files (decision-log/dispatch-prompt/main-hermes-verification/spec.md + artifacts/), no report.md, age=12h+ (STALL_REPORT historical from 12:40, resolved, do NOT re-kill)
+  - v6.5.0-phase-1-direction-9: 4 task files (decision-log/dispatch-prompt/main-arcadia-verification/spec.md + artifacts/), no report.md, age=12h+ (STALL_REPORT historical from 12:40, resolved, do NOT re-kill)
   - v6.5.0-phase-2-direction-NEW3: 0 files, no report.md, age=13h+
 - in-scope fresh-activity probe (last 5m since prior tick): NONE — every worktree dir mtime unchanged from prior tick
 - monitor.md mtime age≈? (cadence intact; only 1 entry today from monitor cron fallback stub)
 - mcp-graph: backlog=0 in_progress=1 done=17 blocked=0 cancelled=0 total=18 (from prior tick; CLI off-PATH here, terminal/execute_code Modal-blocked)
-- index.jsonl: 10 stale `in_progress` entries unchanged (bookkeeping cleanup for main-hermes, out of cron scope), 1 `done` (direction-5), 1 `in_progress` (multi-cli-v1.0-to-v1.6) — **note** Phase 1 marked 9/9 done in monitor.md at 2026-08-23T04:19:48Z but index.jsonl bookkeeping never reconciled (separate issue, out of cron scope)
+- index.jsonl: 10 stale `in_progress` entries unchanged (bookkeeping cleanup for main-arcadia, out of cron scope), 1 `done` (direction-5), 1 `in_progress` (multi-cli-v1.0-to-v1.6) — **note** Phase 1 marked 9/9 done in monitor.md at 2026-08-23T04:19:48Z but index.jsonl bookkeeping never reconciled (separate issue, out of cron scope)
 - .auto-pilot-monitor-state.json: unchanged from prior tick (6 entries, last_change_ts 2026-08-23T03:49Z – 05:00Z)
 - multi-cli-v1.0-to-v1.6/: 4 files (decision-log/dispatch-prompt/spec/subagent-report + artifacts/) — `subagent-report.md` exists, status `in_progress` per index.jsonl but no fresh activity
 - stall detected: **no** — 0 in-scope PIDs, 0 in-scope writing, idle steady-state (38th consecutive tick)
@@ -156,7 +156,7 @@
   - monitor cron owns next-dispatch per P38/P33/P35 split
   - checker scope = stall → kill+redispatch only (P30/P34) — no stall to act on
 - carry-forward (unchanged from prior ticks):
-  - index.jsonl 10 stale `in_progress` entries (bookkeeping cleanup for main-hermes, out of cron scope)
+  - index.jsonl 10 stale `in_progress` entries (bookkeeping cleanup for main-arcadia, out of cron scope)
   - index.jsonl `done` direction-5 + `in_progress` multi-cli-v1.0-to-v1.6 not reconciled (bookkeeping, out of cron scope)
   - direction-9 STALL_REPORT.md historical from 12:40, resolved, do NOT re-kill
   - auto-pilot loop dormant ~22h+, expected
@@ -167,7 +167,7 @@
 ## 02:50 — checker tick #39 (cron)
 - claude PIDs: [] (process action=list empty; 0 in-scope subprocesses; terminal/execute_code Modal-blocked same as #36/#37/#38, mcp__filesystem__read_text_file/write_file used)
 - worktrees (11): all frozen since 2026-08-23T17:31Z — unchanged from prior ticks
-  - v6.5.0-phase-1-direction-3: 4 task files (decision-log/dispatch-prompt/main-hermes-verification/spec.md + artifacts/), no report.md, age=22h+
+  - v6.5.0-phase-1-direction-3: 4 task files (decision-log/dispatch-prompt/main-arcadia-verification/spec.md + artifacts/), no report.md, age=22h+
   - v6.5.0-phase-1-direction-4: 0 files, no report.md, age=14h+
   - v6.5.0-phase-1-direction-5: 0 files, **DONE** (commits 4c68004/ccd40d4 per monitor), age=22h+
   - v6.5.0-phase-1-direction-A2: 0 files, no report.md, age=14h+
@@ -176,13 +176,13 @@
   - v6.5.0-phase-1-direction-C: 0 files, no report.md, age=13h+
   - v6.5.0-phase-1-implementation: 0 files, no report.md, age=22h+
   - v6.5.0-phase-2-direction-6: 0 files, no report.md, age=13h+
-  - v6.5.0-phase-1-direction-9: 4 task files (decision-log/dispatch-prompt/main-hermes-verification/spec.md + artifacts/), no report.md, age=12h+ (STALL_REPORT historical from 12:40, resolved, do NOT re-kill)
+  - v6.5.0-phase-1-direction-9: 4 task files (decision-log/dispatch-prompt/main-arcadia-verification/spec.md + artifacts/), no report.md, age=12h+ (STALL_REPORT historical from 12:40, resolved, do NOT re-kill)
   - v6.5.0-phase-2-direction-NEW3: 0 files, no report.md, age=13h+
 - in-scope fresh-activity probe (last 5m since prior tick): NONE — every worktree dir mtime unchanged from prior tick
 - multi-cli-v1.0-to-v1.6/: 4 files (decision-log/dispatch-prompt/spec/subagent-report + artifacts/) — status `in_progress` per index.jsonl, no fresh activity
 - monitor.md mtime = 2026-08-24T02:08:05+08:00 (5-min cadence intact, written ~42min ago; likely mid-cycle from monitor fallback stub)
 - mcp-graph: backlog=0 in_progress=1 done=17 blocked=0 cancelled=0 total=18 (unchanged from prior tick; CLI off-PATH here, terminal/execute_code Modal-blocked)
-- index.jsonl: 10 stale `in_progress` entries unchanged (bookkeeping cleanup for main-hermes, out of cron scope), 1 `done` (direction-5), 1 `in_progress` (multi-cli-v1.0-to-v1.6)
+- index.jsonl: 10 stale `in_progress` entries unchanged (bookkeeping cleanup for main-arcadia, out of cron scope), 1 `done` (direction-5), 1 `in_progress` (multi-cli-v1.0-to-v1.6)
 - .auto-pilot-monitor-state.json: last modified 2026-08-24T01:37:13+08:00 (unchanged; 6 entries, last_change_ts 2026-08-23T03:49Z – 05:00Z)
 - stall detected: **no** — 0 in-scope PIDs, 0 in-scope writing, idle steady-state (39th consecutive tick)
 - next dispatch candidate: **none**
@@ -190,7 +190,7 @@
   - monitor cron owns next-dispatch per P38/P33/P35 split
   - checker scope = stall → kill+redispatch only (P30/P34) — no stall to act on
 - carry-forward (unchanged from prior ticks):
-  - index.jsonl 10 stale `in_progress` entries (bookkeeping cleanup for main-hermes, out of cron scope)
+  - index.jsonl 10 stale `in_progress` entries (bookkeeping cleanup for main-arcadia, out of cron scope)
   - index.jsonl `done` direction-5 + `in_progress` multi-cli-v1.0-to-v1.6 not reconciled (bookkeeping, out of cron scope)
   - direction-9 STALL_REPORT.md historical from 12:40, resolved, do NOT re-kill
   - auto-pilot loop dormant ~22h+, expected

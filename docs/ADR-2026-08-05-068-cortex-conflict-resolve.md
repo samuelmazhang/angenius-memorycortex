@@ -2,9 +2,9 @@
 
 - Status: Accepted
 - Date: 2026-08-05
-- Author: MiniMax (Hermes Agent) + 用户联合决策
+- Author: MiniMax (Arcadia Agent) + 用户联合决策
 - Supersedes: 无 (新能力)
-- Depends on: V5.3.9 schema + connector/hermes/scripts/cortex_maintenance.py
+- Depends on: V5.3.9 schema + connector/arcadia/scripts/cortex_maintenance.py
 
 ## 背景 (Context)
 
@@ -16,7 +16,7 @@ cortex 现有冲突处理能力分散,且不完整:
 | `/consolidate/extract` | 按句号拆事实 | 无去重,无冲突检测,每调用 +1 行 |
 | `/rumination/run` (ADR-067) | 矛盾打 metadata 标记 | 只打标不删,且只看 importance 差距不看 source_key |
 | `OPS_COUNTERS["conflict_detected"]` | 计数器 | 不是真冲突检测 |
-| `connector/hermes/cortex_maintenance.py` | hermes cron 调维护 endpoint | 没有 conflict-resolve 这一项 |
+| `connector/arcadia/cortex_maintenance.py` | arcadia cron 调维护 endpoint | 没有 conflict-resolve 这一项 |
 
 用户原话:
 > "cortex 记忆体里新信息跟老信息冲突时,要优先更新老记忆,如果不能合并就删除旧的相关内容,添加新的内容,保证记忆最新且不冲突. 另外要有一个周期更新能力,就是根据新的决策优先旧的,如果确定是事实,新的事实要覆盖旧的内容."
@@ -89,7 +89,7 @@ decided_by ∈ {'auto', 'manual'}
 代码改动:
 - `server/docker/unified/schema.sql` — 加 4 列 + 新表 + 3 个新索引
 - `server/src/api_pg.py` — 加 `_resolve_conflict_for_chunk` + `/conflict/upsert` + `/conflict/scan` + `/conflict/log` 共 4 个符号
-- `connector/hermes/scripts/cortex_maintenance.py` — daily 任务流加 2 步
+- `connector/arcadia/scripts/cortex_maintenance.py` — daily 任务流加 2 步
 
 数据库迁移:
 - entrypoint 自动应用 schema (CREATE TABLE IF NOT EXISTS / ALTER COLUMN 不存在需手动补)

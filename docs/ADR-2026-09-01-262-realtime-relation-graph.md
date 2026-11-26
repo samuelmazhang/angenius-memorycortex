@@ -2,7 +2,7 @@
 
 - Status: Accepted
 - Date: 2026-09-01
-- Author: Hermes (subagent dispatch) + 天行健 (decision)
+- Author: Arcadia (subagent dispatch) + 天行健 (decision)
 - Depends on: v6.5.0 P2 scheduler (`server/src/consolidate/scheduler.py`),
               memory_chunks.embedding (pgvector 768-dim, HNSW cosine_ops),
               memory_relations table

@@ -101,9 +101,9 @@ $ git commit -m "docs(methodology): 2026-08-22 multi-cli incident retrospective 
 ### 3.2 ✅ v0.7.1 backup 已删原目录(zip 存档)
 
 ```
-原目录: A:/Application/Hermes-Agent/UserData/cache/skill-archive-20260822/multi-cli-orchestrated-references/
+原目录: A:/Application/Arcadia-Agent/UserData/cache/skill-archive-20260822/multi-cli-orchestrated-references/
   7 个 .md 文件 / 60KB
-zip: A:/Application/Hermes-Agent/UserData/cache/skill-archive-20260822/multi-cli-orchestrated-references-2026-08-22.zip
+zip: A:/Application/Arcadia-Agent/UserData/cache/skill-archive-20260822/multi-cli-orchestrated-references-2026-08-22.zip
   23130 bytes (压缩 38%)
   含全部 7 文件内容(verify 过一致)
 
@@ -152,7 +152,7 @@ v1.6 验证密度:
 - **20 条红线** 全部有对应工具 enforce
 - **4 章实施报告** 全部有端到端测试结果
 - **整合评审 → 实施 → sprint 验证 → 收尾** 闭环
-- **3 个 CLI(claude / codex / opencode)+ 主 hermes 4 个维度** 验证 v1.6 设计
+- **3 个 CLI(claude / codex / opencode)+ 主 arcadia 4 个维度** 验证 v1.6 设计
 
 **从"约束卡"变成"可跑方法论"**。
 
@@ -177,7 +177,7 @@ v1.6 验证密度:
 1. `multi-cli-graph-software-development` v1.6(41.7KB / 863 行 / 20 红线)
 2. `mcp-graph-design` v1.1(64.6KB / 5 references)
 
-### 工具脚本(13 个 + 2 个升级,全部在 `A:/Application/Hermes-Agent/UserData/scripts/`)
+### 工具脚本(13 个 + 2 个升级,全部在 `A:/Application/Arcadia-Agent/UserData/scripts/`)
 
 **§1.1 安全(5)**:
 1. `redact-report.py`(6.5KB)
@@ -217,4 +217,4 @@ v1.6 验证密度:
 
 **累计**: 21 件交付物,总 ~210KB。
 
-— Hermes Agent (M3), 2026-08-23 01:30 CST
+— Arcadia Agent (M3), 2026-08-23 01:30 CST

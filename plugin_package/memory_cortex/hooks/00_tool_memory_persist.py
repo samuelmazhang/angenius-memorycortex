@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Hermes Post-Tool-Call Hook: 工具调用自动记忆沉淀
+Arcadia Post-Tool-Call Hook: 工具调用自动记忆沉淀
 功能：每次工具调用结束后（成功/失败），自动把调用经验存入记忆库，沉淀工具使用经验，避免重复踩坑
 配置项（环境变量）：
 MEMORY_AUTO_PERSIST_TOOL: 是否开启自动沉淀（默认true）
@@ -10,8 +10,8 @@ MEMORY_TOOL_EXPERIENCE_IMPORTANCE_FAILED: 失败调用重要性等级（默认8�
 import json
 import os
 import sys
-sys.path.insert(0, os.path.expanduser("~/.hermes/scripts"))
-from hermes_memory import add, search
+sys.path.insert(0, os.path.expanduser("~/.arcadia/scripts"))
+from arcadia_memory import add, search
 # 配置读取
 MEMORY_AUTO_PERSIST_TOOL = os.getenv("MEMORY_AUTO_PERSIST_TOOL", "true").lower() == "true"
 SUCCESS_IMPORTANCE = int(os.getenv("MEMORY_TOOL_EXPERIENCE_IMPORTANCE_SUCCESS", "7"))
@@ -28,7 +28,7 @@ def main():
         print(json.dumps({}))
         return
     try:
-        # 读取Hermes传入的工具调用信息
+        # 读取Arcadia传入的工具调用信息
         input_data = json.loads(sys.stdin.read())
         tool_name = input_data.get("tool_name", "").strip()
         tool_params = input_data.get("tool_params", {})

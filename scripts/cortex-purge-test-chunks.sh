@@ -15,7 +15,7 @@
 #   source LIKE 'verify%' AND type != 'session_summary'    -> 0 rows
 #   type = 'test'                                         -> 1 row
 #   tags::text LIKE '%release%'                            -> 0 rows
-#   source = 'hermes-session-summarizer'                  -> 30 rows (all pytest/verify-e2e)
+#   source = 'arcadia-session-summarizer'                  -> 30 rows (all pytest/verify-e2e)
 #   content IN ('probe1', 'probe2')                        -> 86 rows
 #   content LIKE 'e2e-memtool-%'                          -> 19 rows (head-anchored)
 #   content LIKE '%verify-summarizer%' OR
@@ -28,7 +28,7 @@
 #   - Any chunk where the word 'e2e-memtool' appears INSIDE the body
 #     (only chunks that start with 'e2e-memtool-' are deleted)
 #   - Real user notes (source='user', type != 'test')
-#   - Anything in source='hermes-agent-sprint36-37' (real Sprint 36/37 sessions)
+#   - Anything in source='arcadia-agent-sprint36-37' (real Sprint 36/37 sessions)
 
 set -euo pipefail
 
@@ -64,8 +64,8 @@ WITH counts AS (
   UNION ALL
   SELECT '4. tags LIKE %release%', COUNT(*) FROM memory_chunks WHERE tags::text LIKE '%release%'
   UNION ALL
-  SELECT '5. source = hermes-session-summarizer', COUNT(*) FROM memory_chunks
-    WHERE source = 'hermes-session-summarizer'
+  SELECT '5. source = arcadia-session-summarizer', COUNT(*) FROM memory_chunks
+    WHERE source = 'arcadia-session-summarizer'
   UNION ALL
   SELECT '6. content IN (probe1, probe2)', COUNT(*) FROM memory_chunks
     WHERE content IN ('probe1','probe2')
@@ -105,7 +105,7 @@ DELETE FROM memory_chunks WHERE source IN ('verify','verify_651','verify-script'
 DELETE FROM memory_chunks WHERE source LIKE 'verify%' AND type <> 'session_summary';
 DELETE FROM memory_chunks WHERE type = 'test';
 DELETE FROM memory_chunks WHERE tags::text LIKE '%release%';
-DELETE FROM memory_chunks WHERE source = 'hermes-session-summarizer';
+DELETE FROM memory_chunks WHERE source = 'arcadia-session-summarizer';
 DELETE FROM memory_chunks WHERE content IN ('probe1','probe2');
 DELETE FROM memory_chunks WHERE content LIKE 'e2e-memtool-%';
 DELETE FROM memory_chunks WHERE content LIKE '%verify-summarizer%';

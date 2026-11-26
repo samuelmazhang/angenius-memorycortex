@@ -32,12 +32,12 @@
 2. **不要在 worktree 根创建 tests/ 顶层目录** (P31), 用 `server/tests/test_scheduler_v6_5.py` 嵌套
 3. spec 写功能不写行数
 4. 不调 LLM (mock extract/resolve_conflicts)
-5. 不 commit (主 hermes 自动)
+5. 不 commit (主 arcadia 自动)
 6. **如果 stall**, 写 `<worktree>/.sprint/STALL_REPORT.md`, exit 0 (P30 重派)
 
 ## stall 检测 (P30 综合判断)
 
-主 hermes 不每分钟 poll (P32). 等 `notify_on_complete` 自动 push.
+主 arcadia 不每分钟 poll (P32). 等 `notify_on_complete` 自动 push.
 判断标准: writing/reading 动作 + uptime + worktree 文件, 三方一致.
 
 完成后 exit 0.

@@ -1,7 +1,7 @@
 # Dispatch Prompt — v6.5.0 #A.1 LLM 抽取层
 
 **收件方**: claude-code (subagent)
-**发件方**: 主 hermes (M3)
+**发件方**: 主 arcadia (M3)
 **任务 ID**: #A.1 (Phase 1, consolidation pipeline 第一步)
 **Worktree**: `..worktrees/v6.5.0-phase-1-implementation`
 **mcp-graph 节点**: `node_e0fcb00af751`(已建, daemon-side, lifecycle=IMPLEMENT)
@@ -101,7 +101,7 @@ async def extract(chunk: dict, context_chunks: list[dict], cfg: Config) -> dict:
 ## 约束(铁律)
 
 1. **只建 #A.1** — 不要建 conflict_resolve / scheduler / eval(其他方向)
-2. **不要 commit** — git add 等主 hermes 验证
+2. **不要 commit** — git add 等主 arcadia 验证
 3. **不引入 tenacity 之外的 retry 库** — 用 `tenacity` 或手写循环
 4. **不引入 pydantic 之外的 schema 库** — 用 `dataclass` 或 `TypedDict`
 5. **LLM 不可达必须返回空 dict 不抛** — 主进程不能因 consolidate 失败而崩溃
@@ -113,10 +113,10 @@ async def extract(chunk: dict, context_chunks: list[dict], cfg: Config) -> dict:
 ## 完成后
 
 1. 写 `.sprint/v6.5.0-phase-1-direction-A1-report.md`
-2. **不要调** subagent-progress.py(脚本不在 worktree 内 — 主 hermes 知道这个限制,后续 sprint 会把脚本部署到 cortex 仓库)
+2. **不要调** subagent-progress.py(脚本不在 worktree 内 — 主 arcadia 知道这个限制,后续 sprint 会把脚本部署到 cortex 仓库)
 3. exit 0
 
-如果失败:用 `.sprint/<task-id>-report.md` 写 `## FAILED` 段说明原因,主 hermes 会 escalate。
+如果失败:用 `.sprint/<task-id>-report.md` 写 `## FAILED` 段说明原因,主 arcadia 会 escalate。
 
 ---
 

@@ -10,7 +10,7 @@
 
 ---
 
-## 功能点 (主 hermes 写,子代理实现)
+## 功能点 (主 arcadia 写,子代理实现)
 
 ### 目标
 
@@ -49,7 +49,7 @@
 
 4. **CHANGELOG.md** — append #B 段 (跟 #A.3 风格一致: 触发条件, 接口, 性能, 设计约束)
 
-### 验收 (主 hermes 自动跑)
+### 验收 (主 arcadia 自动跑)
 
 - pytest `server/tests/test_graph_v6_5.py` (新建, 4 个 dispatch-mandated test):
   1. `test_graph_index_builds_from_relations` — GraphIndex 从 mocked query
@@ -75,4 +75,4 @@
 ### 完成标准
 
 1. 写 `<worktree>/.sprint/v6.5.0-phase-1-direction-B-report.md`
-2. 主 hermes 自动 commit + finish_task
+2. 主 arcadia 自动 commit + finish_task

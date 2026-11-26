@@ -102,8 +102,8 @@ stray `cx.forget(...)` call inside an agent loop.
 - The Python client is the **simplest path** to all 89 endpoints from
   Claude Code without server-side changes. It is one file, zero deps
   beyond `requests`, and lives entirely on the Claude Code side.
-- For Hermes integration (different connector), see
-  `connector/hermes/cortex_memory_backend.py`. The two share the same
+- For Arcadia integration (different connector), see
+  `connector/arcadia/cortex_memory_backend.py`. The two share the same
   server contract but live in separate runtime folders.
 
 ## What this connector does NOT do

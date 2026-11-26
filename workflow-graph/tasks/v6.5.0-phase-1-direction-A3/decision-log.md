@@ -8,7 +8,7 @@
 - 23/23 tests PASS
 - exit 0
 
-## 11:55 — 主 hermes 6 步验收
+## 11:55 — 主 arcadia 6 步验收
 - 116/116 server/tests/ PASS
 - commit f48a04e + merge + task-dir de7dcb8
 - mcp-graph finish node_da33db15e3ec
@@ -25,10 +25,10 @@
    - 处理 stall: kill + write STALL_REPORT.md + redispatch
 
 3. **P34 (lock-file 互斥)**: 用户问"主控还能主动查看吗?"
-   - fix: .auto-pilot-{name}.lock (TTL 10 分钟) 防主 hermes + cron 双杀
+   - fix: .auto-pilot-{name}.lock (TTL 10 分钟) 防主 arcadia + cron 双杀
 
 4. **P35 (trigger file 间接通知)**: 用户问"cron 能自动通知主控吗?"
-   - fix: auto-pilot-trigger.py 写 trigger file, 主 hermes 下次 tool_call 前 cat
+   - fix: auto-pilot-trigger.py 写 trigger file, 主 arcadia 下次 tool_call 前 cat
 
 ## 下一步
 

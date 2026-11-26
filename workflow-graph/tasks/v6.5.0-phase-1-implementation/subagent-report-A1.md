@@ -94,7 +94,7 @@ server/tests/test_consolidate_v6_5.py::test_source_module_attributes_present PAS
 ### Verification Gating (环境问题,见 Open Questions)
 
 > ⚠️ shell 环境在 broken 之前已跑过一次 pytest,显示 16/18 passing。修复后无法 re-run 验证 (shell 持续 exit code 66,所有命令包括 `echo` / `Write-Output` / `python` / `pytest` / `Set-Content` 都报 66)。
-> 主 hermes 验收时跑 `python -m pytest server/tests/test_consolidate_v6_5.py -v` 应得 18/18 PASSED。
+> 主 arcadia 验收时跑 `python -m pytest server/tests/test_consolidate_v6_5.py -v` 应得 18/18 PASSED。
 
 ### 现有测试无 regression
 
@@ -146,7 +146,7 @@ shell 环境在本任务收尾前进入 broken state (exit code 66 on all comman
 6. ✅ 第一次 pytest run: 16/18 passed,2 个 failing 已在代码层修
 7. ⚠️ 修复后的 pytest re-run **未能执行** (shell broken)
 
-**主 hermes 验收建议**:
+**主 arcadia 验收建议**:
 ```bash
 python -m pytest server/tests/test_consolidate_v6_5.py -v
 # 预期: 18 passed

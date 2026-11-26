@@ -1,14 +1,14 @@
 ---
 name: cortex-memory
-description: "Long-term semantic memory for WorkBuddy, backed by the Memory Cortex service that is shared with the Hermes agent. Use when the user asks to remember or forget facts, recall prior context, or whenever prior knowledge could improve the answer. Trigger keywords: 记住, 记一下, 别忘了, 之前, 上次, 你知道, 记忆, remember, recall, what do you know, previously."
+description: "Long-term semantic memory for WorkBuddy, backed by the Memory Cortex service that is shared with the Arcadia agent. Use when the user asks to remember or forget facts, recall prior context, or whenever prior knowledge could improve the answer. Trigger keywords: 记住, 记一下, 别忘了, 之前, 上次, 你知道, 记忆, remember, recall, what do you know, previously."
 version: 1.0.0
 ---
 
 # Cortex Memory — WorkBuddy Skill
 
 Long-term semantic memory for WorkBuddy, backed by the shared **Memory Cortex**
-service (the same instance Hermes agent uses). Memory persists across sessions
-and is shared with Hermes by default.
+service (the same instance Arcadia agent uses). Memory persists across sessions
+and is shared with Arcadia by default.
 
 ## MCP server
 
@@ -58,10 +58,10 @@ Optional args on `cortex_remember`/`cortex_recall`: `type`, `tags`,
 
 ### user_id namespace
 
-- **Default: omit `user_id`** — read/write the shared global memory that Hermes
-  also uses. This is the intended behavior for "接上 Hermes 的 memorycortex".
+- **Default: omit `user_id`** — read/write the shared global memory that Arcadia
+  also uses. This is the intended behavior for "接上 Arcadia 的 memorycortex".
 - Only pass a fixed `user_id` (e.g. `workbuddy`) when the user explicitly asks
-  to isolate WorkBuddy's memory from Hermes's.
+  to isolate WorkBuddy's memory from Arcadia's.
 
 ## Reliability
 
@@ -78,6 +78,6 @@ Call `cortex_introspect()` to confirm the service is alive
 
 ## See also
 
-- `connector/hermes/README.md` — the Hermes integration this mirrors.
+- `connector/arcadia/README.md` — the Arcadia integration this mirrors.
 - `connector/opencode/SKILL.md` — sibling skill contract.
 - `server/src/mcp_server/cortex_mcp.py` — the MCP tool implementation.

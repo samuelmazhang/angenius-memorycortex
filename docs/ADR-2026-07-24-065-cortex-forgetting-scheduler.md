@@ -5,7 +5,7 @@
 | **状态** | ✅ Accepted / Implemented |
 | **日期** | 2026-07-24 |
 | **Sprint** | v10.37 E7 |
-| **影响域** | Hermes Memory Cortex /forgetting/* 调度 |
+| **影响域** | Arcadia Memory Cortex /forgetting/* 调度 |
 | **前置提交** | ADR-064 (commit `5501f71` + `c8d2e16`), ADR-063 (commit `32578d9` + `f33715d`) |
 | **后续工作** | ADR-066 (forgetting last_run 持久化跨 restart, 后续 sprint) |
 

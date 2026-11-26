@@ -87,7 +87,7 @@ _MODEL_CANDIDATES = (
     r".models\bge-reranker-base",
     ".models/bge-reranker-base",
     "/opt/cortex-deploy/models/bge-reranker-base",
-    "/root/.hermes/plugins/memory-cortex/models/bge-reranker-base",
+    "/root/.arcadia/plugins/memory-cortex/models/bge-reranker-base",
 )
 
 # 惰性加载的会话句柄 + 加载状态

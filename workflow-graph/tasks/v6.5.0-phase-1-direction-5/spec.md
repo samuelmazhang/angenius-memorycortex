@@ -10,7 +10,7 @@
 
 ---
 
-## 功能点 (主 hermes 写,子代理实现)
+## 功能点 (主 arcadia 写,子代理实现)
 
 必做:
 
@@ -30,7 +30,7 @@
 
 4. **改 api_pg.py 启动时设置 `SET hnsw.ef_search = 120`** (如果当前没设)
 
-## 验收 (主 hermes 自动跑)
+## 验收 (主 arcadia 自动跑)
 
 - pytest `server/tests/test_hnsw_v6_5.py` (新建, 3 个 test):
   1. `test_schema_has_hnsw_index_comment` — schema.sql 注释有 m=24 + ef_construction=200
@@ -47,4 +47,4 @@
 ## 完成标准
 
 1. 写 `<worktree>/.sprint/v6.5.0-phase-1-direction-5-report.md` (claude-code)
-2. 主 hermes 自动 commit + finish_task + 更新 mcp-graph
+2. 主 arcadia 自动 commit + finish_task + 更新 mcp-graph

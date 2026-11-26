@@ -1,7 +1,7 @@
 # Dispatch — v6.5.0 Phase 1 direction #4 LOCOMO 1986 harness
 
 **收件方**: claude-code (subagent, auto-pilot 3/7)
-**发件方**: 主 hermes (auto-pilot mode)
+**发件方**: 主 arcadia (auto-pilot mode)
 **Worktree**: `..worktrees/v6.5.0-phase-1-direction-4`
 **mcp-graph node**: `node_90180b7a9dda`
 
@@ -67,7 +67,7 @@
 (无则 None)
 
 ## stall 兜底
-(如果 stall, 主 hermes 会接管,这部分记录中断点)
+(如果 stall, 主 arcadia 会接管,这部分记录中断点)
 ```
 
 ## 约束
@@ -77,15 +77,15 @@
 3. 不改 Pydantic 之外库
 4. **不要实际跑 1986 case** (太大, sandbox 不能跑 LLM-as-Judge); 只跑 4 个 unit test
 5. **如果 stall**, 写 `<worktree>/.sprint/STALL_REPORT.md` 说明 stall 在哪步
-6. **不 commit** (主 hermes 自动)
+6. **不 commit** (主 arcadia 自动)
 
-## stall 检测 (主 hermes 会每 1 分钟看进度)
+## stall 检测 (主 arcadia 会每 1 分钟看进度)
 
-主 hermes 状态机:
-- 跑 >10 分钟无新输出 + worktree 已有新文件 → **主 hermes kill + 接管**
-- 跑 >15 分钟完全没动 → **主 hermes kill + 重派同一 task**(带 "读 #4-STALL_REPORT.md" instruction)
+主 arcadia 状态机:
+- 跑 >10 分钟无新输出 + worktree 已有新文件 → **主 arcadia kill + 接管**
+- 跑 >15 分钟完全没动 → **主 arcadia kill + 重派同一 task**(带 "读 #4-STALL_REPORT.md" instruction)
 - 你 (claude-code) 自己感觉 stall 就 `exit 0` + 写 STALL_REPORT.md,**不要无限循环**
 
 ## 完成后
 
-exit 0, 主 hermes 自动 commit + finish_task。
+exit 0, 主 arcadia 自动 commit + finish_task。

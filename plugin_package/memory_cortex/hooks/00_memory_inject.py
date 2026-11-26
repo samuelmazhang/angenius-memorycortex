@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Hermes Pre-Prompt Hook: 记忆自动注入钩子
+Arcadia Pre-Prompt Hook: 记忆自动注入钩子
 功能：用户提问后自动语义搜索相关记忆，注入到System Prompt最前面，零侵入，所有模型通用
 配置项（环境变量）：
 MEMORY_AUTO_INJECT: 是否开启自动注入（默认true）
@@ -11,8 +11,8 @@ MEMORY_AUTO_INJECT_TYPE: 按类型过滤，比如只注入knowledge类型，默�
 import json
 import os
 import sys
-sys.path.insert(0, os.path.expanduser("~/.hermes/scripts"))
-from hermes_memory import search
+sys.path.insert(0, os.path.expanduser("~/.arcadia/scripts"))
+from arcadia_memory import search
 # 配置读取
 MEMORY_AUTO_INJECT = os.getenv("MEMORY_AUTO_INJECT", "true").lower() == "true"
 MEMORY_AUTO_INJECT_LIMIT = int(os.getenv("MEMORY_AUTO_INJECT_LIMIT", "3"))
@@ -24,7 +24,7 @@ def main():
         print(json.dumps({}))
         return
     try:
-        # 读取Hermes传入的输入
+        # 读取Arcadia传入的输入
         input_data = json.loads(sys.stdin.read())
         user_input = input_data.get("user_input", "").strip()
         system_prompt = input_data.get("system_prompt", "")

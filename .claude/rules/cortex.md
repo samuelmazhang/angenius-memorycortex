@@ -91,7 +91,7 @@ connector/claude/
    context`
 - `tags`: free-form, often `["QuantPlatform", "Sprint-100-105-FINAL", "ADR-..."]`
 - `importance`: 1–10, drives tier + TTL (≤3=7d, ≤5=30d, ≤7=180d, ≥8=permanent)
-- `source`: `claude-code | claude-code-hook | user | hermes_memory | ...`
+- `source`: `claude-code | claude-code-hook | user | arcadia_memory | ...`
 
 Live server: `http://127.0.0.1:1880` (override via `CORTEX_URL`).
 Endpoint coverage: 89/89 (validated 2026-09-08).

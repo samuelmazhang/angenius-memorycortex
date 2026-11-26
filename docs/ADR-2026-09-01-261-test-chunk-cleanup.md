@@ -2,14 +2,14 @@
 
 - Status: Accepted
 - Date: 2026-09-01
-- Author: Hermes (subagent dispatch) + 天行健 (决策)
+- Author: Arcadia (subagent dispatch) + 天行健 (决策)
 - Depends on: v6.5.0 P2 scheduler (status='dead' column), memory_chunks table
 
 ## 背景 (Context)
 
 cortex 在多次 verify / e2e / pytest 测试中累计留下了 ~150 条测试残骸
 chunk: 它们 source=`verify`/`verify_651`/`verify-script`/`live`/`verification`
-或 source=`hermes-session-summarizer` 且 content 含 `test-session-summary-ssbb-...` /
+或 source=`arcadia-session-summarizer` 且 content 含 `test-session-summary-ssbb-...` /
 `verify-summarizer-...` / `[session:...source:verify-e2e]` / `[session:...source:pytest-end-to-end]`,
 或 content 完全等于 `probe1` / `probe2` / `e2e-memtool-XXX` / `probe-1-verify-deploy-XXX`
 这类纯测试命名标记。importance 多在 5-7 之间, archived 多为 1 但也有
@@ -24,7 +24,7 @@ active=0 的。它们不会被 P2 worker 处理 (extract 返回空 envelope, 总
 |---|---|---|
 | 1. source IN (verify/live/verification/...) | 硬枚举 | 6 |
 | 2. type='test' | 硬枚举 | 1 |
-| 3. source='hermes-session-summarizer' | 该 source 全是 verify-e2e / pytest-end-to-end 测试产物 | 30 |
+| 3. source='arcadia-session-summarizer' | 该 source 全是 verify-e2e / pytest-end-to-end 测试产物 | 30 |
 | 4. content IN (probe1, probe2) | 纯测试 content | 86 |
 | 5. content LIKE 'e2e-memtool-%' (开头) | e2e 测试命名 | 19 |
 | 6. content LIKE 'verify-summarizer%' OR '%test-session-summary-ssbb%' OR '%session:test-session-%' | pytest/verify-e2e 自动 session 摘要 | 9 |
@@ -63,14 +63,14 @@ deleted:     151
 - 7 个测试残留 pattern 全部清零:
   - `source IN (verify, verify_651, ..., user-cli-...)` -> 0 rows
   - `type = 'test'` -> 0 rows
-  - `source = 'hermes-session-summarizer'` -> 0 rows
+  - `source = 'arcadia-session-summarizer'` -> 0 rows
   - `content IN (probe1, probe2)` -> 0 rows
   - `content LIKE 'e2e-memtool-%'` -> 0 rows (开头匹配, 不伤真笔记)
   - `content LIKE '%verify-summarizer%'` -> 0 rows
   - `content LIKE '%test-session-summary-ssbb%'` -> 0 rows
 - 真实 user 笔记 (`source='user'`) 完整保留 (2428 行 -> 仍然 2428)
-- 真实 Sprint 36/37 session 摘要 (`source='hermes-agent-sprint36-37'`) 保留
-- `hermes_memory` knowledge (Hermes Memory Architecture) 保留
+- 真实 Sprint 36/37 session 摘要 (`source='arcadia-agent-sprint36-37'`) 保留
+- `arcadia_memory` knowledge (Arcadia Memory Architecture) 保留
 
 ## 风险 (Risks)
 

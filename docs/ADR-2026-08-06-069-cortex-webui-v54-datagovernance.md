@@ -2,7 +2,7 @@
 
 - Status: Accepted
 - Date: 2026-08-06
-- Author: Hermes Agent (MiniMax-M3) + 用户联合决策
+- Author: Arcadia Agent (MiniMax-M3) + 用户联合决策
 - Supersedes: 无 (本轮为多任务聚合)
 - Depends on: V5.3.9 runtime + V5.4 schema (ADR-068)
 
@@ -81,7 +81,7 @@
 1. **告警通道**: cron `deliver=local`, 失败时用户**不会收到通知**。下次需改 `deliver='telegram'` 或加 `/tmp/cortex_maintenance_heartbeat` 文件供独立检查。
 2. **回滚脚本**: 有 backup (`/tmp/cortex_backup_*.sql.gz`) 但无 `rollback.sh` 自动脚本。本 ADR 决策: **是必须补的, 见 D6**。
 3. **trigger 测试**: 仅测 1 次 INSERT, 未在 CI 跑回归。
-4. **connector 死代码**: `connector/hermes/cortex_api.py` 自 V5.2.6 (commit 3bf8a59) 起 import `memory_chunk.py` 不到, 整个 `connector/hermes/` 是孤儿代码, 本轮 D 桶 commit 时漏处理。
+4. **connector 死代码**: `connector/arcadia/cortex_api.py` 自 V5.2.6 (commit 3bf8a59) 起 import `memory_chunk.py` 不到, 整个 `connector/arcadia/` 是孤儿代码, 本轮 D 桶 commit 时漏处理。
 
 ### D6. 回滚脚本 (本轮新增)
 
@@ -105,7 +105,7 @@
 | 2 | Shell 包装器结构 | ✓ 9/9 |
 | 3 | SQL 结构 (sentinel/24h/2d/90d/permanent/WHERE/key=value) | ✓ 12/12 |
 | 4 | 真实 8.2 跑 (idempotent exit 0, silent) | ✓ |
-| 5 | Hermes cron 注册 (job_id/schedule/mode) | ✓ |
+| 5 | Arcadia cron 注册 (job_id/schedule/mode) | ✓ |
 
 ### 数据库 diff (执行前后)
 
@@ -135,5 +135,5 @@ DB size:           38 MB (未变, 索引占大头)
 **负面 / 风险**:
 - 触发器 `trg_chunks_autosourcekey` 是隐式行为, 后续 schema 变更需 review
 - cron `deliver=local` 告警盲区, 需后续 ADR-070 解决
-- `connector/hermes/cortex_api.py` 死代码未清理, 长期债 +1
+- `connector/arcadia/cortex_api.py` 死代码未清理, 长期债 +1
 - 文档瘦身可能丢失历史背景 (建议保留 git history + ADR-MAP 入口)

@@ -39,7 +39,7 @@ if [ "$1" = "rollback" ]; then
     -v "$WORK/server/src":/app/src:ro \
     -v "$WORK/server/docker/unified/schema.sql":/opt/cortex/schema.sql:ro \
     -v "$WORK/server/docker/unified/entrypoint.sh":/usr/local/bin/entrypoint.sh:ro \
-    -v /root/.local/share/cortex-models:/root/.hermes/plugins/memory-cortex/models:ro \
+    -v /root/.local/share/cortex-models:/root/.arcadia/plugins/memory-cortex/models:ro \
     "$IMAGE:$OLD_TAG" 2>&1 | tail -3
   exit 0
 fi
@@ -83,7 +83,7 @@ sudo docker run -d --name "$CONTAINER" --restart unless-stopped \
   -v "$WORK/server/src":/app/src:ro \
   -v "$WORK/server/docker/unified/schema.sql":/opt/cortex/schema.sql:ro \
   -v "$WORK/server/docker/unified/entrypoint.sh":/usr/local/bin/entrypoint.sh:ro \
-  -v /root/.local/share/cortex-models:/root/.hermes/plugins/memory-cortex/models:ro \
+  -v /root/.local/share/cortex-models:/root/.arcadia/plugins/memory-cortex/models:ro \
   "$IMAGE:$NEW_TAG"
 
 echo

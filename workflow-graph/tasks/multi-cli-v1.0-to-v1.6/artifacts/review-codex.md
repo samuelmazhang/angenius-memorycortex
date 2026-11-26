@@ -10,8 +10,8 @@
 
 ## 安全威胁清单(按风险排序)
 高风险:
-- M1: prompt 注入 → report.md 把内部 token / IP / stack trace 回写主 hermes,无 redaction
-- M2: reviewer 自身可被污染 — hermes leaf reviewer 读 report.md + diff 提 verdict,这俩都来自未受信子代理
+- M1: prompt 注入 → report.md 把内部 token / IP / stack trace 回写主 arcadia,无 redaction
+- M2: reviewer 自身可被污染 — arcadia leaf reviewer 读 report.md + diff 提 verdict,这俩都来自未受信子代理
 - M3: worktree 删除与子代理进程竞态 — unlink 后子代理仍写 inode
 - M4: .env 自动提交 — 子代理 `git add .` 会把 .env 拉进暂存
 
@@ -22,7 +22,7 @@
 问题 1(严重): mcp-graph 写权限"君子协定"
 - 原因: 本地 SQLite MCP server 无 per-caller ACL;铁律 2 完全依赖子代理听话
 - 外部参考: issue #34645 + Stawinski RCE + GridTheGrey indirect injection
-- 建议: 拆 read/write 两套 MCP server,主 hermes 只暴露 write,子代理配置里只挂 read
+- 建议: 拆 read/write 两套 MCP server,主 arcadia 只暴露 write,子代理配置里只挂 read
 
 问题 2(严重): acp-subagent.sh 路径处理无 sanitization
 - 原因: task-id 来源未限,直接拼到 --prompt-file;worktree 路径无 realpath 校验
@@ -39,6 +39,6 @@
 ## 反驳现有红线
 - 铁律 2 是形式上的 — 仅 prompt 文字"严禁调 mcp-graph 写工具",无 daemon 校验
 - P2 "文件不在 <worktree>/ 下视为越界" — prompt 而非 OS 约束
-- 铁律 3 "主 hermes 亲自验收" — 流程正确但 verdict 输入仍受 M2 污染
+- 铁律 3 "主 arcadia 亲自验收" — 流程正确但 verdict 输入仍受 M2 污染
 
-## 重要: 这是 codex 评审产出(主 hermes 已存档)
+## 重要: 这是 codex 评审产出(主 arcadia 已存档)

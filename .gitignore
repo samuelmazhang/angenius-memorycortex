@@ -43,7 +43,7 @@ NUL
 *.pub
 !id_*.pub
 # workflow-graph/ 大部分不入仓(graph.db 是本地状态)
-# 但 workflow-graph/tasks/ 是主 hermes 中心 task 中控副本,应该入仓
+# 但 workflow-graph/tasks/ 是主 arcadia 中心 task 中控副本,应该入仓
 workflow-graph/*
 !workflow-graph/tasks/
 !workflow-graph/tasks/**

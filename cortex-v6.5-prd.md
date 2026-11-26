@@ -3,7 +3,7 @@
 > **文档定位**: Cortex v6.3.1 (Python FastAPI + PG + pgvector, 105 endpoints, 2638 chunks / 941 relations) 的下一阶段高 ROI 改进方向路线图。
 >
 > **版本历史**:
-> - **v1** (2026-08-22 上午): Hermes 综合 + 8 次 mcp_fetch 实测, 存在 1 个 critical 错误 + 3 个 ROI 高估 + 漏 5 个方向
+> - **v1** (2026-08-22 上午): Arcadia 综合 + 8 次 mcp_fetch 实测, 存在 1 个 critical 错误 + 3 个 ROI 高估 + 漏 5 个方向
 > - **v2** (2026-08-22 中午): Claude 评审后修订, 12 次 WebSearch + 本地代码审计. 35KB 839 行 (用户决定融合后删除, 仅留 changelog)
 > - **v3** (2026-08-22 下午, **本文件**): 3 CLI 独立 subagent (OpenCode / Codex / Claude Code) + 主线程汇总 + 用户 OOB 决策 (禁用 Anthropic Memory Tool + Supabase binary quant) 综合修订. 26 个 arXiv 论文 + 9 个 GitHub repo + 4 个 SaaS 全部 mmx 国内 search 实测
 >
@@ -52,7 +52,7 @@
   - latency p99: **-15%** (v2: -40%, 因 Binary Quant 砍了)
   - QPS: **+0%** (v2: +1600% 来自 PgBouncer, 已砍)
   - debug: **+30%** (OTel 推迟到 Phase 2)
-  - **Hermes session 50 → 110-130 turn** (v2: 50→200 来自 Memory Tool, 现改用 #C summary compaction, 实测可达 +60-80 turn)
+  - **Arcadia session 50 → 110-130 turn** (v2: 50→200 来自 Memory Tool, 现改用 #C summary compaction, 实测可达 +60-80 turn)
   - token 成本: **-50%** (v2: -85% 来自 Prompt Cache, 现改用 Nomic v1.5 + #C, -50%)
   - embedding MTEB: **+4** (62.28 vs 58, Nomic v1.5)
 
@@ -63,10 +63,10 @@
 ### 2.1 架构基线
 
 ```
-Hermes Agent / QuantPlatform SDK / MCP clients
+Arcadia Agent / QuantPlatform SDK / MCP clients
         │
         ├── built-in memory tool + CORTEX_TAKEOVER
-        │       └── connector/hermes/cortex_memory_backend.py
+        │       └── connector/arcadia/cortex_memory_backend.py
         │
         └── formal provider memory-cortex
                 └── plugin_package/memory_cortex/
@@ -85,7 +85,7 @@ Hermes Agent / QuantPlatform SDK / MCP clients
 - **当前版本**: 5.3.9 (CHANGELOG) / 6.3.1 (实际 OpenAPI 标题)
 - **API 路径**: 105 个
 
-### 2.2 8.2 部署实测 (Hermes 2026-08-22)
+### 2.2 8.2 部署实测 (Arcadia 2026-08-22)
 
 ```
 health: {status: healthy, version: 6.3.1, chunks: 2638, relations: 941, vectors: 2638}
@@ -111,7 +111,7 @@ return (0.6 * rrf_norm + 0.4 * sim_eff
 **痛点 D — `min_importance` silent bypass** (`api_pg.py:860, 1164, 1413`):
 `MemorySearchRequest.min_importance: Optional[int] = None` 无 Pydantic 校验.
 
-**痛点 E — Hermes session 长对话 >50 turn 实测 fail**:
+**痛点 E — Arcadia session 长对话 >50 turn 实测 fail**:
 Cortex `/search` push-based, 无长对话 summary 机制.
 
 ---
@@ -370,13 +370,13 @@ SET hnsw.ef_search = 120;  -- 100-200 范围
 
 ## 10. 🆕 方向 #C (新增): 长对话 Summary Compaction (ROI 7)
 
-**为什么新增**: 替代用户禁用的 Anthropic Memory Tool. Cortex 痛点 E (Hermes 50 turn fail) 必须解, 不能等.
+**为什么新增**: 替代用户禁用的 Anthropic Memory Tool. Cortex 痛点 E (Arcadia 50 turn fail) 必须解, 不能等.
 
 ### 10.1 改进目标
 
 | 指标 | 当前 | 目标 |
 |---|---|---|
-| Hermes session 上限 | 50 turn fail | **110-130 turn** |
+| Arcadia session 上限 | 50 turn fail | **110-130 turn** |
 | 单 session token | ~200K (爆) | **<50K** (compaction) |
 
 ### 10.2 实施步骤
@@ -390,7 +390,7 @@ SET hnsw.ef_search = 120;  -- 100-200 范围
 
 **Step 2: 触发器**
 - 自动: session token > 100K 时触发
-- 手动: Hermes agent 调用 `/sessions/compact`
+- 手动: Arcadia agent 调用 `/sessions/compact`
 - 滚动: 每 20 turn 一次 mini-summary
 
 **Step 3: Cortex 存储 compaction 结果**
@@ -516,7 +516,7 @@ Week 6-7: 方向 #B graph index (3-5天) + 方向 #C 长对话 (2-3天)
 | Consolidation | Phase 2 (6 天) | Phase 2 (6 天) | **Phase 1 (8-10 天)** |
 | graph index | 漏 | 漏 | **#B 新增 (3-5 天)** |
 | 长对话 | 靠 Memory Tool | 靠 Memory Tool | **#C summary compaction (2-3 天)** |
-| 6 维收益 — Hermes session | 50→200 turn | 50→200 turn | **50→110-130 turn** (实) |
+| 6 维收益 — Arcadia session | 50→200 turn | 50→200 turn | **50→110-130 turn** (实) |
 | 6 维收益 — QPS | +1600% | +1600% | **+0%** (PgBouncer 砍) |
 
 **v2 (35KB, 839 行) 已按用户决定融合后删除**, v1→v2→v3 演进对比保留在附录作为决策记录.

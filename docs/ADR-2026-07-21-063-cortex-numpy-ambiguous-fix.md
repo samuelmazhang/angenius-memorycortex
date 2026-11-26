@@ -4,7 +4,7 @@
 |---|---|
 | **状态** | ✅ Accepted / Implemented |
 | **日期** | 2026-07-21 |
-| **影响域** | Hermes Memory Cortex (system service, 非项目 git 跟踪) |
+| **影响域** | Arcadia Memory Cortex (system service, 非项目 git 跟踪) |
 | **关联** | ADR-052 §12 (Cortex vs mcp-graph scope clarification), v3.67.32 fix (前序同 pattern 修复) |
 
 ---
@@ -25,7 +25,7 @@
 
 ### grep 找到 bug 来源
 
-`/root/.hermes/plugins/memory-cortex/src/chroma_store.py:136`:
+`/root/.arcadia/plugins/memory-cortex/src/chroma_store.py:136`:
 
 ```python
 def reindex(self, chunks: List[MemoryChunk]) -> Dict:
@@ -152,7 +152,7 @@ Use a.any() or a.all()
 ## 8. 镜像同步说明
 
 本 ADR 记录 fix 是 system file 改动:
-- 真实修改: `/root/.hermes/plugins/memory-cortex/src/chroma_store.py` (system path, **不在 git repo**)
+- 真实修改: `/root/.arcadia/plugins/memory-cortex/src/chroma_store.py` (system path, **不在 git repo**)
 - 镜像修改: 项目内 `docs/04-技术设计/...` 目录新增 ADR + ADR-INDEX 同步 (git 跟踪)
 - 同步逻辑: ADR 是真源, 文档与代码双向追溯
 

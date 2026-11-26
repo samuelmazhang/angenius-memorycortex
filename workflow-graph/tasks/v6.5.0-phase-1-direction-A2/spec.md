@@ -48,4 +48,4 @@
 ## 完成标准
 
 1. 写 `<worktree>/.sprint/v6.5.0-phase-1-direction-A2-report.md`
-2. 主 hermes 自动 commit + finish_task
+2. 主 arcadia 自动 commit + finish_task

@@ -13,7 +13,7 @@
 | **A1.2** | 创建 #A task + #A.1 subtask (daemon-side) | mcp__mcp_graph__node add | ✅ |
 | **A1.3** | 升级 spec.md + dispatch-prompt.md | (写文件) | ✅ |
 | **A1.4** | 真派 claude-code (中间被 kill 重启, 但第一版完成) | claude -p --bare | ✅ |
-| **A1.5** | 主 hermes 6 步验收 | pytest + git + daemon DoD | ✅ 18/18 + 60/60 |
+| **A1.5** | 主 arcadia 6 步验收 | pytest + git + daemon DoD | ✅ 18/18 + 60/60 |
 | **A1.6** | 通过 daemon finish_task (forceFinish) | mcp__mcp_graph__finish_task | ✅ |
 | **A1.7** | commit b068f4a 进 worktree 分支 | git commit | ✅ |
 | **A1.8** | phase 切到 REVIEW | mcp__mcp_graph__set_phase | ✅ |
@@ -29,7 +29,7 @@ claude-code 报告:
 
 **但产物完整**: extract.py 316 行 + test_consolidate_v6_5.py 507 行(18 tests)+ report.md 10832 bytes。
 
-**主 hermes 验证通过**: pytest 18/18 PASS, 60/60 server/tests/ PASS。
+**主 arcadia 验证通过**: pytest 18/18 PASS, 60/60 server/tests/ PASS。
 
 ### 2.2 mcp-graph daemon lifecycle 真实状态
 
@@ -49,7 +49,7 @@ worktree 的 .gitignore 多了 `.sprint/` ignore 段(我之前加的,跟主仓�
 
 claude-code 写的 test 用 `@pytest.mark.asyncio`,但 pytest-asyncio 没装 → "Unknown pytest.mark.asyncio" 警告。
 
-**修复**: 装 pytest-asyncio 1.4.0 (主 hermes 装到 hermes venv)。
+**修复**: 装 pytest-asyncio 1.4.0 (主 arcadia 装到 arcadia venv)。
 
 ---
 
@@ -120,7 +120,7 @@ server/tests/ (3 文件一起跑)
 b068f4a feat(cortex): v6.5.0 Phase 1 direction #A.1 — LLM 抽取层 extract.py
 189b520 feat(cortex): v6.5.0 Phase 1 direction #2 — 召回公式修正
 3ba180c feat(workflow-graph): v1.7 task-dir standard + multi-cli v1.0-v1.6 migration
-43ec2b1 chore(cortex): v6.5.0 planning + connector hermes v6.3.1 dual-write + maint cron
+43ec2b1 chore(cortex): v6.5.0 planning + connector arcadia v6.3.1 dual-write + maint cron
 ```
 
 worktree 分支: `v6.5.0/v6.5.0-phase-1-implementation` (2 个 sprint commit)
@@ -130,12 +130,12 @@ worktree 分支: `v6.5.0/v6.5.0-phase-1-implementation` (2 个 sprint commit)
 ## 7. 反思 / v1.7 SKILL 改进建议
 
 1. **加 R22 (mcp-graph lifecycle phase)**:
-   - 主 hermes dispatch 前必先 `set_phase(IMPLEMENT)`
+   - 主 arcadia dispatch 前必先 `set_phase(IMPLEMENT)`
    - close task 时 `set_phase(REVIEW)`
    - commit 时 `set_phase(HANDOFF)`
    - 部署时 `set_phase(DEPLOY)`
 2. **加 status_flow_valid 红线**: backlog → in_progress → done, 跳过要 forceFinish + evolutionReason
-3. **claude-code sandbox 限制**: PowerShell exit 66 时它会自己披露, 主 hermes 应该手动跑 pytest 验证(已经做了)
+3. **claude-code sandbox 限制**: PowerShell exit 66 时它会自己披露, 主 arcadia 应该手动跑 pytest 验证(已经做了)
 4. **worktree .gitignore bug**: init-worktree 复写 .gitignore 时应该不覆盖, 或者 init-worktree 应该从主仓拉取当前 .gitignore 而不是用内置模板
 5. **pytest-asyncio 依赖**: cortex 项目 pyproject.toml 应该有 pytest-asyncio, 不是临时装
 6. **npx spawn ENOENT in daemon testGate**: daemon 默认想自己跑测试, 但 mcp-graph 用 npm 包。需要修 daemon 或者配 `mode: advisory`(本次默认 advisory)
@@ -146,4 +146,4 @@ worktree 分支: `v6.5.0/v6.5.0-phase-1-implementation` (2 个 sprint commit)
 
 - 等用户拍:commit #A 改动到 main / 开 #A.2 / 开 #3 / 收尾
 
-— Hermes Agent (M3), 2026-08-23 02:38 CST
+— Arcadia Agent (M3), 2026-08-23 02:38 CST

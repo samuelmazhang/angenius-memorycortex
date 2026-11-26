@@ -5,7 +5,7 @@
 | **状态** | ✅ Accepted / Implemented |
 | **日期** | 2026-07-24 |
 | **Sprint** | v10.37 E6 |
-| **影响域** | Hermes Memory Cortex /search 端点 |
+| **影响域** | Arcadia Memory Cortex /search 端点 |
 | **前置提交** | ADR-063 (reindex numpy fix), commit `32578d9` + `f33715d` |
 | **后续工作** | ADR-065 (forgetting 自动调度, 后续 sprint) |
 
@@ -23,7 +23,7 @@
 
 诊断影响:
 - ⚠️ 任何 POST `/search` 调用挂掉
-- ⚠️ hermes recall 工具如果走 `/search` 而不是 `/list`,agent 检索记忆失灵
+- ⚠️ arcadia recall 工具如果走 `/search` 而不是 `/list`,agent 检索记忆失灵
 - ✅ 808 条向量数据完整(vectors = memories)
 - ✅ /provenance/{id} 按 id 查单条 OK
 
@@ -114,16 +114,16 @@ reindex 可以重建 metadata,但:
 ## 4. 验证
 
 ```bash
-$ curl -sS -X POST http://localhost:1880/search -H "Content-Type: application/json" -d '{"query":"hermes","limit":3"}'
+$ curl -sS -X POST http://localhost:1880/search -H "Content-Type: application/json" -d '{"query":"arcadia","limit":3"}'
 {
-    "query": "hermes",
+    "query": "arcadia",
     "total": 3,
     "results": [
         {
             "id": "mem_20260714_114306_238b84",
-            "content": "Hermes 大版本升级 4 件套验证 SOP...",
+            "content": "Arcadia 大版本升级 4 件套验证 SOP...",
             "type": "heuristic",
-            "tags": ["hermes-update", "SOP", ...],
+            "tags": ["arcadia-update", "SOP", ...],
             "importance": 9,
             "distance": null,
             ...
@@ -135,7 +135,7 @@ $ curl -sS -X POST http://localhost:1880/search -H "Content-Type: application/js
 
 | 端点 | Before | After |
 |---|---|---|
-| POST /search query=hermes limit=3 | 500 NPE | **200** (3 results) |
+| POST /search query=arcadia limit=3 | 500 NPE | **200** (3 results) |
 | POST /search query=test limit=2 | 500 NPE | **200** (2 results) |
 | POST /search query=cortex limit=5 | 500 NPE | **(待测,应该 5)** |
 | GET /list | 200 (809 chunks) | 200 (809 chunks, 无回归) |
@@ -169,7 +169,7 @@ ADR-063 § 反思:
 |---|---|---|---|
 | 🟡 中 | 主动 forgetting `last_run=null`,需调度 | ⏳ 待做 | ADR-065 candidate |
 | 🟢 低 | taxonomy 父子关系扩充(4 → 30+) | ⏳ 待做 | ADR-066 candidate |
-| 🟢 低 | 261 条 long_term 长期未访问(可能 hermes 没用) | ⏳ 调研 | - |
+| 🟢 低 | 261 条 long_term 长期未访问(可能 arcadia 没用) | ⏳ 调研 | - |
 
 ---
 

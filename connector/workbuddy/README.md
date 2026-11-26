@@ -1,7 +1,7 @@
 # WorkBuddy Connector for Cortex
 
 Long-term semantic memory integration for **WorkBuddy**, backed by the same
-Memory Cortex service the Hermes agent uses.
+Memory Cortex service the Arcadia agent uses.
 
 ## Status
 
@@ -48,7 +48,7 @@ Both take effect after WorkBuddy restart (new session).
 `cortex_get`, `cortex_forget`, `cortex_conflict_upsert`, `cortex_introspect`.
 
 `user_id` is omitted by default so WorkBuddy shares the global memory with
-Hermes. See `SKILL.md` for the full contract.
+Arcadia. See `SKILL.md` for the full contract.
 
 ## Verify
 
@@ -68,5 +68,5 @@ python connector/workbuddy/scripts/smoke.py
   Cortex's built-in MCP surface instead of a bundled HTTP client, because
   WorkBuddy has a first-class MCP client and the built-in
   `MemoryRecall`/`MemoryUpdate` tools are disabled in favor of Cortex.
-- No `user_id` forced: Hermes reads/writes the global namespace, so WorkBuddy
+- No `user_id` forced: Arcadia reads/writes the global namespace, so WorkBuddy
   must do the same to actually share memory.

@@ -18,12 +18,12 @@
 - **decision**: claude-code 实际写完 etl_reembed.py (274 行) + api_pg.py (331 行) + schema.sql + migrations
 - **stall 信号**: test 文件 0 行 + .sprint/ report 没写, 但跑 17 分钟没退出
 
-## 03:24 — kill + 主 hermes 接手
-- **decision**: 不重派 claude-code, 主 hermes 写 test + 跑 pytest + commit + merge + finish_task
+## 03:24 — kill + 主 arcadia 接手
+- **decision**: 不重派 claude-code, 主 arcadia 写 test + 跑 pytest + commit + merge + finish_task
 - **理由**: claude-code 产物质量高 (274 行 ETL + 331 行 dispatch 都是生产级), 复用省时间
 
-## 03:25 — main hermes 写 test + 装依赖
-- **decision**: 装 psycopg2-binary + fastapi + pydantic 到 hermes venv
+## 03:25 — main arcadia 写 test + 装依赖
+- **decision**: 装 psycopg2-binary + fastapi + pydantic 到 arcadia venv
 - **修 regex**: `model_version[^)]*?DEFAULT 'mpnet'` → `model_version.*?DEFAULT 'mpnet'` (DOTALL)
 - **改 test 不用 import api_pg**: 用 AST 静态分析 (避免 uvicorn 依赖链)
 
@@ -41,7 +41,7 @@
 
 ## 反思
 
-1. claude-code stall 是不可避免的 (大 spec 17 分钟内可能不完成 test+report), 主 hermes 接手模式 OK
+1. claude-code stall 是不可避免的 (大 spec 17 分钟内可能不完成 test+report), 主 arcadia 接手模式 OK
 2. auto-pilot race condition: worktree 创建时 main 不含 #2+#A.1, 需要 merge
 3. mcp-graph CLI 是 MCP 断连的官方 fallback
 4. AST 静态分析比 import 依赖链稳 (避免 uvicorn 误判)

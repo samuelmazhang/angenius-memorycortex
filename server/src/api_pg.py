@@ -86,7 +86,7 @@ def get_embedding_model():
         candidates = [
             r".models\paraphrase-multilingual-MiniLM-L12-v2",
             ".models/paraphrase-multilingual-MiniLM-L12-v2",
-            "/root/.hermes/plugins/memory-cortex/models/paraphrase-multilingual-MiniLM-L12-v2",
+            "/root/.arcadia/plugins/memory-cortex/models/paraphrase-multilingual-MiniLM-L12-v2",
             "/opt/cortex-deploy/models/paraphrase-multilingual-MiniLM-L12-v2",
         ]
         mm_path = None
@@ -108,7 +108,7 @@ def get_embedding_model():
                 raise FileNotFoundError(
                     f"No embedding model. Searched: {candidates}. "
                     f"Place model in .models/ (Windows) "
-                    f"or /root/.hermes/plugins/memory-cortex/models/ (Linux)"
+                    f"or /root/.arcadia/plugins/memory-cortex/models/ (Linux)"
                 )
             logger.warning(f"Multilingual not found, fallback EN at {en_path}")
         _embedding_session = ort.InferenceSession(model_path, providers=["CPUExecutionProvider"])
@@ -130,7 +130,7 @@ def get_nomic_model():
 
     Local-snapshot candidates (searched in order):
       * /opt/cortex-deploy/models/nomic-embed-text-v1.5   (developer devbox)
-      * /root/.hermes/plugins/memory-cortex/models/nomic-embed-text-v1.5
+      * /root/.arcadia/plugins/memory-cortex/models/nomic-embed-text-v1.5
         (the bind-mount that the live container maps to)
     """
     global _nomic_model
@@ -148,7 +148,7 @@ def get_nomic_model():
             # copy, and the live container cannot reach HF.
             local_candidates = [
                     "/opt/cortex-deploy/models/nomic-embed-text-v1.5",
-                    "/root/.hermes/plugins/memory-cortex/models/nomic-embed-text-v1.5",
+                    "/root/.arcadia/plugins/memory-cortex/models/nomic-embed-text-v1.5",
                     os.path.expanduser("~/.cache/huggingface/hub/models--nomic-ai--nomic-embed-text-v1.5/snapshots/main"),
                     os.path.expanduser(".models/nomic-embed-text-v1.5"),
                     os.path.expanduser(".models\\nomic-embed-text-v1.5"),
@@ -730,7 +730,7 @@ async def stats_by_type():
 # V6.1.0: knowledge-center governance stats
 async def stats_by_source():
     """按 source 字段分组统计. V6.1.0 governance -- 知识中心管理可视化.
-    Common sources: user (memory tool manual), memory_tool (V5.4), hermes-session-summarizer (9b auto-extract), etc.
+    Common sources: user (memory tool manual), memory_tool (V5.4), arcadia-session-summarizer (9b auto-extract), etc.
     """
     rows = query("SELECT source, COUNT(*) AS c FROM memory_chunks GROUP BY source ORDER BY c DESC", fetch="all")
     return {r["source"] or "(none)": r["c"] for r in rows}
@@ -836,7 +836,7 @@ def list_endpoints():
 
 def recommend(scenario: str):
     # FIX (2026-08-02): added connector_memory / connector_workflow scenarios so a
-    # client (hermes) can discover which cortex endpoints are actually useful for
+    # client (arcadia) can discover which cortex endpoints are actually useful for
     # its memory-tool workflow, instead of hardcoding them. Returns {scenario,
     # recommended: [paths], actions: {capability: method path}}.
     s = scenario.lower()
@@ -1052,7 +1052,7 @@ def _validate_type(t: str) -> None:
 # The ADR-068 conflict layer can detect "this fact supersedes that one",
 # but it needs an LLM to extract the facts -- and the LLM endpoint is not
 # always up. Without it the corpus accumulates near-identical statements
-# that all stay active, and the hermes connector injects every one of them
+# that all stay active, and the arcadia connector injects every one of them
 # into the system prompt. Two VoxCPM2 "voice drift" entries written two
 # hours apart is exactly that shape.
 #
@@ -1557,7 +1557,7 @@ def list_chunks(
     include_embedding: bool = False,  # V6.2.0: default False (saves 3.6KB/row)
     # V6.6.1 fix (2026-10-31): lifecycle-aware listing.
     #
-    # /list is the endpoint the hermes connector uses to build the frozen
+    # /list is the endpoint the arcadia connector uses to build the frozen
     # system-prompt snapshot (cortex_memory_backend.list_entries -> GET /list).
     # Before this fix it filtered ONLY `archived = 0`, so facts that had been
     # superseded by a newer one (is_deprecated = TRUE) and facts whose TTL had
@@ -1566,15 +1566,15 @@ def list_chunks(
     # keeps coming back" symptom.
     #
     # Both switches default to False (hide stale). Callers that genuinely need
-    # the full history (e.g. the hermes duplicate check, which must still see
+    # the full history (e.g. the arcadia duplicate check, which must still see
     # a deprecated entry so it does not re-create it) opt in explicitly.
     include_deprecated: bool = False,
     include_expired: bool = False,
 ):
-    # FIX (2026-08-02): added `source` filter param. The hermes connector was
+    # FIX (2026-08-02): added `source` filter param. The arcadia connector was
     # classifying memory/user chunks by `type` (which in PG is e.g. 'rag_document'
     # or 'general', not 'knowledge'/'preference') -- the real signal is the
-    # `source` column ('hermes_memory' vs 'hermes_user' vs 'memory_tool' etc).
+    # `source` column ('arcadia_memory' vs 'arcadia_user' vs 'memory_tool' etc).
     # Backward-compatible: `type` filter still works.
     where = []
     params = []
@@ -3229,7 +3229,7 @@ def search_memory(req: MemorySearchRequest):
     # P0 审计基础设施 (2026-08-06): 自动记录 /search 调用
     #
     # 为什么需要: memory_access_audit 之前只有 connector 显式 /audit/log 才写,
-    #   而本机 hermes-agent/tools/cortex_memory_backend.py 没填 query/memory_ids,
+    #   而本机 arcadia-agent/tools/cortex_memory_backend.py 没填 query/memory_ids,
     #   导致 audit 表里 728 行 (5 天) 全部 query=NULL + memory_id=NULL.
     # 这使得"用户问了什么 / 检索了什么 / 耗时多少"完全不可见 — 加强 KG 前无法评估.
     #
@@ -4033,7 +4033,7 @@ def audit_log(body: AuditLogBody = Body(default=AuditLogBody()),
               memory_id: Optional[str] = None,
               resource_type: str = "chunk"):
     # FIX (2026-08-02): accept fields from either query or request body (JSON),
-    # so the hermes connector's POST {action, resource_type, ...} payload no
+    # so the arcadia connector's POST {action, resource_type, ...} payload no
     # longer triggers 422 (previously: `memory_id`+`action` were both required
     # query params; the connector sent them only in the body, so every
     # log_audit call failed and retried for 7s before the connector moved on).
@@ -6104,7 +6104,7 @@ def _sched_record_tag_shared_relations(chunk_id: str) -> int:
 # to the EMPTY envelope on every chunk. resolve_conflicts then saw zero
 # facts and returned zero actions -- forever. Nothing was ever superseded,
 # so an outdated fact stayed active in memory_chunks and was still served
-# by /list -- which is precisely what the hermes connector injects into the
+# by /list -- which is precisely what the arcadia connector injects into the
 # agent's system prompt.
 #
 # `extract()` is an `async def` while the scheduler's worker thread is

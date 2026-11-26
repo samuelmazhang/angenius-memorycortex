@@ -1,6 +1,6 @@
-# Agent 记忆体集成 (hermes ↔ cortex)
+# Agent 记忆体集成 (arcadia ↔ cortex)
 
-> 适用范围：V5.2.16 – V5.2.23，把 hermes-agent 记忆层与 cortex 从"高级 KV 数据库"
+> 适用范围：V5.2.16 – V5.2.23，把 arcadia-agent 记忆层与 cortex 从"高级 KV 数据库"
 > 升级为"真正的 agent 记忆层"。本文记录三层记忆机制、agent 可调用的新能力、
 > 生命周期治理、以及日常维护。
 

@@ -1,20 +1,20 @@
 # Memory Cortex 独立语义记忆服务
-100%兼容Hermes原生记忆接口，零侵入替换，支持语义搜索、多Agent共享、完全离线部署
+100%兼容Arcadia原生记忆接口，零侵入替换，支持语义搜索、多Agent共享、完全离线部署
 
 ## 部署信息（2026-04-19更新）
-- 部署路径：`/root/hermes_plugin/memory_cortex/`
+- 部署路径：`/root/arcadia_plugin/memory_cortex/`
 - 服务配置：Systemd系统级监护，开机自启，崩溃自动重启
 - 服务地址：`http://localhost:1880`
 - 数据存储：
   - 向量数据库：`./data/chroma/`
   - 元数据数据库：`./data/metadata/memory_cortex.db`
   - 离线模型：`./models/`
-- Hermes对接：`/root/.hermes/scripts/hermes_memory.py` 已更新对接新服务
+- Arcadia对接：`/root/.arcadia/scripts/arcadia_memory.py` 已更新对接新服务
 - 自动备份：
   - 备份脚本：`./backup.sh`
   - 备份路径：`./Example-Agent/memory-cortex/backups/`
   - 自动备份：每天凌晨3点运行，保留7天备份，区分不同实例ID
-  - 实例ID规则：`hermes_wsl_主机名`
+  - 实例ID规则：`arcadia_wsl_主机名`
 
 ## 快速使用
 ```bash
@@ -23,18 +23,18 @@ systemctl status memory-cortex
 # 查看服务日志
 journalctl -u memory-cortex -f
 # 手动备份
-/root/hermes_plugin/memory_cortex/backup.sh
+/root/arcadia_plugin/memory_cortex/backup.sh
 # 测试记忆添加
-python /root/.hermes/scripts/hermes_memory.py add "测试记忆内容" --tags test,demo
+python /root/.arcadia/scripts/arcadia_memory.py add "测试记忆内容" --tags test,demo
 # 测试语义搜索
-python /root/.hermes/scripts/hermes_memory.py search "测试"
+python /root/.arcadia/scripts/arcadia_memory.py search "测试"
 ```
 
 ## 特性
 - ✅ 完全离线可用，不需要访问HuggingFace，模型全部本地存储
-- ✅ 100%兼容Hermes原生记忆API，上层代码无需修改
+- ✅ 100%兼容Arcadia原生记忆API，上层代码无需修改
 - ✅ 自动语义搜索，比原生关键词搜索更准确
-- ✅ 多Agent共享记忆，不同Hermes实例可以访问同一套记忆
+- ✅ 多Agent共享记忆，不同Arcadia实例可以访问同一套记忆
 - ✅ 双重备份机制：服务不可用时自动切换到本地缓存，恢复后自动同步
 - ✅ 自动备份到源码目录，支持多实例区分
 

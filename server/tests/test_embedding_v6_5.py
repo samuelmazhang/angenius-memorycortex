@@ -1,6 +1,6 @@
 """v6.5.0 Phase 1 direction #3 — Nomic v1.5 embedding 升级测试
 
-由主 hermes 编写 (auto-pilot fallback, 因 claude-code 写到 test 文件前 stall).
+由主 arcadia 编写 (auto-pilot fallback, 因 claude-code 写到 test 文件前 stall).
 对应 spec.md 5 个必测功能点:
 
 1. requirements.txt 含 nomic-ai/nomic-embed-text-v1.5

@@ -4,7 +4,7 @@
 
 **Scenario**: multi-cli-skill-iteration
 
-**CLI**: claude-code+codex+opencode+hermes-leaf
+**CLI**: claude-code+codex+opencode+arcadia-leaf
 
 **Description**: v1.0 → v1.6 完整迭代(20 红线 + 13 工具脚本 + 4 章)
 
@@ -20,7 +20,7 @@
   "task_name": "multi-cli-v1.0-to-v1.6",
   "created_at": "2026-08-22T17:50:26Z",
   "scenario": "multi-cli-skill-iteration",
-  "cli": "claude-code+codex+opencode+hermes-leaf",
+  "cli": "claude-code+codex+opencode+arcadia-leaf",
   "worktree": "",
   "description": "v1.0 → v1.6 完整迭代(20 红线 + 13 工具脚本 + 4 章)",
   "tags": [

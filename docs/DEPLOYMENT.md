@@ -79,7 +79,7 @@ export HNSW_EF_SEARCH=120                 # 默认: 120
 
 # Embedding model path — *必设*. container 启动时若未设会 crash (RuntimeError).
 # 指向 model.safetensors 所在的目录(含 config.json, modules.json, 1_Pooling/, tokenizer.json 等)
-export EMBEDDING_MODEL_PATH=/root/.hermes/plugins/memory-cortex/models/nomic-embed-text-v1.5
+export EMBEDDING_MODEL_PATH=/root/.arcadia/plugins/memory-cortex/models/nomic-embed-text-v1.5
 
 # Nomic v1.5 model
 export NOMIC_API_KEY=                     # 如果用 nomic 包 API,需要 API key
@@ -142,7 +142,7 @@ scp -r /tmp/nomic-embed-text-v1.5-staging <user>@127.0.0.1:/tmp/
 ssh <user>@127.0.0.1 '
   sudo mv /tmp/nomic-embed-text-v1.5-staging /root/.local/share/cortex-models/nomic-embed-text-v1.5
   # bind-mount 8.2 容器内可见路径:
-  #   /root/.local/share/cortex-models/  ->  /root/.hermes/plugins/memory-cortex/models/
+  #   /root/.local/share/cortex-models/  ->  /root/.arcadia/plugins/memory-cortex/models/
 '
 
 # 4) 容器内 pip 装 sentence-transformers (清华源)
@@ -157,10 +157,10 @@ ssh <user>@127.0.0.1 '
     -p 1880:1880 \
     -v /opt/cortex-deploy/work/server/docker/unified/entrypoint.sh:/usr/local/bin/entrypoint.sh:ro \
     -v /opt/cortex-deploy/work/server/docker/unified/schema.sql:/opt/cortex/schema.sql:ro \
-    -v /root/.local/share/cortex-models:/root/.hermes/plugins/memory-cortex/models:ro \
+    -v /root/.local/share/cortex-models:/root/.arcadia/plugins/memory-cortex/models:ro \
     -v memory-cortex-data:/var/lib/postgresql/data \
     -v /opt/cortex-deploy/work/server/src:/app/src:ro \
-    -e EMBEDDING_MODEL_PATH=/root/.hermes/plugins/memory-cortex/models/nomic-embed-text-v1.5 \
+    -e EMBEDDING_MODEL_PATH=/root/.arcadia/plugins/memory-cortex/models/nomic-embed-text-v1.5 \
     -e PG_USER=postgres -e PG_DB=postgres -e PG_PASSWORD=change_me \
     --restart unless-stopped \
     memory-cortex-stack:5.3.9

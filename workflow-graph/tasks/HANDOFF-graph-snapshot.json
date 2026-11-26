@@ -288,9 +288,9 @@
         "expected_token": 5000,
         "estimated_minutes": 10,
         "iron_law_5_tdd": {
-          "test_plan_author": "main_hermes",
+          "test_plan_author": "main_arcadia",
           "test_code_author": "claude-code",
-          "review_before_run": "main_hermes_after_claude_completes"
+          "review_before_run": "main_arcadia_after_claude_completes"
         },
         "iron_law_1_worktree_binding": "..worktrees/v6.5.0-phase-1-implementation"
       },
@@ -337,9 +337,9 @@
           "ts": "2026-08-22T18:15:38.623Z"
         },
         "touchedFilesObserved": [
-          "connector/hermes/scripts/fix_migration_source.py",
-          "connector/hermes/scripts/migrate_md_to_cortex.py",
-          "connector/hermes/scripts/smoke_memory_tool_cortex.py"
+          "connector/arcadia/scripts/fix_migration_source.py",
+          "connector/arcadia/scripts/migrate_md_to_cortex.py",
+          "connector/arcadia/scripts/smoke_memory_tool_cortex.py"
         ]
       },
       "created_at": "2026-08-22T18:15:38.623Z",
@@ -386,9 +386,9 @@
         },
         "_harnessBaseline": 95,
         "touchedFilesObserved": [
-          "connector/hermes/scripts/fix_migration_source.py",
-          "connector/hermes/scripts/migrate_md_to_cortex.py",
-          "connector/hermes/scripts/smoke_memory_tool_cortex.py"
+          "connector/arcadia/scripts/fix_migration_source.py",
+          "connector/arcadia/scripts/migrate_md_to_cortex.py",
+          "connector/arcadia/scripts/smoke_memory_tool_cortex.py"
         ]
       },
       "created_at": "2026-08-22T18:21:33.905Z",

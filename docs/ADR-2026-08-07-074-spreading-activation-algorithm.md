@@ -2,7 +2,7 @@
 
 - Status: ❌ Rejected (PoC 5 次评估全 FAIL, V7 spread activation 不实施)
 - Date: 2026-08-07
-- Author: Hermes Agent (MiniMax-M3)
+- Author: Arcadia Agent (MiniMax-M3)
 - Depends on: ADR-073 (Rejected)
 - Supersedes: 无
 

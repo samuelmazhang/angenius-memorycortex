@@ -2,7 +2,7 @@
 
 - Status: Accepted
 - Date: 2026-09-02
-- Author: Hermes (subagent dispatch) + 天行健 (decision)
+- Author: Arcadia (subagent dispatch) + 天行健 (decision)
 - Affects: server/docker/unified/Dockerfile, scripts/cortex-rebuild.sh,
   8.2 host image inventory
 

@@ -4,7 +4,7 @@
 
 Removed the legacy `MEMORY.md` and `USER.md` file-based memory
 in favor of cortex (PostgreSQL + pgvector + FTS5). cortex is
-now the **only** memory backend for the hermes memory tool.
+now the **only** memory backend for the arcadia memory tool.
 
 ## What was removed
 
@@ -20,7 +20,7 @@ without bloating git history)
 
 ## Why this is safe
 
-- `CORTEX_TAKEOVER` default in `connector/hermes/memory_tool.py`
+- `CORTEX_TAKEOVER` default in `connector/arcadia/memory_tool.py`
   is `"1"` (cortex). The `.md` files are only consulted when
   `CORTEX_TAKEOVER=0` is set explicitly. Deleting them does
   not change the production path.
@@ -36,7 +36,7 @@ without bloating git history)
 
   * `~/.minimax/agents/mavis/memory/` is now empty.
   * cortex on 127.0.0.1:1880 is healthy (11992 vectors).
-  * All hermes memory operations go through `cortex_recall` /
+  * All arcadia memory operations go through `cortex_recall` /
     `cortex_remember` MCP tools, which read from / write to
     the cortex database.
 
@@ -47,9 +47,9 @@ sessions:
 
   1. Restore `backups/2026-08-23-cortex-takeover/MEMORY.md`
      to the original path.
-  2. Set `CORTEX_TAKEOVER=0` in the hermes runtime environment
+  2. Set `CORTEX_TAKEOVER=0` in the arcadia runtime environment
      to make the memory tool read the file again.
 
 The .md backend code is still in
-`connector/hermes/memory_tool.py`; it just won't be used by
+`connector/arcadia/memory_tool.py`; it just won't be used by
 default.

@@ -1,7 +1,7 @@
 # Cortex v6.5.0 — HANDOFF Executive Summary
 
 > **Date**: 2026-08-23
-> **From**: Hermes Agent (M3, multi-cli-graph-software-development skill v1.8.1)
+> **From**: Arcadia Agent (M3, multi-cli-graph-software-development skill v1.8.1)
 > **To**: Cortex team / SRE / Product
 > **Status**: Phase 1 + 2 COMPLETE (12/12 directions). Ready for A/B rollout.
 
@@ -73,7 +73,7 @@
 ### 4.2 Auto-Pilot 实战经验
 
 - **2 个 claude-code 并行** (#B + #C) 顺利, worktree 独立, 无文件冲突
-- **1 个 spec-vs-task mismatch** (#9 stall) 通过 P36 + 主 hermes 修复
+- **1 个 spec-vs-task mismatch** (#9 stall) 通过 P36 + 主 arcadia 修复
 - **cron fallback** (#33) + **PID lock-file** (#34) + **trigger-file** (#35) 全部加进 SKILL
 - **MCP client 断连** 时切 **mcp-graph CLI** (#28) fallback
 

@@ -11,7 +11,7 @@
 - 完整干完: observability package (5 files) + instrumentation
 - 30/30 tests PASS + 202/202 server/tests/
 
-## 12:35 — 主 hermes 6 步验收
+## 12:35 — 主 arcadia 6 步验收
 - pytest 30/30 + 202/202 PASS
 - commit 1a04ccc (worktree) + a305a4f (merge main)
 - mcp-graph finish node_8a0cbc4dcc9b (CLI)

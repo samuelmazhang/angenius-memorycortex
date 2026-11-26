@@ -2,14 +2,14 @@
 
 ## 背景
 
-Hermes Agent 在 2026-08-22 写了一个 multi-cli 软件开发工作流方法论 skill: `multi-cli-graph-software-development` v1.2 (38.6KB / 536 行)。
+Arcadia Agent 在 2026-08-22 写了一个 multi-cli 软件开发工作流方法论 skill: `multi-cli-graph-software-development` v1.2 (38.6KB / 536 行)。
 
-Skill 路径: `A:/Application/Hermes-Agent/UserData/skills/software-development/multi-cli-graph-software-development/SKILL.md`
+Skill 路径: `A:/Application/Arcadia-Agent/UserData/skills/software-development/multi-cli-graph-software-development/SKILL.md`
 
 它涉及:
 - 3 个外部 CLI(claude / codex / opencode)被派为独立子进程
 - mcp-graph 任务图(59 个工具)
-- hermes leaf subagent 作为 reviewer
+- arcadia leaf subagent 作为 reviewer
 - git worktree 作为隔离工作区
 - 9 步流程 + 5 条铁律 + 12 条红线 + 9 个 pitfalls
 
@@ -23,9 +23,9 @@ Skill 路径: `A:/Application/Hermes-Agent/UserData/skills/software-development/
 2. **mcp-graph 权限隔离**: 铁律 2 说"子代理不能写 mcp-graph",但实际 mcp-graph 工具的权限是怎么 enforce 的?是 skill prompt 自我约束还是 mcp 服务端 enforce?
 3. **secret / token 泄露风险**: prompt 文件里要不要避免出现 API key / token / 密码?worktree 里有没有 `.env` 自动 commit 风险?
 4. **worktree 隔离安全**: 子代理在 worktree 里写代码,会不会误写到 worktree 外?worktree 删除后子代理进程还在跑怎么办?
-5. **reviewer 越权风险**: hermes leaf reviewer 有没有可能误判放过 / 错判?怎么检测 reviewer 被污染?
+5. **reviewer 越权风险**: arcadia leaf reviewer 有没有可能误判放过 / 错判?怎么检测 reviewer 被污染?
 6. **并发 dispatch 风险**: 同时 3 个 CLI 跑在同 worktree 里会冲突吗?git index.lock?npm 缓存冲突?
-7. **错误信息泄露**: 子代理报告里包含敏感信息(server 路径 / 内部 IP / token 痕迹)时,主 hermes 怎么处理?
+7. **错误信息泄露**: 子代理报告里包含敏感信息(server 路径 / 内部 IP / token 痕迹)时,主 arcadia 怎么处理?
 
 ## 强烈要求网络搜索
 
@@ -81,7 +81,7 @@ Skill 路径(本地副本,codex 沙箱内可访问):
 - `..sprint-review/multi-cli-skill-v12-review/skill-copy/SKILL.md` (38.9KB / 538 行)
 - 3 个 references: `..sprint-review/multi-cli-skill-v12-review/skill-copy/references/`
 
-原始位置: `A:/Application/Hermes-Agent/UserData/skills/software-development/multi-cli-graph-software-development/`
+原始位置: `A:/Application/Arcadia-Agent/UserData/skills/software-development/multi-cli-graph-software-development/`
 
 ## 不需要做的事
 

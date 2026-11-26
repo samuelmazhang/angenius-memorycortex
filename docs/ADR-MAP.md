@@ -53,7 +53,7 @@
 ## ADR 引用 grep 模板
 
 ```bash
-grep -rnE "ADR-(063|064|065|066|067)" /root/.hermes/plugins/memory-cortex/src
+grep -rnE "ADR-(063|064|065|066|067)" /root/.arcadia/plugins/memory-cortex/src
 ```
 
 ## 维护规则

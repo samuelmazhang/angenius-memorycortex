@@ -96,7 +96,7 @@ class TestCoerceTags(unittest.TestCase):
 
 class TestConnectorCortexClientCompat(unittest.TestCase):
     """Confirm ``cortex_client.remember`` accepts both list and comma-string
-    for the ``tags`` argument, so that direct SDK callers (Hermes connector,
+    for the ``tags`` argument, so that direct SDK callers (Arcadia connector,
     one-off scripts, etc.) also get the dual-path behavior."""
 
     def test_list_passthrough(self):

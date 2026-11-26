@@ -269,7 +269,7 @@ def _tool_stats_by_type() -> dict:
 
 
 def _tool_stats_by_source() -> dict:
-    """Stats grouped by source label (user/memory_tool/hermes-session-summarizer/...)."""
+    """Stats grouped by source label (user/memory_tool/arcadia-session-summarizer/...)."""
     return _CORTEX_CLIENT._request("GET", "/stats/by-source")
 
 

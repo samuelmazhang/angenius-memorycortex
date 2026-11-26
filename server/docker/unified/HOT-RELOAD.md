@@ -10,7 +10,7 @@ repo can be picked up without rebuilding the docker image.
 | `server/src/` | `/app/src` | cortex Python source |
 | `server/docker/unified/entrypoint.sh` | `/usr/local/bin/entrypoint.sh` | PG init + uvicorn startup |
 | `server/docker/unified/schema.sql` | `/opt/cortex/schema.sql` | DB schema (applied on restart) |
-| `/root/.local/share/cortex-models/` | `/root/.hermes/plugins/memory-cortex/models` | embedding models |
+| `/root/.local/share/cortex-models/` | `/root/.arcadia/plugins/memory-cortex/models` | embedding models |
 
 ## Workflow
 

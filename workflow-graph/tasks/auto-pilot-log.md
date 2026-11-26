@@ -24,7 +24,7 @@
 
 ### Pitfall R 检查
 - dispatch 前查 requirements.txt: 没 nomic-ai 依赖
-- claude-code 子代理应该自己 pip install (但 sandbox 可能失败, 主 hermes 备手)
+- claude-code 子代理应该自己 pip install (但 sandbox 可能失败, 主 arcadia 备手)
 
 
 ## 2026-08-23T03:30:00Z — #3 Nomic v1.5 完成
@@ -34,22 +34,22 @@
 - **graph**: node_58a0139f64b8 done (via CLI fallback)
 - **tests**: 5/5 PASS (#3) + 65/65 PASS (server/tests/)
 - **mcp-graph status**: 8/9 done (89%), epic 3/9 directions
-- **token cost**: ~5K (claude-code 主) + ~3K (主 hermes 补 test)
+- **token cost**: ~5K (claude-code 主) + ~3K (主 arcadia 补 test)
 
 ### 反思 (7 个)
 
-1. claude-code stall 不可避免,主 hermes 接手补 test+report OK
+1. claude-code stall 不可避免,主 arcadia 接手补 test+report OK
 2. mcp-graph CLI 是 MCP 断连的官方 fallback (P28)
 3. auto-pilot race condition: worktree 创建时 main 不含 #2+#A.1,需要 merge main (新红线 P29 待加)
-4. uvicorn pip install 被 term 误判为 server (term bug,不影响主 hermes)
-5. 依赖装到 hermes venv 不是 project venv (需项目用 requirements-dev.txt)
+4. uvicorn pip install 被 term 误判为 server (term bug,不影响主 arcadia)
+5. 依赖装到 arcadia venv 不是 project venv (需项目用 requirements-dev.txt)
 6. mcp-graph CLI finish 简陋(无 --rationale),不重要
 7. claude-code 产物质量好,即便 stall 也复用
 
 ### 下一步
 
 按 ROI 顺序:
-- #4 LOCOMO 1986 harness (ROI 7, 7 人天) — 大 spec, 同样会 stall, 主 hermes 准备接手
+- #4 LOCOMO 1986 harness (ROI 7, 7 人天) — 大 spec, 同样会 stall, 主 arcadia 准备接手
 - #5 HNSW m=24 (ROI 4, 1 人天) — 小 spec, 应该快速过
 - #A.2 conflict_resolve (续 consolidation)
 - #A.3 scheduler
@@ -71,7 +71,7 @@
 | 维度 | #3 (1/7) | #5 (2/7) |
 |---|---|---|
 | claude-code stall? | YES (17min) | NO (完整跑完) |
-| 主 hermes 介入 | 写 test + 装依赖 | 仅装 dotenv |
+| 主 arcadia 介入 | 写 test + 装依赖 | 仅装 dotenv |
 | token cost | ~8K | ~4K |
 
 ### 反思 (5 个)
@@ -104,7 +104,7 @@
 ### P30 状态机验证
 
 - 跑 9 分钟没新输出 → kill
-- .sprint/report.md 已写完 → 主 hermes 6 步验收 (不接管代码)
+- .sprint/report.md 已写完 → 主 arcadia 6 步验收 (不接管代码)
 - **简化状态机有效**: 用户原话 "kill + 检查进度, 没完成则重派" → #4 完成后不需要重派
 
 ### 反思 (3 个)
@@ -213,7 +213,7 @@ P32-P35 状态机对并行 sprint 有效.
 
 ### P32-P35 加固验证 (7/7 sprint 全部生效)
 
-- P32 notify_on_complete: 主 hermes 不阻塞
+- P32 notify_on_complete: 主 arcadia 不阻塞
 - P33 cron monitor fallback: 没触发 (7 个 sprint 都顺利)
 - P34 lock-file: 没触发 (没 stall + 没双杀场景)
 - P35 trigger-file: 没触发 (没 cron 处理场景)

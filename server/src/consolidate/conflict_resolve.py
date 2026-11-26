@@ -348,7 +348,7 @@ def _supersede_old_chunk(
     The ADR-068 conflict layer only ever wrote to ``memory_extracted_facts``.
     The chunk that carried the outdated statement stayed
     ``is_deprecated = FALSE``, so it kept being served by ``/list`` and
-    ``/search`` — and the hermes connector injects ``/list`` straight into
+    ``/search`` — and the arcadia connector injects ``/list`` straight into
     the agent's system prompt. The visible symptom was the agent repeatedly
     quoting a fact the user had already corrected.
 

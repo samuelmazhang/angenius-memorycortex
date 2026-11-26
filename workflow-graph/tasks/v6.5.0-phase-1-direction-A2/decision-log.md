@@ -23,7 +23,7 @@
 ## 11:40 — 写完 report.md (10824 bytes)
 - exit 0
 
-## 11:40 — 主 hermes kill + 6 步验收
+## 11:40 — 主 arcadia kill + 6 步验收
 - pytest 23/23 + 93/93 PASS
 - commit 40bcc70 (5 files, 1433 行)
 - main merge + task-dir commit cbd337c

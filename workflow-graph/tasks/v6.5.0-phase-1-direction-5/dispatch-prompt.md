@@ -1,7 +1,7 @@
 # Dispatch — v6.5.0 Phase 1 direction #5 HNSW m=24
 
 **收件方**: claude-code (subagent)
-**发件方**: 主 hermes (auto-pilot 2/7)
+**发件方**: 主 arcadia (auto-pilot 2/7)
 
 ---
 
@@ -24,16 +24,16 @@
 
 ## 完成品
 
-写 `<worktree>/.sprint/v6.5.0-phase-1-direction-5-report.md` (主 hermes 验收报告写你这边)
+写 `<worktree>/.sprint/v6.5.0-phase-1-direction-5-report.md` (主 arcadia 验收报告写你这边)
 
 ## 约束
 
 1. 只做 #5 范围 (1 人天小 task, 不扩散)
 2. spec 写功能不写行数
 3. 不改 Pydantic / fastapi 之外库
-4. **如果 sandbox 不能跑 pytest, 直接告诉我, 主 hermes 会跑 (Pitfall R + Pitfall P)**
-5. **不 commit** (主 hermes 自动)
+4. **如果 sandbox 不能跑 pytest, 直接告诉我, 主 arcadia 会跑 (Pitfall R + Pitfall P)**
+5. **不 commit** (主 arcadia 自动)
 
 ## 完成后
 
-exit 0, 主 hermes 自动 commit + finish_task。
+exit 0, 主 arcadia 自动 commit + finish_task。

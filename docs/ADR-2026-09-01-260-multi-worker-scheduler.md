@@ -2,7 +2,7 @@
 
 - Status: Accepted
 - Date: 2026-09-01
-- Author: Hermes (subagent dispatch) + 天行健 (决策)
+- Author: Arcadia (subagent dispatch) + 天行健 (决策)
 - Depends on: v6.5.0 P2 (server/src/consolidate/scheduler.py)
 
 ## 背景 (Context)
@@ -53,7 +53,7 @@ sudo docker run -d --name memory-cortex-1 --restart unless-stopped \
   -v /opt/cortex-deploy/work/server/src:/app/src:ro \
   -v /opt/cortex-deploy/work/server/docker/unified/schema.sql:/opt/cortex/schema.sql:ro \
   -v /opt/cortex-deploy/work/server/docker/unified/entrypoint.sh:/usr/local/bin/entrypoint.sh:ro \
-  -v /root/.local/share/cortex-models:/root/.hermes/plugins/memory-cortex/models:ro \
+  -v /root/.local/share/cortex-models:/root/.arcadia/plugins/memory-cortex/models:ro \
   memory-cortex-stack:6.5.0
 
 # Worker 2 (新加)
@@ -62,7 +62,7 @@ sudo docker run -d --name memory-cortex-2 --restart unless-stopped \
   -v /opt/cortex-deploy/work/server/src:/app/src:ro \
   -v /opt/cortex-deploy/work/server/docker/unified/schema.sql:/opt/cortex/schema.sql:ro \
   -v /opt/cortex-deploy/work/server/docker/unified/entrypoint.sh:/usr/local/bin/entrypoint.sh:ro \
-  -v /root/.local/share/cortex-models:/root/.hermes/plugins/memory-cortex/models:ro \
+  -v /root/.local/share/cortex-models:/root/.arcadia/plugins/memory-cortex/models:ro \
   memory-cortex-stack:6.5.0
 ```
 

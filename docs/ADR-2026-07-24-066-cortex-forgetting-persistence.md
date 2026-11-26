@@ -107,18 +107,18 @@ self.metadata_store.save_forgetting_log(
 | 主题派生 | `pitfall` → `heuristic` | pitfall (8) 是 heuristic (7) 的一种 |
 | 实现 vs 抽象 | `quantplatform` → `quantagent` | quantagent (8) 是 QuantPlatform (10) + quantplatform (20) 的抽象 |
 | 实现 vs 抽象 | `QuantPlatform` → `quantplatform` | 大小写合并 |
-| 派生会话 | `hermes_session_end` → `session_end` | hermes_session_end (9) 是 session_end (75) 的特定实现 |
+| 派生会话 | `arcadia_session_end` → `session_end` | arcadia_session_end (9) 是 session_end (75) 的特定实现 |
 | 派生会话 | `session-summary` → `session-extract` | session-summary (5) 是 session-extract (175) 的具体产物 |
 
 ### 4.3 不加: 类型 1-3 (平台/用户/turn:N)
 
 | 类型 | 候选 | 跳过理由 |
 |---|---|---|
-| 平台 | `platform:telegram` → `platform` | hermes 自己有 platform metadata, cortex 加可能 duplicate |
+| 平台 | `platform:telegram` → `platform` | arcadia 自己有 platform metadata, cortex 加可能 duplicate |
 | 用户 | `user:5589304481` → `user` | 用户 ID 是个体, 不一般化 |
-| turn:N | `turn:1` → `turn` | hermes turn metadata, 同平台 |
+| turn:N | `turn:1` → `turn` | arcadia turn metadata, 同平台 |
 
-**保守原则**: 数据驱动但**不抢 hermes metadata 职责**。
+**保守原则**: 数据驱动但**不抢 arcadia metadata 职责**。
 
 ### 4.4 增后 (11 条)
 
@@ -127,7 +127,7 @@ self.metadata_store.save_forgetting_log(
 | QuantPlatform | quantplatform | 1 |
 | quantplatform | quantagent | 1 |
 | fastapi | python | 1 (已有) |
-| hermes_session_end | session_end | 1 |
+| arcadia_session_end | session_end | 1 |
 | javascript | frontend | 1 (已有) |
 | memory_entry | memory | 1 |
 | pitfall | heuristic | 1 |
@@ -153,7 +153,7 @@ self.metadata_store.save_forgetting_log(
 |---|---|---|
 | `/search` 和 `/list` 没调 `apply_taxonomy_boost` | cortex 设计,本 ADR 暂不动 memory_service.search 路径 | ❌ 本 ADR 不治 |
 | taxonomy boost 仅可手动 API 调用 | `apply_taxonomy_boost` 函数存在,需 wire | ❌ 本 ADR 不治 |
-| platform/turn/user/N 等 metadata | 跟 hermes 边界可能 cross | ❌ 本 ADR 故意略过 |
+| platform/turn/user/N 等 metadata | 跟 arcadia 边界可能 cross | ❌ 本 ADR 故意略过 |
 
 ### 5.3 ADR-067 candidate
 
@@ -222,7 +222,7 @@ $ curl /taxonomy/relations
 总数: 11
    QuantPlatform → quantplatform
    quantplatform → quantagent
-   hermes_session_end → session_end
+   arcadia_session_end → session_end
    memory_entry → memory
    pitfall → heuristic
    rumination → memory

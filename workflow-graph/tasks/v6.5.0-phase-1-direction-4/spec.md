@@ -10,7 +10,7 @@
 
 ---
 
-## 功能点 (主 hermes 写,子代理实现)
+## 功能点 (主 arcadia 写,子代理实现)
 
 必做:
 
@@ -40,7 +40,7 @@
    - 报告 F1/BLEU/exact match + per-conv breakdown
    - baseline 记录 (跟方案 v3 表 7.4 对齐)
 
-## 验收 (主 hermes 自动跑)
+## 验收 (主 arcadia 自动跑)
 
 - pytest `tests/eval/test_locomo_v6_5.py` (新建, 4 个 test):
   1. `test_loader_parses_locomo_format` — load 1986 QA pairs
@@ -54,9 +54,9 @@
 
 - LLM 模型本身训练 (用现有 MiniMax-M3 或 GPT-4o-mini API)
 - Cortex 本身改动 (#4 只评估不改)
-- LOCOMO 完整 nightly (主 hermes CI 跑,你只跑 200 case 抽样)
+- LOCOMO 完整 nightly (主 arcadia CI 跑,你只跑 200 case 抽样)
 
 ## 完成标准
 
 1. 写 `<worktree>/.sprint/v6.5.0-phase-1-direction-4-report.md`
-2. 主 hermes 自动 commit + finish_task
+2. 主 arcadia 自动 commit + finish_task

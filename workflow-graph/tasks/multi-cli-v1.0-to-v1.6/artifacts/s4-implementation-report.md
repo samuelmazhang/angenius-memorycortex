@@ -76,7 +76,7 @@ v1.6 解法:`route-task.py` **单一脚本承担两个职责**:
 **v1.6 解法**:
 - mcp-graph schema `smoke_cmd` 字段**仍是 string**(我不改 mcp-graph)
 - 但通过 `metadata.smoke_cmd_extra` JSON array 扩展
-- 主 hermes 读时合并 `smoke_cmd` (string, 第一个) + `smoke_cmd_extra` (array, 其余)
+- 主 arcadia 读时合并 `smoke_cmd` (string, 第一个) + `smoke_cmd_extra` (array, 其余)
 - 逐条跑 smoke,任一 fail = smoke fail
 
 不破坏 mcp-graph 现有 schema,又支持多语言。
@@ -131,4 +131,4 @@ v1.6 解法:`route-task.py` **单一脚本承担两个职责**:
 - 跑真实 sprint 验证 v1.3 + v1.4 + v1.5 + v1.6
 - 收尾(commit + 总结 + 删除 v0.7.1 备份)
 
-— Hermes Agent (M3), 2026-08-23 00:15 CST
+— Arcadia Agent (M3), 2026-08-23 00:15 CST

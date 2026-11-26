@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Hermes Session End Hook: 会话结束自动记忆沉淀
+Arcadia Session End Hook: 会话结束自动记忆沉淀
 功能：会话结束时自动把本次对话中的session memory（通过memory工具保存的重要信息）
      提取并持久化到Memory Cortex向量数据库
 配置项（环境变量）：
@@ -10,8 +10,8 @@ MEMORY_SESSION_PERSIST_MIN_IMPORTANCE: 最小重要性阈值（默认6）
 import json
 import os
 import sys
-sys.path.insert(0, os.path.expanduser("~/.hermes/scripts"))
-from hermes_memory import add
+sys.path.insert(0, os.path.expanduser("~/.arcadia/scripts"))
+from arcadia_memory import add
 
 MEMORY_AUTO_SESSION_PERSIST = os.getenv("MEMORY_AUTO_SESSION_PERSIST", "true").lower() == "true"
 SESSION_PERSIST_MIN_IMPORTANCE = int(os.getenv("MEMORY_SESSION_PERSIST_MIN_IMPORTANCE", "6"))
@@ -73,7 +73,7 @@ def main():
         return
     
     try:
-        # 读取Hermes传入的session memory
+        # 读取Arcadia传入的session memory
         input_data = json.loads(sys.stdin.read())
         session_memory = input_data.get("session_memory", "")
         session_id = input_data.get("session_id", "")

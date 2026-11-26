@@ -10,7 +10,7 @@
 
 ---
 
-## 功能点 (主 hermes 写,子代理实现)
+## 功能点 (主 arcadia 写,子代理实现)
 
 必做 (按方案 v3 第 6 节):
 
@@ -39,7 +39,7 @@
      - A/B grey 10% → 50% → 100%(默认 100% 启动, env override)
    - 不改 schema,只更新 embedding + model_version
 
-## 验收 (主 hermes 自动跑)
+## 验收 (主 arcadia 自动跑)
 
 - pytest `server/tests/test_embedding_v6_5.py` 全过 (新建测试文件,5 个 test case):
   1. `test_requirements_txt_has_nomic_v1_5` — grep 验证 requirements.txt 含 `nomic-embed-text-v1.5`
@@ -61,7 +61,7 @@
 ## 完成标准
 
 1. 写 `<worktree>/.sprint/v6.5.0-phase-1-direction-3-report.md` (claude-code)
-2. 主 hermes 自动 commit + finish_task + 更新 mcp-graph
+2. 主 arcadia 自动 commit + finish_task + 更新 mcp-graph
 
 ---
 

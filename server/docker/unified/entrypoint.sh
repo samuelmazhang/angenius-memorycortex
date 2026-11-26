@@ -86,8 +86,8 @@ trap 'kill -TERM $PG_PID 2>/dev/null; exit 0' TERM INT
 # startup and the container enters a Restarting crash loop (pre-existing
 # bug fix; see ADR-077 2026-08-23). Operators can override via -e
 # EMBEDDING_MODEL_PATH=... at run time.
-if [ -z "$EMBEDDING_MODEL_PATH" ] && [ -d /root/.hermes/plugins/memory-cortex/models/nomic-embed-text-v1.5 ]; then
-    export EMBEDDING_MODEL_PATH=/root/.hermes/plugins/memory-cortex/models/nomic-embed-text-v1.5
+if [ -z "$EMBEDDING_MODEL_PATH" ] && [ -d /root/.arcadia/plugins/memory-cortex/models/nomic-embed-text-v1.5 ]; then
+    export EMBEDDING_MODEL_PATH=/root/.arcadia/plugins/memory-cortex/models/nomic-embed-text-v1.5
     echo "[entrypoint] EMBEDDING_MODEL_PATH set to $EMBEDDING_MODEL_PATH (default)"
 fi
 

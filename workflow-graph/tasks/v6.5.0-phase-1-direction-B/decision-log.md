@@ -9,7 +9,7 @@
 - 完整干完: graph package (5 files, 744 行) + schema + migration + config + api_pg.py + 30 tests
 - 30/30 tests PASS + 146/146 server/tests/
 
-## 12:00 — 主 hermes 6 步验收
+## 12:00 — 主 arcadia 6 步验收
 - pytest 30/30 + 146/146 PASS
 - commit ab1622e (worktree) + 942c9ba (task-dir)
 - mcp-graph finish node_068b77fea072 (CLI)

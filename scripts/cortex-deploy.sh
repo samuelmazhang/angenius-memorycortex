@@ -81,21 +81,21 @@ fi
 echo
 echo "=== [4/9] carry the connector source into the container ==="
 # server/tests/test_lifecycle_precision_v6_6_1.py reads
-# connector/hermes/memory_tool.py and cortex_memory_backend.py to assert
-# on the Hermes-side behaviour. The container only bind-mounts
+# connector/arcadia/memory_tool.py and cortex_memory_backend.py to assert
+# on the Arcadia-side behaviour. The container only bind-mounts
 # server/src, so the repo-relative path does not exist there and the
 # test raised FileNotFoundError AT COLLECTION time -- which aborts the
 # whole pytest run, not just that file.
 #
 # Copying the two files in keeps the test meaningful (it asserts on the
 # real source) instead of weakening it to skip.
-if [ -d "$WORK/connector/hermes" ]; then
-  # Two destinations: /app/connector/hermes (the container's own tree) and
-  # /connector/hermes (the repo root the container's tests resolve to).
-  sudo docker exec "$CONTAINER" mkdir -p /app/connector/hermes /connector/hermes 2>/dev/null || true
-  sudo docker cp "$WORK/connector/hermes/." "$CONTAINER:/app/connector/hermes/" 2>/dev/null || true
-  sudo docker cp "$WORK/connector/hermes/." "$CONTAINER:/connector/hermes/" 2>/dev/null || true
-  echo "  connector/hermes -> /app/connector/hermes and /connector/hermes"
+if [ -d "$WORK/connector/arcadia" ]; then
+  # Two destinations: /app/connector/arcadia (the container's own tree) and
+  # /connector/arcadia (the repo root the container's tests resolve to).
+  sudo docker exec "$CONTAINER" mkdir -p /app/connector/arcadia /connector/arcadia 2>/dev/null || true
+  sudo docker cp "$WORK/connector/arcadia/." "$CONTAINER:/app/connector/arcadia/" 2>/dev/null || true
+  sudo docker cp "$WORK/connector/arcadia/." "$CONTAINER:/connector/arcadia/" 2>/dev/null || true
+  echo "  connector/arcadia -> /app/connector/arcadia and /connector/arcadia"
 fi
 
 echo

@@ -48,7 +48,7 @@ echo "=== Cortex v5.2.2 unified — Docker bringup with bind mounts ==="
 if [ ! -d "$LOCAL_MODEL_DIR/onnx" ] || [ ! -f "$LOCAL_MODEL_DIR/tokenizer.json" ]; then
     echo "Copying embedding model to $LOCAL_MODEL_DIR (one-time, ~4GB)..."
     mkdir -p "$LOCAL_MODEL_DIR"
-    cp -r /root/.hermes/plugins/memory-cortex/models/paraphrase-multilingual-MiniLM-L12-v2/. \
+    cp -r /root/.arcadia/plugins/memory-cortex/models/paraphrase-multilingual-MiniLM-L12-v2/. \
         "$LOCAL_MODEL_DIR/"
 fi
 
@@ -71,7 +71,7 @@ docker run -d \
     -v "$(pwd)/server/src:/app/src:ro" \
     -v "$(pwd)/server/docker/unified/entrypoint.sh:/usr/local/bin/entrypoint.sh:ro" \
     -v "$(pwd)/server/docker/unified/schema.sql:/opt/cortex/schema.sql:ro" \
-    -v "${PARENT_MODEL_DIR}:/root/.hermes/plugins/memory-cortex/models:ro" \
+    -v "${PARENT_MODEL_DIR}:/root/.arcadia/plugins/memory-cortex/models:ro" \
     -v "${VOLUME_NAME}:/var/lib/postgresql/data" \
     --log-driver json-file --log-opt max-size=10m --log-opt max-file=3 \
     "${IMG_NAME}:${IMG_TAG}"

@@ -9,7 +9,7 @@
 #   - 异常 (exit ≠ 0 或 stdout 含 [ALERT]): 发 telegram + 写 heartbeat warn 行
 #
 # 通道降级链 (按 D1 > D2 > D3 顺序):
-#   D1: Telegram (hermes 通道)
+#   D1: Telegram (arcadia 通道)
 #   D2: Heartbeat 文件 (/tmp/cortex_maintenance_heartbeat) — 本机可读
 #   D3: 沉默 (no_agent watchdog 保留)
 #
@@ -59,15 +59,15 @@ fi
 # 异常: 走 D1 (telegram) + D2 (heartbeat warn)
 ALERT_MSG="[CORTEX ALERT] ${TIMESTAMP} reason=${ALERT_REASON}"
 
-# D1: Telegram (通过 hermes_telegram, 复用 Hermes adapter)
-if command -v hermes_telegram >/dev/null 2>&1; then
-    if ! echo "$ALERT_MSG" | hermes_telegram notify --channel admin >/dev/null 2>&1; then
+# D1: Telegram (通过 arcadia_telegram, 复用 Arcadia adapter)
+if command -v arcadia_telegram >/dev/null 2>&1; then
+    if ! echo "$ALERT_MSG" | arcadia_telegram notify --channel admin >/dev/null 2>&1; then
         TELEGRAM_FAIL=1
         echo "[WRAPPER WARN] telegram notify failed, falling back to heartbeat only" >&2
     fi
 else
     TELEGRAM_FAIL=1
-    echo "[WRAPPER WARN] hermes_telegram not found in PATH, falling back to heartbeat only" >&2
+    echo "[WRAPPER WARN] arcadia_telegram not found in PATH, falling back to heartbeat only" >&2
 fi
 
 # D2: Heartbeat warn 行

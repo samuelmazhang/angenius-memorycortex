@@ -1,10 +1,10 @@
 """Regression tests for the V6.6.1 lifecycle-precision fixes.
 
-Audit findings from the hermes memory-retrieval incident (2026-10-31),
+Audit findings from the arcadia memory-retrieval incident (2026-10-31),
 all traced to source rather than inferred:
 
 1. **The prompt-injection channel had no lifecycle filter.**
-   The hermes connector builds the frozen system-prompt snapshot from
+   The arcadia connector builds the frozen system-prompt snapshot from
    ``GET /list`` (cortex_memory_backend.list_entries). That endpoint
    filtered ONLY ``archived = 0``. ``is_deprecated`` (superseded by a
    newer fact) and ``expires_at`` (the TTL assigned by
@@ -21,7 +21,7 @@ all traced to source rather than inferred:
 
 3. **The conflict pipeline never ran.**
    ``_resolve_conflict_for_chunk`` (the ADR-068 writer) requires
-   ``metadata->>'source_key'``; the hermes connector sends no metadata
+   ``metadata->>'source_key'``; the arcadia connector sends no metadata
    at all, so its chunks land in no bucket. The periodic reconciliation
    scans ``WHERE metadata ? 'source_key'`` — also nothing. And the
    background scheduler was constructed WITHOUT ``extract_fn``, so
@@ -58,23 +58,23 @@ SRC_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src"))
 
 
 def _find_repo_root() -> str:
-    """Locate the tree that holds connector/hermes.
+    """Locate the tree that holds connector/arcadia.
 
     The tests live at <repo>/server/tests/ locally, so the repo root is
     two levels up. In the deployed container the tree is flattened to
     /app/tests/, so the repo root is ONE level up -- and the old fixed
     "two levels up" resolved to the filesystem root, where
-    connector/hermes does not exist. That raised FileNotFoundError at
+    connector/arcadia does not exist. That raised FileNotFoundError at
     COLLECTION time, which aborted the whole pytest run rather than
     just this file.
 
-    The deploy copies connector/hermes into the container, so both
+    The deploy copies connector/arcadia into the container, so both
     layouts are complete; the lookup just has to find the right one.
     """
     here = os.path.dirname(os.path.abspath(__file__))
     for cand in (os.path.join(here, "..", ".."), os.path.join(here, "..")):
         cand = os.path.abspath(cand)
-        if os.path.isdir(os.path.join(cand, "connector", "hermes")):
+        if os.path.isdir(os.path.join(cand, "connector", "arcadia")):
             return cand
     return os.path.abspath(os.path.join(here, "..", ".."))
 
@@ -98,9 +98,9 @@ SOURCE = api_source_with_routes()
 CONFLICT_SRC = _read(os.path.join(SRC_DIR, "consolidate", "conflict_resolve.py"))
 RAPTOR_SRC = _read(os.path.join(SRC_DIR, "consolidate", "raptor_index.py"))
 SCHEDULER_SRC = _read(os.path.join(SRC_DIR, "consolidate", "scheduler.py"))
-HERMES_TOOL_SRC = _read(os.path.join(REPO_ROOT, "connector", "hermes", "memory_tool.py"))
-HERMES_BACKEND_SRC = _read(
-    os.path.join(REPO_ROOT, "connector", "hermes", "cortex_memory_backend.py")
+ARCADIA_TOOL_SRC = _read(os.path.join(REPO_ROOT, "connector", "arcadia", "memory_tool.py"))
+ARCADIA_BACKEND_SRC = _read(
+    os.path.join(REPO_ROOT, "connector", "arcadia", "cortex_memory_backend.py")
 )
 _API_SRC = SOURCE
 
@@ -206,10 +206,10 @@ def _if_gates_of(source: str, attr: str) -> list:
 
 
 class TestListEndpointLifecycle(unittest.TestCase):
-    """GET /list is what hermes injects into the system prompt.
+    """GET /list is what arcadia injects into the system prompt.
 
     It must hide superseded and expired facts by default, and expose
-    them only through an explicit opt-in (the hermes duplicate check
+    them only through an explicit opt-in (the arcadia duplicate check
     needs to see a deprecated entry so it does not re-create it).
     """
 
@@ -326,7 +326,7 @@ class TestConflictPipelineCanMarkChunksStale(unittest.TestCase):
 
     Until this fix the only writers of memory_chunks.is_deprecated were
     /conflict/upsert and /conflict/scan, and BOTH require a
-    metadata->>'source_key' that the hermes connector never sends.
+    metadata->>'source_key' that the arcadia connector never sends.
     """
 
     def test_supersede_propagates_to_the_chunk(self):
@@ -392,39 +392,39 @@ class TestSchedulerWiring(unittest.TestCase):
         self.assertIn("return base", seg)
 
 
-class TestHermesSnapshotHasNoDuplicates(unittest.TestCase):
+class TestArcadiaSnapshotHasNoDuplicates(unittest.TestCase):
     """The recall block must not duplicate the /list dump."""
 
     def test_no_hardcoded_generic_recall_query(self):
         self.assertNotIn(
             'question="recent context"',
-            HERMES_TOOL_SRC,
+            ARCADIA_TOOL_SRC,
             "a fixed, content-free query re-injects the same stale set every boot",
         )
 
     def test_active_recall_is_opt_in(self):
-        self.assertIn('os.getenv("HERMES_ACTIVE_RECALL", "0")', HERMES_TOOL_SRC)
-        self.assertIn('os.getenv("HERMES_RECALL_QUERY", "")', HERMES_TOOL_SRC)
+        self.assertIn('os.getenv("ARCADIA_ACTIVE_RECALL", "0")', ARCADIA_TOOL_SRC)
+        self.assertIn('os.getenv("ARCADIA_RECALL_QUERY", "")', ARCADIA_TOOL_SRC)
 
     def test_recall_block_is_deduplicated_against_the_dump(self):
-        seg = _slice(HERMES_TOOL_SRC, "if getattr(self, \"_recall_context\", None):", "return {")
+        seg = _slice(ARCADIA_TOOL_SRC, "if getattr(self, \"_recall_context\", None):", "return {")
         self.assertIn("_norm_for_dedupe", seg)
         self.assertIn("_seen", seg)
 
     def test_dedupe_helper_normalizes_whitespace_and_case(self):
-        self.assertIn("def _norm_for_dedupe(", HERMES_TOOL_SRC)
+        self.assertIn("def _norm_for_dedupe(", ARCADIA_TOOL_SRC)
         seg = _slice(
-            HERMES_TOOL_SRC,
+            ARCADIA_TOOL_SRC,
             "def _norm_for_dedupe(",
             "# FIX (2026-08-02, Direction C): three-tier memory",
         )
         self.assertIn(".lower()", seg)
 
     def test_snapshot_entry_count_is_capped(self):
-        self.assertIn("def _snapshot_max_entries(", HERMES_TOOL_SRC)
-        self.assertIn("HERMES_SNAPSHOT_MAX_ENTRIES", HERMES_TOOL_SRC)
+        self.assertIn("def _snapshot_max_entries(", ARCADIA_TOOL_SRC)
+        self.assertIn("ARCADIA_SNAPSHOT_MAX_ENTRIES", ARCADIA_TOOL_SRC)
         seg = _slice(
-            HERMES_TOOL_SRC,
+            ARCADIA_TOOL_SRC,
             "# Net savings: 39 fewer HTTP roundtrips per load",
             "# Capture frozen snapshot",
         )
@@ -432,7 +432,7 @@ class TestHermesSnapshotHasNoDuplicates(unittest.TestCase):
         # The legacy .md path must stay untouched: it is already bounded by
         # its write-time char budget.
         md_seg = _slice(
-            HERMES_TOOL_SRC,
+            ARCADIA_TOOL_SRC,
             'self.memory_entries = self._read_file(mem_dir / "MEMORY.md")',
             "def _load_from_cortex(",
         )
@@ -445,29 +445,29 @@ class TestHermesSnapshotHasNoDuplicates(unittest.TestCase):
         # Checked on the AST so a mention inside a docstring does not
         # count as a call site.
         self.assertEqual(
-            _if_gates_of(HERMES_TOOL_SRC, "_is_cortex_unavailable"), [],
+            _if_gates_of(ARCADIA_TOOL_SRC, "_is_cortex_unavailable"), [],
             "no branch may be gated on the inverted predicate",
         )
         self.assertGreaterEqual(
-            len(_if_gates_of(HERMES_TOOL_SRC, "use_cortex")), 5,
+            len(_if_gates_of(ARCADIA_TOOL_SRC, "use_cortex")), 5,
             "the cortex takeover gate must be `if self.use_cortex:`",
         )
 
 
-class TestHermesBackendListContract(unittest.TestCase):
+class TestArcadiaBackendListContract(unittest.TestCase):
     """The connector must opt in to deprecated rows only where it needs them."""
 
     def test_list_entries_defaults_to_hiding_deprecated(self):
-        seg = _slice(HERMES_BACKEND_SRC, "def list_entries(", "def search(")
+        seg = _slice(ARCADIA_BACKEND_SRC, "def list_entries(", "def search(")
         self.assertIn("include_deprecated: bool = False", seg)
         self.assertIn("include_deprecated", seg)
 
     def test_duplicate_check_sees_deprecated_rows(self):
-        seg = _slice(HERMES_BACKEND_SRC, "def find_existing_chunk(", "def create_entry(")
+        seg = _slice(ARCADIA_BACKEND_SRC, "def find_existing_chunk(", "def create_entry(")
         self.assertIn("include_deprecated=True", seg)
 
     def test_substring_lookup_sees_deprecated_rows(self):
-        seg = _slice(HERMES_BACKEND_SRC, "def lookup_entry_by_substring(", "def is_cortex_active(")
+        seg = _slice(ARCADIA_BACKEND_SRC, "def lookup_entry_by_substring(", "def is_cortex_active(")
         self.assertIn("include_deprecated=True", seg)
 
 
@@ -629,7 +629,7 @@ class TestNearDuplicateSuppression(unittest.TestCase):
     injected into the agent's system prompt. This is the fallback.
     """
 
-    def _call(self, db, new_id="chunk_new", source="hermes_memory",
+    def _call(self, db, new_id="chunk_new", source="arcadia_memory",
               importance=7, emb="[0.1,0.2]", model="nomic-v1.5"):
         # Re-bind the module-level query/execute the function closes over
         # to this test's stub, then run the REAL function body.

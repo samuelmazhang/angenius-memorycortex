@@ -8,10 +8,10 @@
 - v0.7.1 skill 完全删除,用 v1.0 `multi-cli-graph-software-development` 替代
 - 反思事故 + 加固 5 铁律 + 12 红线 + 9 Pitfalls
 - 跟 `mcp-graph-design` skill 协同
-- 整合 3 CLI(claude / codex / opencode)评审 + 主 hermes 自评
+- 整合 3 CLI(claude / codex / opencode)评审 + 主 arcadia 自评
 - 4 项 P0(安全 / 可观测性 / 韧性 / 场景覆盖)全部落地
 
-**执行人**: 主 hermes M3 + 子代理 claude / codex / opencode + hermes leaf
+**执行人**: 主 arcadia M3 + 子代理 claude / codex / opencode + arcadia leaf
 
 **时间**: 2026-08-22 22:00 - 2026-08-23 01:45 CST
 
@@ -19,4 +19,4 @@
 
 ---
 
-详细 prompt 见 artifacts/prompt-*.txt(主 hermes 派给 3 CLI 的评审任务原文)
+详细 prompt 见 artifacts/prompt-*.txt(主 arcadia 派给 3 CLI 的评审任务原文)

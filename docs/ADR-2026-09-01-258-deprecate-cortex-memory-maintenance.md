@@ -2,7 +2,7 @@
 
 - Status: Accepted
 - Date: 2026-09-01
-- Author: Hermes (subagent dispatch) + 天行健 (决策)
+- Author: Arcadia (subagent dispatch) + 天行健 (决策)
 - Supersedes: 无 (deprecates /opt/cortex-deploy/cortex-memory-maintenance.sh)
 - Depends on: v6.5.0 P2 write-time scheduler (server/src/consolidate/scheduler.py)
 

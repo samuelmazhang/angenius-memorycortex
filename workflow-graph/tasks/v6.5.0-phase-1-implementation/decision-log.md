@@ -10,8 +10,8 @@
 ### 02:00 — 决定只真派 claude-code
 - **决策**: 不用 3 CLI 协同(claude + codex + opencode),只用 claude-code
 - **理由**: 用户 2026-08-23 02:00 OOB 决定 — 节省 token,接受 3 CLI 验证质量损失
-- **风险**: 没 codex / opencode 交叉验证,如果 claude-code 改错,主 hermes 验证时才发现
-- **缓解**: 主 hermes 6 步验收 + pytest + 真实 /search 调用前/后对比
+- **风险**: 没 codex / opencode 交叉验证,如果 claude-code 改错,主 arcadia 验证时才发现
+- **缓解**: 主 arcadia 6 步验收 + pytest + 真实 /search 调用前/后对比
 
 ### 02:00 — 决定单 task-dir 覆盖 Phase 1(内部按方向 track)
 - **决策**: 不为每个方向单独 task-dir,而是 1 个 task-dir 覆盖整个 Phase 1
@@ -54,13 +54,13 @@
 - **#A task 通过 `mcp__mcp_graph__node add`** 成功,daemon 自动分配 id `node_0620546ff0f9`
 - **Epic metadata 更新** 通过 `mcp__mcp_graph__node update` 成功,含 7 方向进度
 - **Phase 切回 REVIEW**(sprint #2 已完成待 review)
-- **结论**: 主 hermes 应该 **一直用 daemon API**,不绕 SQLite 应急
+- **结论**: 主 arcadia 应该 **一直用 daemon API**,不绕 SQLite 应急
 
 ### 02:18 — 反思 SQLite 应急的教训
 - **错的**: 我之前没先调 `daemon_status` / `list` 验证 daemon 是否在跑
 - **错的**: 直接 SQLite INSERT,绕过了 daemon 的所有 audit / FTS / version 控制
 - **修复**: 我刚才通过 daemon 重新 `update` task #2,daemon 给了 `evolutionCount=1` + 完整 evolutionReason 记录
-- **预防**: v1.7 SKILL 加 R8 "主 hermes dispatch 前必先调 daemon_status 验证"
+- **预防**: v1.7 SKILL 加 R8 "主 arcadia dispatch 前必先调 daemon_status 验证"
 
 
 ### 02:38 — #A.1 LLM 抽取层 6 步验收 PASS
@@ -72,8 +72,8 @@
 ### 02:38 — claude-code sandbox 限制
 - **现象**: claude-code 跑 #A.1 时 PowerShell 返回 exit 66 (无法跑 pytest)
 - **披露**: claude-code 主动在 report 中说 "PowerShell returns exit code 66... I cannot run pytest"
-- **缓解**: 主 hermes 手动跑 pytest 验证 (60/60 PASS)
-- **v1.7 SKILL 改进**: 不需要改 skill,claude-code 自己会披露 + 主 hermes 验证
+- **缓解**: 主 arcadia 手动跑 pytest 验证 (60/60 PASS)
+- **v1.7 SKILL 改进**: 不需要改 skill,claude-code 自己会披露 + 主 arcadia 验证
 
 ### 02:38 — mcp-graph daemon forceFinish 用法
 - **现象**: finish_task 拒绝 backlog → done (status_flow_valid)
@@ -116,5 +116,5 @@
 
 ### 03:00 — claude-code sandbox 限制 (再次)
 - **现象**: claude-code PowerShell 返回 exit 66 持续
-- **缓解**: 主 hermes 自己跑 pytest 验证 (已经在 main-hermes-verification.md #A.1 经验里有)
-- **产物完整**: 所有 spec 5 步 + 5 spec tests + 3 edge tests 都实现, test 文件由主 hermes 之前 fallback 写过
+- **缓解**: 主 arcadia 自己跑 pytest 验证 (已经在 main-arcadia-verification.md #A.1 经验里有)
+- **产物完整**: 所有 spec 5 步 + 5 spec tests + 3 edge tests 都实现, test 文件由主 arcadia 之前 fallback 写过

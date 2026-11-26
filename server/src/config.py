@@ -60,7 +60,7 @@ class CortexConfig:
         if not _mp:
             raise RuntimeError(
                 "EMBEDDING_MODEL_PATH 未配置。请在 .env 设置:\n"
-                "EMBEDDING_MODEL_PATH=/root/.hermes/plugins/memory-cortex/models/huggingface_cache/"
+                "EMBEDDING_MODEL_PATH=/root/.arcadia/plugins/memory-cortex/models/huggingface_cache/"
                 "models--sentence-transformers--paraphrase-multilingual-mpnet-base-v2/snapshots/<SHA>"
             )
         self.embedding_model_path: str = _mp

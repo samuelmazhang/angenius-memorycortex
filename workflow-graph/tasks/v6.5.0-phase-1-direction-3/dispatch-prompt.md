@@ -1,7 +1,7 @@
 # Dispatch — v6.5.0 Phase 1 direction #3 Nomic v1.5
 
 **收件方**: claude-code (subagent)
-**发件方**: 主 hermes (auto-pilot mode)
+**发件方**: 主 arcadia (auto-pilot mode)
 **Worktree**: `..worktrees/v6.5.0-phase-1-direction-3`
 **mcp-graph node**: `node_58a0139f64b8`
 
@@ -64,18 +64,18 @@
 1. **只做 #3 范围**(不碰 consolidation / LOCOMO / HNSW / graph / summary)
 2. **spec 写功能不写行数**(Pitfall O)
 3. **不改 Pydantic 之外库**
-4. **不 commit**(主 hermes 自动)
+4. **不 commit**(主 arcadia 自动)
 5. **LLM 不需要**(纯后端 embedding 改动, 不调 OpenAI/MiniMax-M3)
 6. **如果遇到 #3 不该改的代码**, 写 decision-log.md 说"跳过",不要扩散
 
 ## 完成后
 
 1. 写 `.sprint/v6.5.0-phase-1-direction-3-report.md`
-2. 主 hermes 自动 commit + finish_task
+2. 主 arcadia 自动 commit + finish_task
 3. exit 0
 
-如果失败: `.sprint/<task-id>-report.md` 写 `## FAILED` 段说明原因,主 hermes escalate。
+如果失败: `.sprint/<task-id>-report.md` 写 `## FAILED` 段说明原因,主 arcadia escalate。
 
 ---
 
-**开干。auto-pilot mode: 主 hermes 会 6 步验收 (pytest + diff) + commit + finish_task,你只负责写代码**。
+**开干。auto-pilot mode: 主 arcadia 会 6 步验收 (pytest + diff) + commit + finish_task,你只负责写代码**。

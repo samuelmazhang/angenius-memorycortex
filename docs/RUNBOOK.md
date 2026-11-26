@@ -172,11 +172,11 @@ sudo docker run -d --name memory-cortex-maintain-2 --restart unless-stopped \
   -v /opt/cortex-deploy/work/server/src:/app/src:ro \
   -v /opt/cortex-deploy/work/server/docker/unified/schema.sql:/opt/cortex/schema.sql:ro \
   -v /opt/cortex-deploy/work/server/docker/unified/entrypoint.sh:/usr/local/bin/entrypoint.sh:ro \
-  -v /root/.local/share/cortex-models:/root/.hermes/plugins/memory-cortex/models:ro \
+  -v /root/.local/share/cortex-models:/root/.arcadia/plugins/memory-cortex/models:ro \
   --entrypoint "bash" \
   -e PG_HOST=127.0.0.1 -e PG_PORT=5432 \
   -e PG_DB=postgres -e PG_USER=postgres -e PG_PASSWORD=<pw> \
-  -e EMBEDDING_MODEL_PATH=/root/.hermes/plugins/memory-cortex/models/nomic-embed-text-v1.5 \
+  -e EMBEDDING_MODEL_PATH=/root/.arcadia/plugins/memory-cortex/models/nomic-embed-text-v1.5 \
   memory-cortex-stack:latest \
   -c "export PATH=/opt/cortex-venv/bin:\$PATH; export VIRTUAL_ENV=/opt/cortex-venv; \
       export PYTHONPATH=/opt/cortex-venv/lib/python3.11/site-packages:\${PYTHONPATH:-}; \

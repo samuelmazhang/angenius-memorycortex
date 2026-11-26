@@ -21,7 +21,7 @@
 
 ---
 
-## 2. 文件清单(全部在 `A:/Application/Hermes-Agent/UserData/scripts/`)
+## 2. 文件清单(全部在 `A:/Application/Arcadia-Agent/UserData/scripts/`)
 
 ```
 scripts/
@@ -110,4 +110,4 @@ python scripts/validate-verdict.py .sprint/verdict.md             # exit 0 if cl
 python scripts/safe-worktree-remove.py <worktree>                 # exit 0
 ```
 
-— Hermes Agent (M3), 2026-08-22 23:50 CST
+— Arcadia Agent (M3), 2026-08-22 23:50 CST

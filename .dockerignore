@@ -25,7 +25,7 @@ export_memories.py
 import_memories.py
 init_history_data.py
 merge_import.py
-migrate_hermes_memories.py
+migrate_arcadia_memories.py
 sync_local_memories.py
 download_model.sh
 download_model.py

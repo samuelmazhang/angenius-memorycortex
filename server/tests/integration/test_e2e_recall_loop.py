@@ -259,7 +259,7 @@ class TestLiveCortexWriteReadLoop(unittest.TestCase):
         try:
             # Use a generic English phrase that overlaps with whatever
             # real chunks still have embeddings. "memory recall" should
-            # hit any pre-existing cortex / hermes documentation.
+            # hit any pre-existing cortex / arcadia documentation.
             code2, body2 = _http("POST", "/search", {
                 "query": "memory recall search",
                 "limit": 10,

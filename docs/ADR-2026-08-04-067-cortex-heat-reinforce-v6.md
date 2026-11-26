@@ -303,8 +303,8 @@ async def review_session_history(lookback_days: int = 3) -> int:
 **目标**：实现评估回路 §一 流程图。
 
 **位置**：`server/src/hooks/02_memory_evaluation.py`（新建）
-- **注意**：这是 cortex 端实现，不是 hermes 端 hook
-- cortex 端提供 `/eval/feedback` endpoint 接收评分，hermes 端 hook 才负责触发
+- **注意**：这是 cortex 端实现，不是 arcadia 端 hook
+- cortex 端提供 `/eval/feedback` endpoint 接收评分，arcadia 端 hook 才负责触发
 
 **核心函数**：
 ```python

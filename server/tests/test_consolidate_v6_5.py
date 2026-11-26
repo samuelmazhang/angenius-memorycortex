@@ -97,7 +97,7 @@ async def test_extract_returns_valid_schema():
                             {"entity": "Alice", "predicate": "city", "value": "Beijing", "confidence": 0.7},
                         ],
                         "timeline": [
-                            {"date": "2026-01-15", "event": "joined Hermes"},
+                            {"date": "2026-01-15", "event": "joined Arcadia"},
                         ],
                         "preferences": [
                             {"key": "language", "value": "Python", "polarity": "like"},

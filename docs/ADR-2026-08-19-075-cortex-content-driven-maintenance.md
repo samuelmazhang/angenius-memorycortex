@@ -25,7 +25,7 @@ cortex 当前提供的"维护清理"端点分两类范式:
 
 ```
 cortex_ttl_archive(days=30) 会归栏 1892/2614 = 72% chunks
-其中 4 月份的 BootstrapBlazor 文档 / Cron Job / hermes 偏好
+其中 4 月份的 BootstrapBlazor 文档 / Cron Job / arcadia 偏好
 等用户明确表示"重要资料"会被一并归栏
 ```
 
@@ -87,7 +87,7 @@ cortex_ttl_archive(days=30) 会归栏 1892/2614 = 72% chunks
 
 ### 正面
 
-1. **数据保全**: 用户 4 月份的 BootstrapBlazor 文档 / Cron Job / hermes 偏好等长期参考**不再被批量归档**
+1. **数据保全**: 用户 4 月份的 BootstrapBlazor 文档 / Cron Job / arcadia 偏好等长期参考**不再被批量归档**
 2. **预测性维护**: 维护行为**完全可预测** — 只有内容冲突才触发动作，age 维度不参与
 3. **审计友好**: log 里的 supersede 决策**100% 是 content-driven**，可解释性极强
 4. **避免误伤**: 之前 72% 一次性 archive 这种"宽幅"操作**不再可能**

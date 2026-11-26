@@ -106,7 +106,7 @@ safe-worktree-remove.py(清理 worktree)
 ### 4.2 route-task.py dispatch 顺序错误已发现
 
 原 route-task.py `--dispatch` 假设 worktree 已经存在。但 v1.6 sprint 流程里,route-task 在 init-worktree 之后跑,**正确顺序**:
-1. git worktree add (用户/主 hermes 显式)
+1. git worktree add (用户/主 arcadia 显式)
 2. init-worktree.py(写 .gitignore + .sprint/)
 3. route-task.py route(决策, **不** dispatch, 因为 init 已经写 base)
 4. retry-with-backoff.py 包 claude-code --cmd ...(实际派子代理)
@@ -117,7 +117,7 @@ safe-worktree-remove.py(清理 worktree)
 
 所有 13 个工具**独立运行**,不依赖彼此的内部状态(都通过 `.sprint/` 文件交互)。这意味着:
 - 任意一个工具失败,不影响其他工具
-- 主 hermes 可以按需调用任意子集
+- 主 arcadia 可以按需调用任意子集
 - 测试时容易隔离每个工具
 
 ---
@@ -139,8 +139,8 @@ v1.6 验证密度:
 ## 6. 下一步:收尾
 
 - git commit cortex 仓库(反思文档 + 诊断文档 + 实施报告)
-- 删除 v0.7.1 backup(`A:/Application/Hermes-Agent/UserData/cache/skill-archive-20260822/multi-cli-orchestrated-references/`)
+- 删除 v0.7.1 backup(`A:/Application/Arcadia-Agent/UserData/cache/skill-archive-20260822/multi-cli-orchestrated-references/`)
 - graph.db 处置(灌死状态,看你选:保留 / 清理 / 重建)
 - `D:\test\cortex-v6.5\` 处置(无 .git 孤儿,看你选)
 
-— Hermes Agent (M3), 2026-08-23 00:30 CST
+— Arcadia Agent (M3), 2026-08-23 00:30 CST

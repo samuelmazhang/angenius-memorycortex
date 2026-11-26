@@ -8,7 +8,7 @@
 - 完整干完: summary.py 151 行 + compact.py 317 行 + 26 tests + 237 行 report
 - 26/26 tests PASS + 142/142 server/tests/
 
-## 12:05 — 主 hermes 6 步验收
+## 12:05 — 主 arcadia 6 步验收
 - pytest 26/26 + 142/142 PASS
 - commit ea6a72e + merge c83fe88
 
@@ -16,7 +16,7 @@
 
 #B + #C 并行跑 (Q2=2):
 - 两个独立 worktree, 无文件冲突
-- claude-code 各跑各的, 主 hermes 收到 notify 后逐个 6 步验收
+- claude-code 各跑各的, 主 arcadia 收到 notify 后逐个 6 步验收
 - cron monitor (P33) 同时监控 2 个 PID
 
 Phase 1 完结 (9/9 directions done).

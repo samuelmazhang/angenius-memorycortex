@@ -2,22 +2,22 @@
 
 ## 背景
 
-Hermes Agent 在 2026-08-22 写了一个 multi-cli 软件开发工作流方法论 skill: `multi-cli-graph-software-development` v1.2 (38.6KB / 536 行)。
+Arcadia Agent 在 2026-08-22 写了一个 multi-cli 软件开发工作流方法论 skill: `multi-cli-graph-software-development` v1.2 (38.6KB / 536 行)。
 
-Skill 路径: `A:/Application/Hermes-Agent/UserData/skills/software-development/multi-cli-graph-software-development/SKILL.md`
+Skill 路径: `A:/Application/Arcadia-Agent/UserData/skills/software-development/multi-cli-graph-software-development/SKILL.md`
 
 **5 条铁律**:
 1. mcp-graph 节点根目录 = 代码 worktree 根目录(双向绑定)
-2. 主 hermes 独占 graph 写权限
-3. 主 hermes 亲自测试验收才关闭 task
+2. 主 arcadia 独占 graph 写权限
+3. 主 arcadia 亲自测试验收才关闭 task
 4. 任务粒度必须可独立测试
-5. TDD split(主 hermes 写测试方案,子代理写测试用例 + 实现)
+5. TDD split(主 arcadia 写测试方案,子代理写测试用例 + 实现)
 
 **相关 skills**(上下文):
 - `superpowers/subagent-driven-development`(核心方法论)
 - `superpowers/using-git-worktrees`(worktree)
 - `multi-cli-acp-subagent`(CLI 包装脚本)
-- `hermes-claude-code-subagent-workflow`(单 CLI 备选)
+- `arcadia-claude-code-subagent-workflow`(单 CLI 备选)
 - `mcp-graph-design`(图谱内容设计,刚新建)
 - `mcp-tool-evaluation`(mcp 健康)
 
@@ -26,7 +26,7 @@ Skill 路径: `A:/Application/Hermes-Agent/UserData/skills/software-development/
 你是 **工作流编排 + 多 CLI 协同** 评审者。重点找:
 
 1. **dispatch 流程合理性**: `Step 0-6` 9 步流程是不是必要的?有没有冗余/缺失步骤?
-2. **多 CLI 协调模型**: 3 个 CLI(claude/codex/opencode) + hermes 子代理 + reviewer 子代理 — 角色分工清不清楚?有没有角色冲突?
+2. **多 CLI 协调模型**: 3 个 CLI(claude/codex/opencode) + arcadia 子代理 + reviewer 子代理 — 角色分工清不清楚?有没有角色冲突?
 3. **铁律之间的依赖**: 5 条铁律互相依赖关系清不清楚?有没有铁律违反时应该触发另一个铁律但没写?
 4. **superpowers 对齐**: 跟 `superpowers/subagent-driven-development` 的 5 轮 fix loop / pre-flight review 是不是真的一致?
 5. **worktree 实践**: worktree-first 是不是写到位了?`.worktrees/` 跟 `.gitignore` 的关系有没有覆盖?
@@ -93,7 +93,7 @@ Skill 路径(本地副本,claude 沙箱内可访问):
 - `..sprint-review/multi-cli-skill-v12-review/skill-copy/SKILL.md` (38.9KB / 538 行)
 - 3 个 references: `..sprint-review/multi-cli-skill-v12-review/skill-copy/references/`
 
-原始位置: `A:/Application/Hermes-Agent/UserData/skills/software-development/multi-cli-graph-software-development/`
+原始位置: `A:/Application/Arcadia-Agent/UserData/skills/software-development/multi-cli-graph-software-development/`
 
 ## 不需要做的事
 

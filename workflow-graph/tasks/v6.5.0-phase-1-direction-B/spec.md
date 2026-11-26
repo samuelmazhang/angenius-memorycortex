@@ -39,7 +39,7 @@
 3. **不要在 worktree 根创建 tests/** (P31)
 4. spec 写功能不写行数
 5. **不调 LLM** (纯图算法)
-6. 不 commit (主 hermes 自动)
+6. 不 commit (主 arcadia 自动)
 
 ## 完成标准
 

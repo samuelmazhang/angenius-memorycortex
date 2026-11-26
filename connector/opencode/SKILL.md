@@ -89,4 +89,4 @@ tools = get_cortex_tools()
 
 ## License
 
-Personal connector — follows `connector/hermes/` (which is itself personal patches).
+Personal connector — follows `connector/arcadia/` (which is itself personal patches).

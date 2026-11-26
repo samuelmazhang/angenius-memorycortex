@@ -1,6 +1,6 @@
 #!/bin/bash
 # Cortex daily maintenance wrapper (2026-08-06)
-# 调用方: hermes cronjob (no_agent=true, schedule='0 3 * * *')
+# 调用方: arcadia cronjob (no_agent=true, schedule='0 3 * * *')
 # 行为: 跑 maintenance_daily.sql, 解析 key=value 输出
 #   - 一切正常且删除量小: 不输出 (沉默, watchdog pattern)
 #   - 删除量异常大 或 失败: 输出 [ALERT] 前缀, cron 自动通知

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Memory Cortex - Hermes Memory Provider Plugin
+Memory Cortex - Arcadia Memory Provider Plugin
 
-注册为Hermes的memory provider插件，实现三个钩子：
+注册为Arcadia的memory provider插件，实现三个钩子：
 1. pre_llm_call: 自动注入语义记忆（对应00_memory_inject.py）
 2. post_tool_call: 自动持久化工具调用经验（对应00_tool_memory_persist.py）  
 3. on_session_end: 自动持久化session memory（对应01_memory_session_persist.py）
@@ -21,7 +21,7 @@ import time
 logger = logging.getLogger(__name__)
 
 # The connector/backend is the single HTTP integration path. The default is the
-# remote lab service used by Hermes on the Windows host; deployments should set
+# remote lab service used by Arcadia on the Windows host; deployments should set
 # MEMORY_CORTEX_URL explicitly rather than relying on this fallback.
 CORTEX_URL = os.getenv("MEMORY_CORTEX_URL", "http://127.0.0.1:1880")
 
@@ -89,8 +89,8 @@ def _search_memory_cortex(query: str, limit: int = 3, min_similarity: float = 0.
         return []
 
 def register(collector):
-    """注册为Hermes memory provider插件。"""
-    # 延迟导入，只在 Hermes 环境中执行
+    """注册为Arcadia memory provider插件。"""
+    # 延迟导入，只在 Arcadia 环境中执行
     # 注意：MemoryProvider 在 agent.memory_provider 中，不在 plugins.memory 中
     try:
         from agent.memory_provider import MemoryProvider
@@ -226,7 +226,7 @@ def register(collector):
                 logger.debug("on_session_end error: %s", e)
         
         def on_memory_write(self, action: str, target: str, content: str) -> None:
-            """镜像Hermes内置记忆写入到Memory Cortex。"""
+            """镜像Arcadia内置记忆写入到Memory Cortex。"""
             try:
                 # The built-in Cortex takeover/backend is the single write owner.
                 # This provider must not mirror the same write into /chunks.

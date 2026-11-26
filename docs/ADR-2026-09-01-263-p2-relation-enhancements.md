@@ -2,7 +2,7 @@
 
 - Status: Accepted
 - Date: 2026-09-01
-- Author: Hermes (subagent dispatch) + 天行健 (decision)
+- Author: Arcadia (subagent dispatch) + 天行健 (decision)
 - Depends on: ADR-262 (real-time similar relation graph)
 
 ## 背景 (Context)

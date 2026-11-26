@@ -2,7 +2,7 @@
 
 - Status: Accepted
 - Date: 2026-09-11
-- Author: Hermes (subagent dispatch) + 天行健 (OOB 决策 2026-09-11)
+- Author: Arcadia (subagent dispatch) + 天行健 (OOB 决策 2026-09-11)
 - Depends on: cortex V6.5.1 (PATCH /chunks/{id} endpoint, /list 端点, importance-based tier 映射)
 - Trigger: 主会话审计发现 28 个 probe/stub 噪声 chunks + 3 个 importance=99 数据 bug chunks (per user OOB 2026-09-11)
 
@@ -25,7 +25,7 @@ spec 在标题写 "28",分桶列了 7+11+1+3=22,实际可执行 IDs 只有 7+8+1
 
 ### Extra e2e-memtool 15 个发现过程 (D-style honest)
 
-按 spec 提示 "看 17 个 e2e-memtool-* chunks 跟 Category 3 重叠, 那些已经有真实 ID 列在 C 列表里 (但可能不够完整). 如果发现更多 probe/smoke noise (regex match),也一并 DELETE",跑全量 /list 后用 regex `^e2e-memtool-[a-f0-9]+(-b[12])?$` 匹配 content,得到 16 个命中。**15 个** 是 23 字符纯测试名 (`e2e-memtool-447bad8e-b2` 这种格式),source 是 `user` 或 `hermes_memory` (mavis 升级 e2e 测试 + 2026-09-07/10 三轮 e2e 残骸),明显是测试残留。**1 个例外** `mem_20260802_152934_450724_94576c` 是 280 字符真实内容 (讲 Hermes memory tool 的 2200 chars 限制 vs cortex 远程容量, 反面引用了 e2e-memtool 字面),**KEEP**。
+按 spec 提示 "看 17 个 e2e-memtool-* chunks 跟 Category 3 重叠, 那些已经有真实 ID 列在 C 列表里 (但可能不够完整). 如果发现更多 probe/smoke noise (regex match),也一并 DELETE",跑全量 /list 后用 regex `^e2e-memtool-[a-f0-9]+(-b[12])?$` 匹配 content,得到 16 个命中。**15 个** 是 23 字符纯测试名 (`e2e-memtool-447bad8e-b2` 这种格式),source 是 `user` 或 `arcadia_memory` (mavis 升级 e2e 测试 + 2026-09-07/10 三轮 e2e 残骸),明显是测试残留。**1 个例外** `mem_20260802_152934_450724_94576c` 是 280 字符真实内容 (讲 Arcadia memory tool 的 2200 chars 限制 vs cortex 远程容量, 反面引用了 e2e-memtool 字面),**KEEP**。
 
 判定方法:
 - `content` 长度 < 30 字符 + 匹配 `^e2e-memtool-[a-f0-9]+(-b[12])?$` → DELETE (15 条)
@@ -37,7 +37,7 @@ spec 在标题写 "28",分桶列了 7+11+1+3=22,实际可执行 IDs 只有 7+8+1
 ### Step 1: 16 个 spec DELETE (按桶 A→B→C 顺序)
 
 **A. type='test' (7)**
-- `mem_20260910_133419_921519_c04ce5` (rebuild-probe-1789047259-MEMORY-was-deleted, src=hermes-memfile-delete-probe)
+- `mem_20260910_133419_921519_c04ce5` (rebuild-probe-1789047259-MEMORY-was-deleted, src=arcadia-memfile-delete-probe)
 - `mem_20260908_123334_902672_fc76c2_1` (claude-smoke-1788870814-B, src=user)
 - `mem_20260908_123334_824064_d2ea87_0` (claude-smoke-1788870814-A, src=user)
 - `mem_20260908_123036_877704_bde3e0_1` (claude-smoke-1788870636-B, src=user)
@@ -95,7 +95,7 @@ PATCH payload: `{"importance": 1, "tags": ["quarantine", "data-bug", "imp99-empt
 ## 根因推测 (importance=99 是怎么写的?)
 
 观察事实:
-- 3 个 imp=99 chunk 的 `content` 是 `''` (2 个) 或 `'x'` (1 个),`source` 是 `user` (推测) 或 `hermes_memory` (legacy migration)
+- 3 个 imp=99 chunk 的 `content` 是 `''` (2 个) 或 `'x'` (1 个),`source` 是 `user` (推测) 或 `arcadia_memory` (legacy migration)
 - 它们在 2026-08-13 06:12-06:21 短短 9 分钟内被写入, content 完全随机
 - importance 字段 schema 限制是 1-10, 99 是越界值 → 服务端不验证范围 (V6.5.1) 直接入库
 - tier 行为: importance=99 → 因不在 1-10 bucket map, 实际走 "≥ 9" → `permanent` tier (理论) 但实际查回是 `short_term` —— 推测 tier 字段在 V6.5.1 有 max-importance=10 静默 clamp

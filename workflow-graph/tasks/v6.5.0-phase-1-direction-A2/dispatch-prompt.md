@@ -38,14 +38,14 @@
 3. **不要接管 #A.1 extract.py 代码, 只写 conflict_resolve.py**
 4. spec 写功能不写行数
 5. 不调 LLM (纯逻辑)
-6. **不 commit** (主 hermes 自动)
+6. **不 commit** (主 arcadia 自动)
 7. **如果 stall**, 写 `<worktree>/.sprint/STALL_REPORT.md` 说明中断点, exit 0
 
 ## stall 检测 (P30 简化)
 
-主 hermes 每 1 分钟看进度:
+主 arcadia 每 1 分钟看进度:
 - 跑 >10 分钟无新输出 + worktree 无产物 → kill + 重派同一 task
-- 跑 >10 分钟 + .sprint/report.md 已写 → kill + 主 hermes 6 步验收
+- 跑 >10 分钟 + .sprint/report.md 已写 → kill + 主 arcadia 6 步验收
 - 跑 >15 分钟完全没动 → kill + 重派
 
 完成后 exit 0。

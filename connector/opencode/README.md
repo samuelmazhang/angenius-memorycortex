@@ -149,17 +149,17 @@ print(info['health']['version'])  # should be >= 5.3.9
 
 Tests load modules via `importlib.util.spec_from_file_location` so they don't need to be installed as a package. If running from a different CWD, ensure you're inside the `memory-cortex` repo root.
 
-## Why this exists (vs hermes connector)
+## Why this exists (vs arcadia connector)
 
-`connector/hermes/` is a **personal patch set** for hermes-agent (per user policy). This `connector/opencode/` is:
+`connector/arcadia/` is a **personal patch set** for arcadia-agent (per user policy). This `connector/opencode/` is:
 
-- **Mirror of hermes structure** (cortex_memory_backend → memory_tool → tests)
+- **Mirror of arcadia structure** (cortex_memory_backend → memory_tool → tests)
 - **Adapted for opencode's skill mechanism** (SKILL.md frontmatter + loader)
-- **Independent code path** — won't conflict with the hermes patch set
+- **Independent code path** — won't conflict with the arcadia patch set
 - **Reference template** for future opencode-ai partners
 
 ## See also
 
-- `connector/hermes/` — fully-featured hermes integration (V6.3.1)
+- `connector/arcadia/` — fully-featured arcadia integration (V6.3.1)
 - `server/src/sdk/cortex_client.py` — full Python SDK (699 lines)
 - `server/src/mcp_server/cortex_mcp.py` — MCP-protocol alternative

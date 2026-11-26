@@ -21,11 +21,11 @@
 
 ## 2. 关键交付物
 
-### 2.1 工具脚本(在 `A:/Application/Hermes-Agent/UserData/scripts/`)
+### 2.1 工具脚本(在 `A:/Application/Arcadia-Agent/UserData/scripts/`)
 
 | 脚本 | 大小 | 用途 |
 |---|---|---|
-| `subagent-progress.py` | 10.6KB | 子代理心跳 + 主 hermes 读取 |
+| `subagent-progress.py` | 10.6KB | 子代理心跳 + 主 arcadia 读取 |
 | `extract-subagent-metrics.py` | 6.9KB | report.md → metric JSON |
 | `validate-verdict.py` v1.1 | 5.2KB | verdict 注入扫描 + JSON 输出 + first_failure |
 | `references/progress-schema-example.json` | 833B | heartbeat JSON schema 示例 |
@@ -33,7 +33,7 @@
 ### 2.2 SKILL.md v1.4 新增内容
 
 - **§可观测性章**(3 条新红线 P13-P15 + 3 个工具说明)
-- **fast-path 流程图**(主 hermes 不再重跑 6 步,从 first_failure 字段直接定位)
+- **fast-path 流程图**(主 arcadia 不再重跑 6 步,从 first_failure 字段直接定位)
 - **v1.4 变更说明**
 
 ---
@@ -55,7 +55,7 @@ rc=0 stderr=✗ task-composite-score FAILED: AssertionError: ...
 === done (写 metrics) ===
 rc=0 stderr=✓ task-composite-score DONE
 
-=== read (主 hermes 读状态) ===
+=== read (主 arcadia 读状态) ===
 rc=0
   status=done
   phase=done
@@ -64,7 +64,7 @@ rc=0
   errors_seen count=1
   metrics={wall_time_seconds=1200, stdout_lines=234, files_written=2}
 
-=== list (主 hermes 列所有 task) ===
+=== list (主 arcadia 列所有 task) ===
 task-composite-score       done     done        100%  ...  AssertionError: composite_score 公式...
 task-embedding-upgrade     in_progress  init     5%  ...
 
@@ -93,7 +93,7 @@ rc=1, ERROR: report 缺关键 metric
 
 整合评审 §1.2 提"加 `progress` 字段(0-100)进 mcp-graph node schema"。但 mcp-graph 是外部 service,我改不了 schema。
 
-**改用 fallback**:在 worktree 内的 `.sprint/<task-id>.progress.json` 文件,子代理每 30s 写,主 hermes 任何时候 read。**优势**:
+**改用 fallback**:在 worktree 内的 `.sprint/<task-id>.progress.json` 文件,子代理每 30s 写,主 arcadia 任何时候 read。**优势**:
 - 不依赖外部 schema 变更
 - 跨平台(POSIX / Windows 都支持 file I/O)
 - 跟 `init-worktree.py` 已经创建的 `.sprint/` 目录天然兼容
@@ -102,9 +102,9 @@ rc=1, ERROR: report 缺关键 metric
 
 整合评审 opencode 提的核心痛点:"6 步验收任一红 → 整轮重派"。
 
-v1.4 fast-path 解法:**3 个新工具都用 JSON stdout + first_failure 字段**,主 hermes 不用重跑 6 步:
+v1.4 fast-path 解法:**3 个新工具都用 JSON stdout + first_failure 字段**,主 arcadia 不用重跑 6 步:
 
-- `validate-verdict.py` v1.1:JSON 输出,主 hermes 读 `first_failure` 知道哪行哪类问题
+- `validate-verdict.py` v1.1:JSON 输出,主 arcadia 读 `first_failure` 知道哪行哪类问题
 - `extract-subagent-metrics.py`:JSON 输出,缺关键 metric 立即 reject(避免下次重跑)
 - `subagent-progress.py`:子代理的 `failed --error=...` 写 first_failure 字段,后续 dispatch 的子代理能读 first_failure 知道前次哪步错
 
@@ -157,14 +157,14 @@ python scripts/subagent-progress.py update --task-id <id> --worktree <path> \
 python scripts/subagent-progress.py failed --task-id <id> --worktree <path> \
     --error "ImportError: No module named 'foo'"
 
-# 4. 主 hermes 看进度
+# 4. 主 arcadia 看进度
 python scripts/subagent-progress.py list --worktree <path>
 
-# 5. 主 hermes 收 verdict
+# 5. 主 arcadia 收 verdict
 python scripts/validate-verdict.py <verdict.md>    # 输出 JSON
 
-# 6. 主 hermes 收 report
+# 6. 主 arcadia 收 report
 python scripts/extract-subagent-metrics.py <report.md> --strict
 ```
 
-— Hermes Agent (M3), 2026-08-22 23:55 CST
+— Arcadia Agent (M3), 2026-08-22 23:55 CST

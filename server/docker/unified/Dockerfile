@@ -7,7 +7,7 @@
 #   * /app/src:      bind-mounted RO from host (git pull updates instantly)
 #   * /opt/cortex/schema.sql + /usr/local/bin/entrypoint.sh: bind-mounted RO
 #   * /var/lib/postgresql/data: docker volume (persists across restarts)
-#   * /root/.hermes/plugins/memory-cortex/models: bind-mounted RO
+#   * /root/.arcadia/plugins/memory-cortex/models: bind-mounted RO
 #
 # Hot update flow (no image rebuild):
 #   git push && ssh 8.2 'cd /opt/cortex-deploy/work && git pull && #     sudo /opt/cortex-deploy/cortex-deploy.sh'   (no image rebuild)

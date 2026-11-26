@@ -1,6 +1,6 @@
 name: memory-cortex
 version: "5.3.9"
-description: "Memory Cortex V5.3 PostgreSQL/pgvector provider for Hermes"
+description: "Memory Cortex V5.3 PostgreSQL/pgvector provider for Arcadia"
 provides_hooks:
   - pre_llm_call
   - post_tool_call

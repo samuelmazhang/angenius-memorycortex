@@ -138,7 +138,7 @@ to connector workflows.
 
 ## [6.5.1 connector] - 2026-09-10
 
-Hermes connector upgrade: V6.3.1 → V6.5.1 (server already on 6.5.1 since
+Arcadia connector upgrade: V6.3.1 → V6.5.1 (server already on 6.5.1 since
 2026-09-01). Driven by gap analysis of `http://127.0.0.1:1880/openapi.json`
 (111 ops) vs the V6.3.1 connector surface (80 unique HTTP calls → 78%
 coverage). Two calls were **404/405-ing every invocation**:
@@ -336,7 +336,7 @@ metrics。预期效果：debug 吞吐 +30%。
 - VERSION 6.0.1 -> 6.1.0
 - app = FastAPI(version="6.1.0")
 
-**Connector 变更** (connector/hermes/cortex_memory_backend.py):
+**Connector 变更** (connector/arcadia/cortex_memory_backend.py):
 - 加 ALLOWED_TYPES mirror (client-side fast-fail before round-trip)
 - 加 _validate_type() helper
 - create_session_summary: 强制 user_id 必填 (KB per-user isolation)
@@ -386,7 +386,7 @@ metrics。预期效果：debug 吞吐 +30%。
 - app = FastAPI(version="6.0.1") (title 同步)
 - VERSION 文件升 6.0.0 → 6.0.1
 
-**Connector 变更** (`connector/hermes/`):
+**Connector 变更** (`connector/arcadia/`):
 - `cortex_memory_backend.py`:
   - 加 `upsert_session_conflict()` (包 /conflict/upsert, source_key 桶)
   - 加 `list_session_summaries_for_user_include_superseded()` (audit 变体)
@@ -420,7 +420,7 @@ metrics。预期效果：debug 吞吐 +30%。
 
 ## [5.3.8] - 2026-08-10 (conflict-resolve connector wrapper)
 
-详见 [6.0.1] 条目 — connector/hermes/ 的 session_summarizer + cortex_memory_backend
+详见 [6.0.1] 条目 — connector/arcadia/ 的 session_summarizer + cortex_memory_backend
 新增 upsert_session_conflict 等 API, 配合 server [6.0.1] 修复一起发布.
 
 ---
@@ -429,17 +429,17 @@ metrics。预期效果：debug 吞吐 +30%。
 
 ### V5.3.7 — 跨会话自动摘要 (9b → cortex, 写入 + 注入双轨)
 
-按用户 a→b→c 模式 2 实施: hermes 的 45,549 条历史消息 (22,428 tool 输出 = 49%) 是知识金矿,但每个新 session 起步空白。auto-summarizer 让"上次的对话要点"自动出现在下次 session 的 system prompt 里。
+按用户 a→b→c 模式 2 实施: arcadia 的 45,549 条历史消息 (22,428 tool 输出 = 49%) 是知识金矿,但每个新 session 起步空白。auto-summarizer 让"上次的对话要点"自动出现在下次 session 的 system prompt 里。
 
 **新增模块**:
-- `connector/hermes/session_summarizer.py` (12 KB, 9b 摘要 + cortex 推送 + 本地 SQLite 缓存)
-- `connector/hermes/scripts/install_session_summarizer.py` (mtime-aware sync)
-- `connector/hermes/tests/test_session_summarizer_blackbox.py` (6 tests e2e)
+- `connector/arcadia/session_summarizer.py` (12 KB, 9b 摘要 + cortex 推送 + 本地 SQLite 缓存)
+- `connector/arcadia/scripts/install_session_summarizer.py` (mtime-aware sync)
+- `connector/arcadia/tests/test_session_summarizer_blackbox.py` (6 tests e2e)
 
 **新增 connector API**:
 - `cortex_memory_backend.create_session_summary(content, *, importance=7, tags, session_id, source, extractor, trigger)` — 写 `session_summary` type chunk,带 retry + circuit breaker。importance=7 默认进 long_term (180 天)。
 
-**触发机制** (hermes 端,不在本仓库,但需要 hermes-agent 同步改动):
+**触发机制** (arcadia 端,不在本仓库,但需要 arcadia-agent 同步改动):
 - `SessionDB.end_session()` 末尾 fire-and-forget `summarize_session_async()` — 仅在真结束 (rowcount>0) 时触发,避免 no-op 浪费 9b 调用。
 - `SessionDB.append_message()` 渐进式: 每 50 条 assistant 消息重跑一次,崩溃也不漏。
 - `agent/conversation_loop.py::_restore_or_build_system_prompt` 在 `stored_state == "missing"` 时注入 prior_summaries 到 system_prompt (避免 prefix-cache 抖动)。
@@ -451,11 +451,11 @@ metrics。预期效果：debug 吞吐 +30%。
 **Schema 变更** (向后兼容):
 - `state.db` 加 `session_summaries` 表 (10 列 + 2 indexes),由 `SessionDB._init_schema` 自动 CREATE IF NOT EXISTS 创建。
 
-**验证**: 6/6 PASS (V5.3.7 pytest e2e + V3 hermes-verify 4/4 PASS) — 真实 9b 抽取 2 facts,真实 cortex 写入 `mem_xxx`,回环 search 命中。
+**验证**: 6/6 PASS (V5.3.7 pytest e2e + V3 arcadia-verify 4/4 PASS) — 真实 9b 抽取 2 facts,真实 cortex 写入 `mem_xxx`,回环 search 命中。
 
-**禁用**: 环境变量 `HERMES_DISABLE_SESSION_SUMMARY=1`。
+**禁用**: 环境变量 `ARCADIA_DISABLE_SESSION_SUMMARY=1`。
 
-**ADR 累计**: V5.3.7 不需要新 ADR,完全在 V5.3 现有架构内 (cortex chunk + hermes SQLite 双轨)。
+**ADR 累计**: V5.3.7 不需要新 ADR,完全在 V5.3 现有架构内 (cortex chunk + arcadia SQLite 双轨)。
 
 ---
 
@@ -486,7 +486,7 @@ metrics。预期效果：debug 吞吐 +30%。
 
 **新 ADR (本轮新增)**:
 - ADR-070: cron 告警通道 (telegram + heartbeat + 沉默降级链)
-- ADR-071: connector/hermes/cortex_api.py 死代码清理 (V2 时代 import 失败, 89KB 删除)
+- ADR-071: connector/arcadia/cortex_api.py 死代码清理 (V2 时代 import 失败, 89KB 删除)
 - ADR-072: WebUI E2E (Playwright, 4 个 MVP test)
 
 **回滚脚本**: `server/scripts/rollback_cortex.sh` (commit aa16495)
@@ -519,14 +519,14 @@ metrics。预期效果：debug 吞吐 +30%。
 - 桶内无旧事实 → NOOP
 
 **周期任务接入**:
-- `connector/hermes/scripts/cortex_maintenance.py daily()` 加 2 步: `POST /conflict/scan` + `GET /conflict/log?limit=50`
-- 复用现有 hermes cron 调度 (daily/weekly/hourly),无需新增 scheduler
+- `connector/arcadia/scripts/cortex_maintenance.py daily()` 加 2 步: `POST /conflict/scan` + `GET /conflict/log?limit=50`
+- 复用现有 arcadia cron 调度 (daily/weekly/hourly),无需新增 scheduler
 
 **新增文件**: `docs/ADR-2026-08-05-068-cortex-conflict-resolve.md`
 **修改文件**:
 - `server/docker/unified/schema.sql` (新增 4 列 + 1 表 + 3 索引)
 - `server/src/api_pg.py` (新增 ~330 行: `_resolve_conflict_for_chunk` + 3 endpoint)
-- `connector/hermes/scripts/cortex_maintenance.py` (daily 加 2 步)
+- `connector/arcadia/scripts/cortex_maintenance.py` (daily 加 2 步)
 - `docs/ADR-MAP.md` (登记 ADR-068)
 
 **手动迁移命令** (旧库升级):
@@ -672,7 +672,7 @@ V5 PG 迁移后 `memory_relations` 停止生长，110/1956 稀疏到无法支撑
 
 ### 本地 connector 黑盒测试（扩大端到端范围）+ 修复 2 个 connector↔server 契约 bug
 
-新增 `connector/hermes/tests/test_cortex_backend_blackbox.py`（**28 测试**）：
+新增 `connector/arcadia/tests/test_cortex_backend_blackbox.py`（**28 测试**）：
 不只测 memory_tool 的 8 个动作，而是把本地 `tools.cortex_memory_backend` 的
 **backend 层公开方法**对**远程 cortex 服务端**黑盒调用并断言返回形状。覆盖：
 health/stats/metrics/recommend、search/search_hybrid/search_tts/reason_with_memory、
@@ -708,12 +708,12 @@ core profile、deep_context。
 
 ### connector 测试固化 + README 同步说明
 
-- 新增 `connector/hermes/tests/test_memory_tool_e2e.py`：端到端 8 动作测试
+- 新增 `connector/arcadia/tests/test_memory_tool_e2e.py`：端到端 8 动作测试
   （add/replace/remove/batch + recall/save_procedure/get_procedure/deep_context/
-  audit_query + registry/schema + 上游读安全不变量）。用 hermes venv 直接跑，
+  audit_query + registry/schema + 上游读安全不变量）。用 arcadia venv 直接跑，
   monkeypatch `get_memory_dir` 隔离到临时目录。**17 用例全绿**。
   （`--import-mode=importlib` 避免 repo 根 `__init__.py` 被当包导入。）
-- `connector/hermes/README.md` 重写：记录本机 hermes（`A:\...\hermes-agent`）
+- `connector/arcadia/README.md` 重写：记录本机 arcadia（`A:\...\arcadia-agent`）
   与 repo 的同步方式、VM 只跑服务端不跑 connector、8 动作清单、跑测试命令、
   revert 方法、`get_memory_dir` 不读 env 的坑。
 
@@ -724,11 +724,11 @@ core profile、deep_context。
 
 ## [5.3.6] - 2026-08-02
 
-### 补回 hermes upstream 的磁盘读安全不变量（修复 3 个 pytest 失败）
+### 补回 arcadia upstream 的磁盘读安全不变量（修复 3 个 pytest 失败）
 
-升级到 recall 版 memory_tool 后，运行 hermes 自带的 `tests/tools/test_memory_tool.py`
+升级到 recall 版 memory_tool 后，运行 arcadia 自带的 `tests/tools/test_memory_tool.py`
 发现 `TestUnreadableFileDoesNotWipeMemory` 3 个失败——recall 版是从较早的
-hermes 快照衍生的，**丢失了上游后续加的磁盘读安全加固**：
+arcadia 快照衍生的，**丢失了上游后续加的磁盘读安全加固**：
 
 - 文件存在但损坏（invalid UTF-8 / IO error）时，`add`/`replace`/`remove`
   必须**拒绝写入并保留原字节**，而不是当"空 store"覆盖掉（会清空用户记忆）。
@@ -746,15 +746,15 @@ hermes 快照衍生的，**丢失了上游后续加的磁盘读安全加固**：
 - `_detect_external_drift(target, raw)` 改为接收已读 raw，不再自行重读。
 - `_read_file` 保留给只读调用者（load_from_disk）降级为 []。
 
-**验证**：hermes 自带 pytest `tests/tools/test_memory_tool.py`（37 测试）全绿——
+**验证**：arcadia 自带 pytest `tests/tools/test_memory_tool.py`（37 测试）全绿——
 此前 34/37（3 个读安全失败），修复后全过；含 `add`/`replace`/`remove` 在损坏文件上
 拒绝且字节保留、`replace` 恰好读一次。另 `test_memory_tool_schema.py` +
 `test_memory_tool_import_fallback.py` + agent 记忆测试 45 全绿；recall（cortex
 混合+图谱）功能测试仍通过。
 
-**坑**：ad-hoc 验证 memory 工具时，`get_memory_dir()` 用 `get_hermes_home()/memories`
-不读 `HERMES_MEMORY_DIR` 环境变量——隔离测试要 monkeypatch `get_memory_dir`（pytest
-fixture 就是这样做的），否则会写到真实 hermes 记忆目录。
+**坑**：ad-hoc 验证 memory 工具时，`get_memory_dir()` 用 `get_arcadia_home()/memories`
+不读 `ARCADIA_MEMORY_DIR` 环境变量——隔离测试要 monkeypatch `get_memory_dir`（pytest
+fixture 就是这样做的），否则会写到真实 arcadia 记忆目录。
 
 ---
 
@@ -762,7 +762,7 @@ fixture 就是这样做的），否则会写到真实 hermes 记忆目录。
 
 ### connector memory_tool 升级到 agentic recall 版本 + 修复 4 个潜在生产 bug
 
-本机 hermes 的 `tools/memory_tool.py` 是独立旧实现（MemoryStore，action 仅
+本机 arcadia 的 `tools/memory_tool.py` 是独立旧实现（MemoryStore，action 仅
 add/replace/remove，无 recall）。替换为 repo connector 的 V5.3 recall 版本
 （action 扩展为 8 个：add/replace/remove/**recall/save_procedure/get_procedure/
 deep_context/audit_query**，含主动回忆注入 + 动态 schema）。
@@ -783,13 +783,13 @@ deep_context/audit_query**，含主动回忆注入 + 动态 schema）。
    auto-link（Direction 2），但本机 `cortex_memory_backend.py` 是独立版本，
    没有该方法 → AttributeError。补上（自包含，用 search_hybrid+create_link）。
 
-**验证**（hermes venv + live cortex 8.2）：8 个 action 全绿——ADD/REPLACE/
+**验证**（arcadia venv + live cortex 8.2）：8 个 action 全绿——ADD/REPLACE/
 REMOVE/BATCH（cortex write hooks 触发，audit 记录）、RECALL（混合+图谱k-hop
 hits）、SAVE_PROCEDURE→GET_PROCEDURE（往返可查）、DEEP_CONTEXT、AUDIT_QUERY、
 未知 action 正确报错。target 校验对 save_procedure 放开、对 add 仍强制。
 
 **坑**：
-- 本机 hermes `tools/memory_tool.py` 是 upstream 未修改（git clean），
+- 本机 arcadia `tools/memory_tool.py` 是 upstream 未修改（git clean），
   `cortex_memory_backend.py` 是 untracked 本地添加——两者独立定制，改 connector
   要分别 patch，别用整文件覆盖（有互相不认识的方法）。
 - `memory_tool()` 这类工具函数必须 end-to-end 跑一次才知道缩进/引用是否真对，
@@ -816,11 +816,11 @@ connector 的 `search(limit=n)` / `search_hybrid(top_k=n)` 现在真正返回 n 
 
 ## [5.3.3] - 2026-08-02
 
-### connector 配合：让服务端检索/图谱增强真正对 agent 生效（hermes ↔ cortex）
+### connector 配合：让服务端检索/图谱增强真正对 agent 生效（arcadia ↔ cortex）
 
 服务端 V5.3.0-5.3.2 的三路 RRF + 图谱回填 + k-hop 已可用，但 connector 侧
 （`tools/cortex_memory_backend.py` + `memory_tool.py`）的旧调用把新能力挡在门外。
-本次补齐 connector 层，让 hermes agent 实际受益：
+本次补齐 connector 层，让 arcadia agent 实际受益：
 
 - **`CortexMemoryBackend.search()` 默认 `include_related=True`**：正常 search 现会
   沿图谱邻居扩展并做相关度门控（服务端 `_expand_graph_neighbors_filtered`），
@@ -840,7 +840,7 @@ connector 的 `search(limit=n)` / `search_hybrid(top_k=n)` 现在真正返回 n 
 search_hybrid limit 修复）全部 200 通过。
 
 **坑**：connector 有两套实现（`cortex_api.py` SDK 与 `cortex_memory_backend.py`），
-hermes 实际用后者（`memory_tool` 里 `from tools import cortex_memory_backend as _cmb`）；
+arcadia 实际用后者（`memory_tool` 里 `from tools import cortex_memory_backend as _cmb`）；
 改 connector 前先确认走的是哪个，别改错文件。
 
 ---
@@ -952,7 +952,7 @@ agent 记忆体的 5 个加强方向全部落地（详见 docs/Agent-记忆体�
 - `working_context`：返回持久化的 conversation（`ORDER BY seq`）与 working_memory 融合，
   替代硬编码 `[]`。
 
-现在 hermes 可按 session 持久化 + 恢复 LLM/assistant 对话，打通 Direction B 的跨轮连续性。
+现在 arcadia 可按 session 持久化 + 恢复 LLM/assistant 对话，打通 Direction B 的跨轮连续性。
 
 ---
 
@@ -1011,13 +1011,13 @@ V5.2.17 开始让 create 设置 expires_at，终于使 `/forgetting/cleanup` 能
   `{long:0, med:0, short:total}`）。
 
 配合 V5.2.16 的 connector tier→importance 映射，三层生命周期（short→medium→long→
-permanent）端到端可用：hermes 用 tier=short 写会拿到 7 天 TTL，cleanup 真正能删。
+permanent）端到端可用：arcadia 用 tier=short 写会拿到 7 天 TTL，cleanup 真正能删。
 
 ---
 
 ## [5.2.16] - 2026-08-01
 
-### Direction A/B/C — hermes<->cortex 集成改进
+### Direction A/B/C — arcadia<->cortex 集成改进
 
 - **Direction A (dynamic schema)**：server `/endpoints/recommend` 新支持
   `connector_memory` scenario，返回 actions 映射；backend 新增 `recommend_endpoints()`
@@ -1066,11 +1066,11 @@ permanent）端到端可用：hermes 用 tier=short 写会拿到 7 天 TTL，cle
 - 顶层 V4 plugin stack: `__init__.py`, `plugin.yaml`, `plugin_package/`, `patches/`, `examples/`
 - 顶层 V3 ops 脚本: `backup.sh`, `check_all_memories.py`, `deploy.sh`, `download_model.sh`,
   `export_memories.py`, `init_history_data.py`, `merge_import.py`,
-  `migrate_hermes_memories.py`, `sync_local_memories.py`, `requirements.txt`
+  `migrate_arcadia_memories.py`, `sync_local_memories.py`, `requirements.txt`
 - `scripts/` 下 V3 ops (保留 save/load-docker-images.sh) → V5.2.7 全删
 - `docs/` V2/V3 设计文档 + 旧 05-实施规划 + optimization/
 - `server/src/` V4 sqlite/chroma 业务代码 (api.py, chroma_store.py, dashboard.py,
-  hermes_memory.py, metadata_store.py, plugin.py, storage_budget.py, taxonomy.py,
+  arcadia_memory.py, metadata_store.py, plugin.py, storage_budget.py, taxonomy.py,
   hooks/, memory_*.py)
 - `server/scripts/` V5.0 split + 迁移脚本 (已完成的迁移)
 - `server/docker/` V5.0 split Dockerfile + 4 旧 docker-compose 变体 + postgres-init/
@@ -1084,7 +1084,7 @@ permanent）端到端可用：hermes 用 tier=short 写会拿到 7 天 TTL，cle
 - `server/docker/unified/{Dockerfile,entrypoint.sh,schema.sql,HOT-RELOAD.md}` — V5 单容器运行时
 - `server/scripts/run_docker_stack_unified.sh` — V5 启动器
 - `server/tests/e2e_smoke.py` — 48 测试
-- `connector/{hermes,opencode}/` — 出口适配器参考实现
+- `connector/{arcadia,opencode}/` — 出口适配器参考实现
 - 全部 git/CI 配置 (`.gitlab-ci.yml`, `.pre-commit-config.yaml`, `.githooks/`)
 
 ---
@@ -1095,9 +1095,9 @@ permanent）端到端可用：hermes 用 tier=short 写会拿到 7 天 TTL，cle
 
 **位置**: [`backups/2026-07-04-cortex-takeover/`](./backups/2026-07-04-cortex-takeover/README.md)
 
-把 hermes-agent builtin `MemoryStore`(tools/memory_tool.py)从写 `~/.hermes/memories/{MEMORY,USER}.md`,改成完全走 cortex HTTP backend。完整实施包 = README + 1 个新模块 (`cortex_memory_backend.py`) + 2 个 diff (`memory_tool.py.diff` / `test_memory_tool.py.diff`),其他 agent 可 `cp -r` 整目录过去直接 apply。
+把 arcadia-agent builtin `MemoryStore`(tools/memory_tool.py)从写 `~/.arcadia/memories/{MEMORY,USER}.md`,改成完全走 cortex HTTP backend。完整实施包 = README + 1 个新模块 (`cortex_memory_backend.py`) + 2 个 diff (`memory_tool.py.diff` / `test_memory_tool.py.diff`),其他 agent 可 `cp -r` 整目录过去直接 apply。
 
-**验证**: 6/6 PASS — `use_cortex=True` / `load_from_disk 87+80 条` / `.md 永不创建` / char_limit 行为正确 / 83 个 hermes 自带 test 通过 / 重启后真 LLM 触发接管。
+**验证**: 6/6 PASS — `use_cortex=True` / `load_from_disk 87+80 条` / `.md 永不创建` / char_limit 行为正确 / 83 个 arcadia 自带 test 通过 / 重启后真 LLM 触发接管。
 
 **配套 plugin 改动**: `plugin_package/memory_cortex/__init__.py` 完整实装 19 方法已交付(见 `backups/2026-07-04-full-provider-impl/`)。
 
@@ -1239,9 +1239,9 @@ permanent）端到端可用：hermes 用 tier=short 写会拿到 7 天 TTL，cle
 - **严格化** `EMBEDDING_MODEL_PATH` 校验:空值启动时直接抛 `RuntimeError`,强制 .env 配置
 
 #### 服务层 (R1-A, R1-D)
-- **同步** hooks 到 `~/.hermes/hooks/`:补齐 v2.1 修复版 `02_memory_evaluation.py`,覆盖旧版 `00_memory_inject`(TIMEOUT 5s→15s)
+- **同步** hooks 到 `~/.arcadia/hooks/`:补齐 v2.1 修复版 `02_memory_evaluation.py`,覆盖旧版 `00_memory_inject`(TIMEOUT 5s→15s)
 - **新增** `scripts/watchdog.sh`:端口 + 进程 + HTTP 三重健康检查,失败 3 次自动告警
-- **新增** `scripts/backup.sh`:真实路径(原 `~/.hermes_plugin/memory_cortex/` 已不存在)
+- **新增** `scripts/backup.sh`:真实路径(原 `~/.arcadia_plugin/memory_cortex/` 已不存在)
 - **新增** `tests/smoke.py`:5 个核心 API 烟雾测试(health / stats / chunks CRUD / search / dashboard)
 
 #### API 层 (R1-C, R2-H, R3-M)
@@ -1265,7 +1265,7 @@ permanent）端到端可用：hermes 用 tier=short 写会拿到 7 天 TTL，cle
 - **P0** `/forgetting/stats` 500: `MemoryForgettingService` 缺 `get_forgetting_stats()` 方法
 - **P0** `AUTO_FORGING_ENABLED` 拼写错误 → `AUTO_FORGETTING_ENABLED`
 - **P1** `00_memory_inject.py` TIMEOUT 5s → 15s(Chroma + embedding 负载高时超时)
-- **P1** 注入失败静默丢弃 → 写日志到 `~/.hermes/logs/memory_inject.log`
+- **P1** 注入失败静默丢弃 → 写日志到 `~/.arcadia/logs/memory_inject.log`
 - **P1** tool_experience 硬丢弃 → 场景过滤(debugging 上下文才召回)
 - **P1** `relevance_score` 外部访问驱动 → 新增 `02_memory_evaluation.py` 自评回路
 - **P2** short-cmd(`cd x` 等)相似度仅 0.26 → query 扩展 + 阈值降到 0.35
@@ -1299,7 +1299,7 @@ permanent）端到端可用：hermes 用 tier=short 写会拿到 7 天 TTL，cle
 ## [1.0] - 2026-04
 
 - 初始版本:CRUD + Chroma + SQLite 双存储
-- 兼容 Hermes 原生记忆协议
+- 兼容 Arcadia 原生记忆协议
 - 语义搜索 + 标签/类型/重要性过滤
 
 ---
@@ -1312,35 +1312,35 @@ permanent）端到端可用：hermes 用 tier=short 写会拿到 7 天 TTL，cle
 > - V3.0 原计划的知识图谱/推理/共享功能:已删除(2026-06-20),实际数据 0 调用
 
 任何新功能开发前,先更新本文档 + VERSION,再写代码。
-## [6.3.1] - 2026-08-18 (connector ↔ cortex version alignment + hermes internal patches)
+## [6.3.1] - 2026-08-18 (connector ↔ cortex version alignment + arcadia internal patches)
 
 按 user 决策: 把 connector 版本对齐到 cortex server 当前版本 (6.3.1),
-并把所有 hermes 端已部署的补丁回写到 connector 仓, 让
-`.connector\hermes\` 重新成为
+并把所有 arcadia 端已部署的补丁回写到 connector 仓, 让
+`.connector\arcadia\` 重新成为
 单一 source of truth. 同时明确双写策略: **cortex 是 sole source of
 truth, 本地 `session_summaries` 表是 fast cache**.
 
 **版本对齐**:
 - `connector/VERSION` 从无到 `6.3.1` (跟 `/opt/cortex-deploy` 跑的服务端一致)
-- `connector/hermes/README.md` 头部 `Current version` 从 V5.3.7 → V6.3.1
-- `connector/hermes/cortex_memory_backend.py` 内 V5.3.0+/V5.3.2/... 注释保留
+- `connector/arcadia/README.md` 头部 `Current version` 从 V5.3.7 → V6.3.1
+- `connector/arcadia/cortex_memory_backend.py` 内 V5.3.0+/V5.3.2/... 注释保留
   (历史 footprint), 但 module docstring + upsert_session_conflict 强化为 V6.3.1
-- `connector/hermes/session_summarizer.py` docstring 标注 V6.3.1 + 双写策略
+- `connector/arcadia/session_summarizer.py` docstring 标注 V6.3.1 + 双写策略
 
-**Hermes 内部 patches** (第一次正式落地, 历史 README 只说"apply by hand"):
-1. **`hermes_state_common.py`**: `session_summaries` 表 + 2 个索引
+**Arcadia 内部 patches** (第一次正式落地, 历史 README 只说"apply by hand"):
+1. **`arcadia_state_common.py`**: `session_summaries` 表 + 2 个索引
    (idx_session_summaries_session, idx_session_summaries_user_created)
    - 表 schema 跟 cortex 端的 session_summary chunks **不冲突**
      (本地是关系表, cortex 是 vector store)
    - `UNIQUE(session_id, source)` 保证同 source 重写不重复
-2. **`hermes_state.py` SessionDB 新增 3 个方法**:
+2. **`arcadia_state.py` SessionDB 新增 3 个方法**:
    - `upsert_session_summary(session_id, summary_text, short, parsed, source, trigger)`
      → `Optional[int]` (FK race 返 None)
    - `update_session_summary_cortex_id(row_id, cortex_chunk_id)`
      → cortex 写成功后回填本地 cache
    - `list_session_summaries(user_id, limit=5)`
      → 下个 session 首轮注入用, 按 created_at DESC 排序
-3. **`hermes_state.py` SessionDB 内部 hooks**:
+3. **`arcadia_state.py` SessionDB 内部 hooks**:
    - `end_session()` 末尾: fire-and-forget `summarize_session_async(self, session_id, source="end")`
    - `append_message()` 末尾: `_maybe_progressive_summary(session_id)` 检查 assistant
      消息数是否到 PROGRESSIVE_THRESHOLD (默认 50) 倍数
@@ -1348,7 +1348,7 @@ truth, 本地 `session_summaries` 表是 fast cache**.
    首轮 fresh-build 之前: 拉最近 N=5 条 prior summaries 拼进 system_message,
    让 builder 自然吸收 (continuation 路径不动, prefix cache 不命中只在首轮)
 
-完整 diff 在 connector 仓新文件 `HERMES_INTERNAL_PATCHES.md`.
+完整 diff 在 connector 仓新文件 `ARCADIA_INTERNAL_PATCHES.md`.
 
 **双写策略 - cortex 是 sole source of truth**:
 - 写顺序: cortex 先 (`upsert_session_conflict` → 返回 chunk_id)
@@ -1356,23 +1356,23 @@ truth, 本地 `session_summaries` 表是 fast cache**.
 - cortex 失败: 本地 cache 跳过更新, **不假装成功**, 调用方看到 cortex_id=None
 - 本地失败: cortex 已经写了, 调用方不感知 (本地 cache miss 是允许的)
 - 读取: 优先用本地 cache (fast index), cache miss 时回退 cortex search
-  (`/list?source=hermes-session-summarizer&target={user_id}`)
+  (`/list?source=arcadia-session-summarizer&target={user_id}`)
 - TTL/tier: `SUMMARY_IMPORTANCE=7` 自动 long_term (180d), 跟 server V6.1.0
   governance 一致
 
 **Source 标签强化 (V6.1.0 governance 对接)**:
-- `upsert_session_conflict` 的 `source` 参数固定传 `"hermes-session-summarizer"`
+- `upsert_session_conflict` 的 `source` 参数固定传 `"arcadia-session-summarizer"`
 - 服务端 `/stats/by-source` 已经按这个标签分组 (见 server OpenAPI 注释)
-- 之前的 `source="user"` 是错的, 治理后改为 `source="hermes-session-summarizer"`
+- 之前的 `source="user"` 是错的, 治理后改为 `source="arcadia-session-summarizer"`
   + `user_id` 字段保留作 per-user 隔离 (KB per-user isolation, V5.3.9+ 强制)
 
 **install_session_summarizer.py 默认路径修正**:
-- 默认 `HERMES_TOOLS_DIR` 从 `A:\Application\Hermes-Agent\Program\hermes-agent\tools`
-  (过时, 不是运行实例) → `A:\Application\Hermes-Agent\UserData\hermes-agent\tools`
-  (本机真实跑 hermes 的 venv 所在)
-- 仍支持 `HERMES_TOOLS_DIR` env override
+- 默认 `ARCADIA_TOOLS_DIR` 从 `A:\Application\Arcadia-Agent\Program\arcadia-agent\tools`
+  (过时, 不是运行实例) → `A:\Application\Arcadia-Agent\UserData\arcadia-agent\tools`
+  (本机真实跑 arcadia 的 venv 所在)
+- 仍支持 `ARCADIA_TOOLS_DIR` env override
 
-**端到端验证** (本机 hermes venv):
+**端到端验证** (本机 arcadia venv):
 - `test_memory_tool_e2e.py`: 17/17 PASS
 - `test_cortex_backend_blackbox.py`: 28/28 PASS (V6.3.1 server 端点全兼容)
 - `test_session_summarizer_blackbox.py`: 10 PASS + 2 SKIP (LM Studio 9b 不可达时预期 skip)
@@ -1381,8 +1381,8 @@ truth, 本地 `session_summaries` 表是 fast cache**.
 
 **回滚**:
 ```bash
-cd /a/Application/Hermes-Agent/UserData/hermes-agent
-git checkout -- hermes_state.py hermes_state_common.py agent/conversation_loop.py tools/memory_tool.py
+cd /a/Application/Arcadia-Agent/UserData/arcadia-agent
+git checkout -- arcadia_state.py arcadia_state_common.py agent/conversation_loop.py tools/memory_tool.py
 rm tools/cortex_memory_backend.py tools/session_summarizer.py
 # state.db 的 session_summaries 表留下无害 (无引用)
 ```

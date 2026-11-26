@@ -6,11 +6,11 @@
 
 ```
 multi-cli-v1.0-to-v1.6/
-├── dispatch-prompt.md    # 主 hermes → 子代理的原始 prompt
+├── dispatch-prompt.md    # 主 arcadia → 子代理的原始 prompt
 ├── spec.md               # task spec / metadata
 ├── subagent-report.md    # 子代理返回的 report
 ├── reviewer-verdict.md   # reviewer verdict
-├── decision-log.md       # 主 hermes 关键决策
+├── decision-log.md       # 主 arcadia 关键决策
 ├── progress.json         # 心跳进度(从 worktree .sprint/ 复制)
 ├── audit.jsonl           # 统一 audit log
 └── artifacts/            # 子代理产物 (diff / screenshot / test output)

@@ -2,7 +2,7 @@
 
 - Status: Accepted
 - Date: 2026-08-06
-- Author: Hermes Agent (MiniMax-M3)
+- Author: Arcadia Agent (MiniMax-M3)
 - Depends on: ADR-069 (WebUI 修复 + API 自动探测)
 - Supersedes: 无
 

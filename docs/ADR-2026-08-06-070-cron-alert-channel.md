@@ -2,7 +2,7 @@
 
 - Status: Accepted
 - Date: 2026-08-06
-- Author: Hermes Agent (MiniMax-M3)
+- Author: Arcadia Agent (MiniMax-M3)
 - Depends on: ADR-069 (数据治理 + cron)
 - Supersedes: 无
 
@@ -41,7 +41,7 @@ ADR-069 D5 列了"已知遗留":
 
 ### D1. Telegram 通道
 
-复用现有 `hermes_telegram` adapter (已在 Hermes 配置)。新增 cron wrapper:
+复用现有 `arcadia_telegram` adapter (已在 Arcadia 配置)。新增 cron wrapper:
 
 ```bash
 # server/scripts/cron_with_alert.sh
@@ -50,7 +50,7 @@ set -euo pipefail
 result=$("$@" 2>&1) || rc=$?
 # 检查是否触发告警
 if [[ "${result}" =~ \[ALERT\] ]] || [[ ${rc:-0} -ne 0 ]]; then
-    echo "[CORTEX ALERT] ${result}" | hermes_telegram notify --channel admin
+    echo "[CORTEX ALERT] ${result}" | arcadia_telegram notify --channel admin
 fi
 ```
 
@@ -73,10 +73,10 @@ echo "last_run=$(date -u +%FT%TZ) status=ok deletions={sa:N,wm:N,arch:N}" \
 ### 正面
 - 失败可见 (从"沉默 watchdog" → "沉默 + 主动告警")
 - 三通道降级链: Telegram 挂了 → heartbeat 还在 → 至少沉默模式下个 cron 还会跑
-- 不引入新依赖 (复用 Hermes telegram adapter)
+- 不引入新依赖 (复用 Arcadia telegram adapter)
 
 ### 负面 / 风险
-- Telegram 通道依赖 Hermes 进程存活 (但 24/7 跑)
+- Telegram 通道依赖 Arcadia 进程存活 (但 24/7 跑)
 - Heartbeat 文件本机, 远程监控看不到 (本期先解决"进程死了"问题, 跨机监控下期)
 - 阈值是硬编码, 后续可放 settings 表
 

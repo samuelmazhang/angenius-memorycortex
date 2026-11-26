@@ -1,7 +1,7 @@
 # 1.3 韧性章落地报告
 
 > **状态**: 完成,2026-08-23 00:00 CST
-> **承接**: 整合评审 §1.3 韧性 6 个缺口(opencode / claude / 主 hermes 一致)
+> **承接**: 整合评审 §1.3 韧性 6 个缺口(opencode / claude / 主 arcadia 一致)
 
 ---
 
@@ -55,7 +55,7 @@ list 命令表格输出 + JSON 详细输出
 整合评审 §1.3 提的 6 个缺口,5 个直接落地,1 个**没做**:`merge conflict` 处理。理由:
 - merge conflict 出现的根本原因是**多个子代理 push 到同一分支** — 这违反红线 P3(限 3 个并行)+ 铁律 1(worktree 隔离)
 - v1.5 的 worktree 模型**已经避免了** merge conflict(每个 task 一个 worktree + feature branch)
-- 真正出现 merge conflict 是在**合并到 main 时** — 那是主 hermes 显式行为,可以走 S3.5 已有 audit + 人工 escalate
+- 真正出现 merge conflict 是在**合并到 main 时** — 那是主 arcadia 显式行为,可以走 S3.5 已有 audit + 人工 escalate
 - **所以不在 v1.5 加 merge conflict 工具,记入 Pitfall M: "并行 worktree 各自 commit 时如果分支冲突,SafeRollbackWorktree 兜底"**
 
 ### 3.2 audit log 统一入口
@@ -71,7 +71,7 @@ list 命令表格输出 + JSON 详细输出
 
 v1.5 设计:
 - `retry-with-backoff.py --max-attempts 3` 跑完 → exit 1 + 写 audit (event=circuit_breaker)
-- **不再自动继续 retry** — 主 hermes 读 audit,人工决策 (a) escalate / (b) 改方案 / (c) rollback + skip
+- **不再自动继续 retry** — 主 arcadia 读 audit,人工决策 (a) escalate / (b) 改方案 / (c) rollback + skip
 - 这样**避免了无限循环**+**保留人类控制权**
 
 ---
@@ -112,4 +112,4 @@ v1.5 设计:
 
 **累计:** v1.0 → v1.5 全部红线 19 条 + 工具 12 个 + 章节 3 个,从"约束卡"变成"可跑方法论"。
 
-— Hermes Agent (M3), 2026-08-23 00:00 CST
+— Arcadia Agent (M3), 2026-08-23 00:00 CST

@@ -13,7 +13,7 @@
 ## 12:30 — NEW3 跑完 (notify_on_complete 推过来)
 - 31/31 tests PASS
 - 203/203 server/tests/ PASS
-- 主 hermes 6 步验收
+- 主 arcadia 6 步验收
 - commit 2fee00b (worktree) + 6100af7 (task-dir on main)
 - mcp-graph finish node_b5b0ba3cca64 (CLI)
 

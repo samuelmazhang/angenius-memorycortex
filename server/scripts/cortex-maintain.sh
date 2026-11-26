@@ -65,13 +65,13 @@ docker run -d \
     -v /opt/cortex-deploy/work/server/src:/app/src:ro \
     -v /opt/cortex-deploy/work/server/docker/unified/schema.sql:/opt/cortex/schema.sql:ro \
     -v /opt/cortex-deploy/work/server/docker/unified/entrypoint.sh:/usr/local/bin/entrypoint.sh:ro \
-    -v /root/.local/share/cortex-models:/root/.hermes/plugins/memory-cortex/models:ro \
+    -v /root/.local/share/cortex-models:/root/.arcadia/plugins/memory-cortex/models:ro \
     -e PG_HOST=localhost \
     -e PG_PORT=5432 \
     -e PG_DB=postgres \
     -e PG_USER=postgres \
     -e PG_PASSWORD=change_me \
-    -e EMBEDDING_MODEL_PATH=/root/.hermes/plugins/memory-cortex/models/nomic-embed-text-v1.5 \
+    -e EMBEDDING_MODEL_PATH=/root/.arcadia/plugins/memory-cortex/models/nomic-embed-text-v1.5 \
     "$IMAGE"
 
 # 3. Wait for entrypoint.sh to finish PG startup (typically 30s

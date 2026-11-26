@@ -2,7 +2,7 @@
 
 - Status: ❌ Rejected (PoC-1 + PoC-2 + 权重搜索 5 次评估全 FAIL)
 - Date: 2026-08-07
-- Author: Hermes Agent (MiniMax-M3)
+- Author: Arcadia Agent (MiniMax-M3)
 - Depends on: V6.0 (ADR-067/068/069/070/071/072 已合入)
 - Supersedes: 无
 
