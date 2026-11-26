@@ -1,0 +1,12 @@
+fastapi>=0.109.0
+uvicorn>=0.27.0
+chromadb>=0.4.22
+sentence-transformers>=2.5.0
+pydantic>=2.6.0
+python-dotenv>=1.0.0
+# v6.5.0 Phase 1 direction #3 — Nomic v1.5 embedding upgrade (ROI 8).
+# HuggingFace Sentence-Transformers handle for nomic-ai/nomic-embed-text-v1.5.
+# MTEB 62.28 (vs MiniLM-L12-v2 ~58). Used by embed_text() dispatch when
+# EMBEDDING_MODEL=nomic-v1.5 (default). See server/src/api_pg.py.
+nomic>=1.4.0 ; platform_system != "Windows"
+sentence-transformers>=2.5.0

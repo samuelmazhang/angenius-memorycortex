@@ -1,0 +1,98 @@
+# Task: 评审 multi-cli-graph-software-development skill v1.2 — 实践验证 + 真实案例视角
+
+## 背景
+
+Hermes Agent 在 2026-08-22 写了一个 multi-cli 软件开发工作流方法论 skill: `multi-cli-graph-software-development` v1.2 (38.6KB / 536 行)。
+
+Skill 路径: `A:/Application/Hermes-Agent/UserData/skills/software-development/multi-cli-graph-software-development/SKILL.md`
+
+它是基于 **2026-08-22 7-CLI 失控事件** 反思后的版本(替换了 v0.7.1 `multi-cli-orchestrated-development`),5 条铁律 + 12 红线 + 9 pitfalls。
+
+**这次评审你要换"实证"角度** — 不是逻辑严密,不是安全,是**真实跑过什么 / 失败过什么 / 是否纸上谈兵**。
+
+## 评审角度
+
+你是 **实践验证 + 真实案例** 评审者。重点找:
+
+1. **有没有回归测试** — 这个 skill 替换了 v0.7.1,是不是有跑过实际 sprint 验证?用户 OOB:"skill 升级后必跑回归测试" — v1.2 跑过吗?跑过什么?
+2. **铁律 5(TDD split)是否真落地** — 主 hermes 写测试方案,子代理写测试用例 + 实现,这流程在真实 sprint 里跑得通吗?有什么现实障碍?
+3. **现实场景覆盖**: 这个 skill 能 cover 哪些真实场景?哪些场景它没说?
+   - 单个 PR 改 1 文件(需要 multi-cli 吗?)
+   - 重构整个模块(粒度怎么切?)
+   - 多语言 monorepo(python + TS + Go 混)
+   - 调试难 bug(不是加新功能)
+   - 安全 patch(紧急)
+4. **失败案例对照** — 2026-08-22 那个 7-CLI 失控是 v0.7.1 造成的,v1.2 的铁律能不能真防住?有哪条铁律如果子代理/CLI 不遵守,会再次失控?
+5. **可观测性**: 主 hermes 怎么知道子代理出问题了?有 health check / log / metric 吗?失败了怎么诊断?
+6. **跟 superpowers 的实操差距**: superpowers 那套"5 轮 fix loop"很完整,v1.2 的 fix loop 在哪?是真的实现了还是只是引用了?
+7. **reviewer reviewer**: hermes leaf reviewer 的输出信任度怎么验证?有没有" reviewer 跟过"机制?
+
+## 强烈要求网络搜索
+
+- `mmx search query --q "multi-agent coding workflow real case study review" --output text --quiet --non-interactive`
+- `mmx search query --q "subagent-driven-development fix loop implementation" --output text --quiet --non-interactive`
+- `mmx search query --q "TDD split plan implementer reviewer production" --output text --quiet --non-interactive`
+- `mmx search query --q "AI coding agent spawn multiple CLI parallel failure mode" --output text --quiet --non-interactive`
+
+**至少引用 2 个外部来源**(GitHub 项目 / case study / 博客)。
+
+## 评审产出(结构化)
+
+写到 stdout:
+
+```
+## 外部参考来源
+1. <URL> — 一句话核心观点
+2. ...
+
+## 这篇 SKILL.md 是纸上谈兵还是真能跑?
+
+### 没跑过的部分
+- 哪些铁律 / 红线只是"看着对",没真实 sprint 验证过?
+- 真实跑会出什么问题?
+
+### 已跑过的部分(从 SKILL.md 文本推断)
+- v1.0 → v1.1 → v1.2 各阶段的 chang 说明是事后总结 — 但有没有跑过回归测试?
+
+## 真实场景覆盖矩阵
+| 场景 | skill 覆盖? | 现实障碍? |
+|------|-------------|----------|
+| 单文件 bug fix | | |
+| 重构模块 | | |
+| 多语言 monorepo | | |
+| 调试 bug | | |
+| 安全 patch | | |
+
+## 失败场景对照(对比 v0.7.1)
+- 失控场景 1: ...
+- v1.2 怎么防:?
+- v1.2 防不住的可能:?
+
+## 可观测性缺口
+- 主 hermes 看不到子代理进度的盲区在哪?
+- 失败诊断的 fast path 在哪?
+
+## 反驳
+- 哪条铁律其实是过度工程?(真实 sprint 用不上)
+- 哪个场景应该用 superpowers 直接做,不需要本 skill?
+```
+
+## 重要约束
+
+- **不要写 skill 文档**
+- **必须用网络搜索**
+- 输出长度:400-800 字
+- 评审要犀利,挑刺为主
+
+## 关键源文件
+
+- 主 SKILL.md(本次评审目标,38.9KB / 538 行):
+  `..sprint-review/multi-cli-skill-v12-review/skill-copy/SKILL.md`
+  **这是工作目录内的本地副本**(原文件在 `A:/Application/Hermes-Agent/UserData/skills/`,opencode 沙箱外)。请先读本地副本。
+- 反思事件参考: `.docs\methodology\2026-08-22-multi-cli-incident-retrospective.md`
+
+## 不需要做的事
+
+- 不需要评审 workflow(其他 CLI)
+- 不需要评审安全(其他 CLI)
+- 不需要建 skill 文件

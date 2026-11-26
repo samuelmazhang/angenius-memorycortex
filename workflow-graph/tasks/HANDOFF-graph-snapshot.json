@@ -1,0 +1,931 @@
+{
+  "snapshot_at": "2026-08-23T13:00:00Z",
+  "snapshot_reason": "HANDOFF Phase 1+2 complete (12/12 directions)",
+  "project": {
+    "id": "proj_282c9f0b9dfb",
+    "name": "Cortex v6.3.1 Improvement Plan"
+  },
+  "stats": {
+    "node_count": 18,
+    "edge_count": 13,
+    "by_status": {
+      "in_progress": 1,
+      "done": 17
+    },
+    "by_type": {
+      "epic": 1,
+      "subtask": 5,
+      "task": 12
+    }
+  },
+  "nodes": [
+    {
+      "id": "node_v6_5_0_phase_1_epic",
+      "project_id": "proj_282c9f0b9dfb",
+      "type": "epic",
+      "title": "Cortex v6.5.0 Phase 1 Implementation",
+      "description": "Cortex v6.3.1 改进方案 v3 Phase 1 (5-7 周 30-33 人天).\n7 个方向:#2 召回公式 / #A consolidation / #3 embedding / #4 LOCOMO harness / #5 HNSW / #B graph PPR / #C summary compaction.\n\nPlan doc: docs/改进方案-cortex-v6.5.0-完整版-20260822.md (526 行)\nFirst direction: #2 召回公式修正 (ROI 9 排第一)",
+      "status": "in_progress",
+      "priority": 3,
+      "xp_size": "XL",
+      "estimate_minutes": 600,
+      "tags": [
+        "v6.5.0",
+        "phase-1",
+        "cortex",
+        "improvement-plan"
+      ],
+      "parent_id": null,
+      "sprint": "v6.5.0-Phase-1",
+      "source_file": null,
+      "source_start_line": null,
+      "source_end_line": null,
+      "source_confidence": null,
+      "acceptance_criteria": [
+        "7 个方向每个至少有 1 个 subtask 节点",
+        "每个方向 sprint 测试通过率 >95%",
+        "LOCOMO 1986 case F1/BLEU/EM baseline 记录",
+        "A/B grey 50% 上线准备"
+      ],
+      "blocked": false,
+      "metadata": {
+        "phase_1_progress": {
+          "phase_1_completion": "9/9 directions done",
+          "phase_1_status": "COMPLETE"
+        },
+        "phase_2_progress": {
+          "NEW3_combined": "203/203",
+          "NEW3_status": "done",
+          "NEW3_tests": "31/31",
+          "direction_6_combined": "202/202",
+          "direction_6_status": "done",
+          "direction_6_tests": "30/30",
+          "direction_9_combined": "235/235",
+          "direction_9_status": "done",
+          "direction_9_tests": "32/32",
+          "phase_2_completion": "3/3 directions done",
+          "phase_2_status": "COMPLETE"
+        },
+        "total_progress": "12/12 directions (Phase 1 + 2)"
+      },
+      "created_at": "2026-08-22T18:06:40Z",
+      "updated_at": "2026-08-23T04:57:46.259Z",
+      "test_files": null,
+      "modified_by": "unknown",
+      "version": 13,
+      "evolution_reason": "🎉 PHASE 2 COMPLETE 3/3: #9 RAPTOR (commit 2453de1 + 1c0bc3e + 785223a). Total 235/235 tests, 0 回归. Phase 1+2 = 12/12 directions done. 17/18 graph nodes (94%).",
+      "evolution_count": 12
+    },
+    {
+      "id": "node_v6_5_0_subtask_2_1_formula",
+      "project_id": "proj_282c9f0b9dfb",
+      "type": "subtask",
+      "title": "#2.1 composite_score 公式权重调整",
+      "description": "修改 server/src/api_pg.py:1281-1282。详见 dispatch-prompt.md。",
+      "status": "done",
+      "priority": 1,
+      "xp_size": "S",
+      "estimate_minutes": 600,
+      "tags": [
+        "v6.5.0",
+        "phase-1",
+        "direction-2"
+      ],
+      "parent_id": "node_v6_5_0_d2_recall_fix",
+      "sprint": "v6.5.0-Phase-1",
+      "source_file": "server/src/api_pg.py",
+      "source_start_line": null,
+      "source_end_line": null,
+      "source_confidence": null,
+      "acceptance_criteria": [
+        "server/src/api_pg.py:1281-1282 修改后通过对应 pytest",
+        "diff 不超过 20 行"
+      ],
+      "blocked": false,
+      "metadata": {
+        "worktree": "..worktrees/v6.5.0-phase-1-implementation",
+        "files": [
+          "server/src/api_pg.py:1281-1282"
+        ],
+        "parent_task": "#2 召回公式修正"
+      },
+      "created_at": "2026-08-22T18:06:40Z",
+      "updated_at": "2026-08-22T18:10:38Z",
+      "test_files": null,
+      "modified_by": null,
+      "version": 1,
+      "evolution_reason": null,
+      "evolution_count": 0
+    },
+    {
+      "id": "node_v6_5_0_subtask_2_2_cold_start",
+      "project_id": "proj_282c9f0b9dfb",
+      "type": "subtask",
+      "title": "#2.2 _relevance_scores() 冷启动预热",
+      "description": "修改 server/src/api_pg.py:1036-1050。详见 dispatch-prompt.md。",
+      "status": "done",
+      "priority": 1,
+      "xp_size": "S",
+      "estimate_minutes": 600,
+      "tags": [
+        "v6.5.0",
+        "phase-1",
+        "direction-2"
+      ],
+      "parent_id": "node_v6_5_0_d2_recall_fix",
+      "sprint": "v6.5.0-Phase-1",
+      "source_file": "server/src/api_pg.py",
+      "source_start_line": null,
+      "source_end_line": null,
+      "source_confidence": null,
+      "acceptance_criteria": [
+        "server/src/api_pg.py:1036-1050 修改后通过对应 pytest",
+        "diff 不超过 20 行"
+      ],
+      "blocked": false,
+      "metadata": {
+        "worktree": "..worktrees/v6.5.0-phase-1-implementation",
+        "files": [
+          "server/src/api_pg.py:1036-1050"
+        ],
+        "parent_task": "#2 召回公式修正"
+      },
+      "created_at": "2026-08-22T18:06:40Z",
+      "updated_at": "2026-08-22T18:10:38Z",
+      "test_files": null,
+      "modified_by": null,
+      "version": 1,
+      "evolution_reason": null,
+      "evolution_count": 0
+    },
+    {
+      "id": "node_v6_5_0_subtask_2_3_pydantic",
+      "project_id": "proj_282c9f0b9dfb",
+      "type": "subtask",
+      "title": "#2.3 min_importance Pydantic 校验",
+      "description": "修改 server/src/api_pg.py:860, 1164-1166, 1413-1415。详见 dispatch-prompt.md。",
+      "status": "done",
+      "priority": 1,
+      "xp_size": "S",
+      "estimate_minutes": 600,
+      "tags": [
+        "v6.5.0",
+        "phase-1",
+        "direction-2"
+      ],
+      "parent_id": "node_v6_5_0_d2_recall_fix",
+      "sprint": "v6.5.0-Phase-1",
+      "source_file": "server/src/api_pg.py",
+      "source_start_line": null,
+      "source_end_line": null,
+      "source_confidence": null,
+      "acceptance_criteria": [
+        "server/src/api_pg.py:860, 1164-1166, 1413-1415 修改后通过对应 pytest",
+        "diff 不超过 20 行"
+      ],
+      "blocked": false,
+      "metadata": {
+        "worktree": "..worktrees/v6.5.0-phase-1-implementation",
+        "files": [
+          "server/src/api_pg.py:860, 1164-1166, 1413-1415"
+        ],
+        "parent_task": "#2 召回公式修正"
+      },
+      "created_at": "2026-08-22T18:06:40Z",
+      "updated_at": "2026-08-22T18:10:38Z",
+      "test_files": null,
+      "modified_by": null,
+      "version": 1,
+      "evolution_reason": null,
+      "evolution_count": 0
+    },
+    {
+      "id": "node_v6_5_0_subtask_2_4_related",
+      "project_id": "proj_282c9f0b9dfb",
+      "type": "subtask",
+      "title": "#2.4 include_related 邻居扩展参数",
+      "description": "修改 server/src/api_pg.py:1252-1256。详见 dispatch-prompt.md。",
+      "status": "done",
+      "priority": 1,
+      "xp_size": "S",
+      "estimate_minutes": 600,
+      "tags": [
+        "v6.5.0",
+        "phase-1",
+        "direction-2"
+      ],
+      "parent_id": "node_v6_5_0_d2_recall_fix",
+      "sprint": "v6.5.0-Phase-1",
+      "source_file": "server/src/api_pg.py",
+      "source_start_line": null,
+      "source_end_line": null,
+      "source_confidence": null,
+      "acceptance_criteria": [
+        "server/src/api_pg.py:1252-1256 修改后通过对应 pytest",
+        "diff 不超过 20 行"
+      ],
+      "blocked": false,
+      "metadata": {
+        "worktree": "..worktrees/v6.5.0-phase-1-implementation",
+        "files": [
+          "server/src/api_pg.py:1252-1256"
+        ],
+        "parent_task": "#2 召回公式修正"
+      },
+      "created_at": "2026-08-22T18:06:40Z",
+      "updated_at": "2026-08-22T18:10:38Z",
+      "test_files": null,
+      "modified_by": null,
+      "version": 1,
+      "evolution_reason": null,
+      "evolution_count": 0
+    },
+    {
+      "id": "node_v6_5_0_d2_recall_fix",
+      "project_id": "proj_282c9f0b9dfb",
+      "type": "task",
+      "title": "#2 召回公式修正 (imp 5%→ 15%) + 新块冷启动 + Pydantic 校验",
+      "description": "方向 #2 详细规格(来自方案 v3 第 7 节):\n\n1. composite_score 权重调整 (server/src/api_pg.py:1281-1282)\n   - rrf_norm: 0.6 → 0.5 (-0.1)\n   - imp: 0.05 → 0.15 (+0.10)\n   - rlv: 0.1 → 0.05 (-0.05)\n   - sim_eff + recency: 不变 (0.4 + 0.1)\n\n2. _relevance_scores() 冷启动预热 (L1036)\n   - 0.3 base + 0.05*imp + 0.2 if type=note + min(count, 10)/10\n\n3. Pydantic 校验 (L860)\n   - min_importance: Optional[int]=None → int = Field(0, ge=0, le=10)\n   - L1164 / L1413 同步\n\n4. include_related 邻居扩展 (L1252-1256)\n   - min_strength: 0.5 → 0.3\n   - cap: 6 → 10\n   - 保留 lex_hit neighbors\n   - importance≥6 second-pass filter",
+      "status": "done",
+      "priority": 1,
+      "xp_size": "M",
+      "estimate_minutes": 600,
+      "tags": [
+        "v6.5.0",
+        "phase-1",
+        "direction-2",
+        "recall-formula",
+        "api-search"
+      ],
+      "parent_id": "node_v6_5_0_phase_1_epic",
+      "sprint": "v6.5.0-Phase-1",
+      "source_file": "docs/改进方案-cortex-v6.5.0-完整版-20260822.md",
+      "source_start_line": 200,
+      "source_end_line": 350,
+      "source_confidence": 0.95,
+      "acceptance_criteria": [
+        "5 个 pytest 全过 (test_recall_v6_5.py)",
+        "现有 tests/ 全过 (无 regression)",
+        "composite_score 在 imp=10 / rrf_norm=1 / sim_eff=1 / recency=1 / rlv=0.5 下计算正确",
+        "min_importance=-1 / 11 / 20 抛 ValidationError"
+      ],
+      "blocked": false,
+      "metadata": {
+        "worktree": "..worktrees\u000b6.5.0-phase-1-implementation",
+        "files": [
+          "server/src/api_pg.py:860",
+          "server/src/api_pg.py:1036-1050",
+          "server/src/api_pg.py:1164-1166",
+          "server/src/api_pg.py:1252-1282",
+          "server/src/api_pg.py:1413-1415"
+        ],
+        "test_plan": "5 个 pytest cases:\n1. test_composite_score_weights - 权重符合 v6.5 spec\n2. test_recall_formula_imp_weight_increased - imp 0.05→0.15\n3. test_min_importance_validation - Field(0, ge=0, le=10) 拒绝负数/超 10\n4. test_cold_start_relevance_score - 新块 rlv >= 0.3\n5. test_include_related_min_strength_lower - 0.3 strength 弱链能进",
+        "smoke_cmd": "pytest tests/test_recall_v6_5.py -v",
+        "scenario": "new-feature",
+        "cli": "claude-code",
+        "dispatch_prompt": "workflow-graph/tasks/v6.5.0-phase-1-implementation/dispatch-prompt.md",
+        "task_dir": "workflow-graph/tasks/v6.5.0-phase-1-implementation/",
+        "expected_token": 5000,
+        "estimated_minutes": 10,
+        "iron_law_5_tdd": {
+          "test_plan_author": "main_hermes",
+          "test_code_author": "claude-code",
+          "review_before_run": "main_hermes_after_claude_completes"
+        },
+        "iron_law_1_worktree_binding": "..worktrees/v6.5.0-phase-1-implementation"
+      },
+      "created_at": "2026-08-22T18:06:40Z",
+      "updated_at": "2026-08-22T18:15:16.778Z",
+      "test_files": null,
+      "modified_by": null,
+      "version": 1,
+      "evolution_reason": null,
+      "evolution_count": 0
+    },
+    {
+      "id": "node_0620546ff0f9",
+      "project_id": "proj_282c9f0b9dfb",
+      "type": "task",
+      "title": "#A consolidation pipeline (Mem0-style + ADR-068)",
+      "description": "#A consolidation pipeline (Mem0-style + LLM 抽取 + ADR-068 冲突兜底) (ROI 9 并列第一)\n\n4 个 subtask:\n- #A.1 LLM 抽取层 server/src/consolidate/extract.py (~200 行)\n- #A.2 ADR-068 conflict_resolve SUPERSEDE 逻辑\n- #A.3 scheduler.py 每 100 chunks 触发\n- #A.4 eval integration with #4 LOCOMO harness\n\nAnchors: Mem0 arXiv:2504.19413, A-MEM arXiv:2502.12110 NeurIPS 2025, BEAM arXiv:2510.27246 ICLR 2026\n\nEffort: 8-10 person-days. LLM cost ~$15-30/mo.\"",
+      "status": "done",
+      "priority": 1,
+      "xp_size": "XL",
+      "estimate_minutes": 4800,
+      "tags": [
+        "v6.5.0",
+        "phase-1",
+        "direction-A",
+        "consolidation",
+        "mem0",
+        "ADR-068"
+      ],
+      "parent_id": "node_v6_5_0_phase_1_epic",
+      "sprint": "v6.5.0-Phase-1",
+      "source_file": null,
+      "source_start_line": null,
+      "source_end_line": null,
+      "source_confidence": null,
+      "acceptance_criteria": [
+        "[8 个 pytest 全过 (extract / conflict_resolve / scheduler / eval integration)\",4 个 subtask 各自验证通过,主流程 e2e 测试\"]"
+      ],
+      "blocked": false,
+      "metadata": {
+        "provenance": {
+          "source": "mcp",
+          "actor": "unknown",
+          "ts": "2026-08-22T18:15:38.623Z"
+        },
+        "touchedFilesObserved": [
+          "connector/hermes/scripts/fix_migration_source.py",
+          "connector/hermes/scripts/migrate_md_to_cortex.py",
+          "connector/hermes/scripts/smoke_memory_tool_cortex.py"
+        ]
+      },
+      "created_at": "2026-08-22T18:15:38.623Z",
+      "updated_at": "2026-08-22T18:44:48.923Z",
+      "test_files": "[\"server/tests/test_consolidate_v6_5.py\"]",
+      "modified_by": null,
+      "version": 3,
+      "evolution_reason": null,
+      "evolution_count": 0
+    },
+    {
+      "id": "node_e0fcb00af751",
+      "project_id": "proj_282c9f0b9dfb",
+      "type": "subtask",
+      "title": "#A.1 LLM 抽取层 extract.py",
+      "description": "#A.1 LLM 抽取层 server/src/consolidate/extract.py (~200 行)\n\n调用 LLM (Anthropic SDK or MiniMax-M3 via http://localhost:8080/v1/chat/completions) 抽取结构化记忆:\n- 输入: chunk.content + ±2 邻居 chunks\n- 输出 JSON schema: {\"facts\": [{\"entity\": \"...\", \"predicate\": \"...\", \"value\": \"...\"}], \"timeline\": [{\"date\": \"...\", \"event\": \"...\"}], \"preferences\": [{\"category\": \"...\", \"preference\": \"...\"}]}\n- LLM 配置用 server/src/config.py 的 llm_url / llm_api_key / llm_model / llm_timeout\n- 重试: tenacity 或手写 retry with backoff (3 attempts, 30s/60s/120s)\n- 错误处理: LLM 不可达时返回空 list,不抛异常(让上层 handle)\n\n依赖: #A.2 conflict_resolve (用 extract 输出), #A.3 scheduler (触发 extract)",
+      "status": "done",
+      "priority": 1,
+      "xp_size": "M",
+      "estimate_minutes": 600,
+      "tags": [
+        "v6.5.0",
+        "phase-1",
+        "direction-A",
+        "consolidate",
+        "LLM-extract",
+        "mem0"
+      ],
+      "parent_id": "node_0620546ff0f9",
+      "sprint": "v6.5.0-Phase-1",
+      "source_file": null,
+      "source_start_line": null,
+      "source_end_line": null,
+      "source_confidence": null,
+      "acceptance_criteria": [
+        "[extract() 函数 5 个 test case 通过,异步 LLM 调用 + retry with backoff,JSON schema 验证抽出 facts/timeline/preferences,error handling: LLM 不可达时 graceful fallback]"
+      ],
+      "blocked": false,
+      "metadata": {
+        "provenance": {
+          "source": "mcp",
+          "actor": "unknown",
+          "ts": "2026-08-22T18:21:33.905Z"
+        },
+        "_harnessBaseline": 95,
+        "touchedFilesObserved": [
+          "connector/hermes/scripts/fix_migration_source.py",
+          "connector/hermes/scripts/migrate_md_to_cortex.py",
+          "connector/hermes/scripts/smoke_memory_tool_cortex.py"
+        ]
+      },
+      "created_at": "2026-08-22T18:21:33.905Z",
+      "updated_at": "2026-08-22T18:36:59.392Z",
+      "test_files": "[\"server/tests/test_consolidate_v6_5.py\"]",
+      "modified_by": null,
+      "version": 4,
+      "evolution_reason": null,
+      "evolution_count": 0
+    },
+    {
+      "id": "node_58a0139f64b8",
+      "project_id": "proj_282c9f0b9dfb",
+      "type": "task",
+      "title": "#3 Nomic v1.5 embedding 升级 + 增量 re-embed (auto-pilot)",
+      "description": "v6.5.0 Phase 1 direction #3 (ROI 8, 3.5 人天). 5 步: (1) requirements.txt 加 nomic-embed-text-v1.5; (2) memory_chunks.model_version 字段; (3) 新 chunk 用 Nomic embed; (4) background ETL re-embed 老 chunks (A/B grey 10% → 50% → 100%); (5) query 统一 Nomic embed. MTEB 58 → 62.28.",
+      "status": "done",
+      "priority": 3,
+      "xp_size": "M",
+      "estimate_minutes": null,
+      "tags": [
+        "v6.5.0",
+        "phase-1",
+        "direction-3",
+        "embedding",
+        "Nomic-v1.5",
+        "auto-pilot"
+      ],
+      "parent_id": "node_v6_5_0_phase_1_epic",
+      "sprint": null,
+      "source_file": null,
+      "source_start_line": null,
+      "source_end_line": null,
+      "source_confidence": null,
+      "acceptance_criteria": {},
+      "blocked": false,
+      "metadata": {
+        "provenance": {
+          "source": "cli",
+          "actor": "user",
+          "cmd": "mcp-graph add task",
+          "ts": "2026-08-22T19:06:58.752Z"
+        }
+      },
+      "created_at": "2026-08-22T19:06:58.752Z",
+      "updated_at": "2026-08-22T19:33:14.422Z",
+      "test_files": null,
+      "modified_by": null,
+      "version": 1,
+      "evolution_reason": null,
+      "evolution_count": 0
+    },
+    {
+      "id": "node_62068c377af1",
+      "project_id": "proj_282c9f0b9dfb",
+      "type": "task",
+      "title": "#5 HNSW 参数调优 m=24 (auto-pilot 2/7)",
+      "description": "v6.5.0 Phase 1 direction #5 (ROI 4, 1 人天). HNSW m=16 → m=24, ef_search 100-200. 1 行 SQL + 1 个 env var.",
+      "status": "done",
+      "priority": 3,
+      "xp_size": null,
+      "estimate_minutes": null,
+      "tags": {},
+      "parent_id": "node_v6_5_0_phase_1_epic",
+      "sprint": null,
+      "source_file": null,
+      "source_start_line": null,
+      "source_end_line": null,
+      "source_confidence": null,
+      "acceptance_criteria": {},
+      "blocked": false,
+      "metadata": {
+        "provenance": {
+          "source": "cli",
+          "actor": "user",
+          "cmd": "mcp-graph add task",
+          "ts": "2026-08-22T19:35:04.711Z"
+        }
+      },
+      "created_at": "2026-08-22T19:35:04.711Z",
+      "updated_at": "2026-08-22T19:44:54.976Z",
+      "test_files": null,
+      "modified_by": null,
+      "version": 1,
+      "evolution_reason": null,
+      "evolution_count": 0
+    },
+    {
+      "id": "node_90180b7a9dda",
+      "project_id": "proj_282c9f0b9dfb",
+      "type": "task",
+      "title": "#4 LOCOMO 1986 online eval harness (auto-pilot 3/7)",
+      "description": "v6.5.0 Phase 1 direction #4 (ROI 7, 7 人天). LOCOMO 1986 case 加载 + Cortex 适配 + LLM-as-Judge + CI 集成. snap-research/locomo, 1986 QA pairs × 10 convs. CI 拆 200 case 抽样 + 完整 nightly. LLM-as-Judge ~/mo.",
+      "status": "done",
+      "priority": 3,
+      "xp_size": null,
+      "estimate_minutes": null,
+      "tags": {},
+      "parent_id": "node_v6_5_0_phase_1_epic",
+      "sprint": null,
+      "source_file": null,
+      "source_start_line": null,
+      "source_end_line": null,
+      "source_confidence": null,
+      "acceptance_criteria": {},
+      "blocked": false,
+      "metadata": {
+        "provenance": {
+          "source": "cli",
+          "actor": "user",
+          "cmd": "mcp-graph add task",
+          "ts": "2026-08-23T03:05:16.460Z"
+        }
+      },
+      "created_at": "2026-08-23T03:05:16.460Z",
+      "updated_at": "2026-08-23T03:22:53.008Z",
+      "test_files": null,
+      "modified_by": null,
+      "version": 1,
+      "evolution_reason": null,
+      "evolution_count": 0
+    },
+    {
+      "id": "node_e05c670d7380",
+      "project_id": "proj_282c9f0b9dfb",
+      "type": "task",
+      "title": "#A.2 ADR-068 conflict_resolve SUPERSEDE/DEDUPE (auto-pilot 4/7)",
+      "description": "v6.5.0 Phase 1 direction #A.2 (续 consolidation). ADR-068 conflict_resolve SUPERSEDE/DEDUPE 逻辑, 用 memory_chunks.metadata->>'user_id' 分桶. 接 extract() 输出,处理重复/冲突.",
+      "status": "done",
+      "priority": 3,
+      "xp_size": null,
+      "estimate_minutes": null,
+      "tags": {},
+      "parent_id": "node_v6_5_0_phase_1_epic",
+      "sprint": null,
+      "source_file": null,
+      "source_start_line": null,
+      "source_end_line": null,
+      "source_confidence": null,
+      "acceptance_criteria": {},
+      "blocked": false,
+      "metadata": {
+        "provenance": {
+          "source": "cli",
+          "actor": "user",
+          "cmd": "mcp-graph add task",
+          "ts": "2026-08-23T03:26:15.119Z"
+        }
+      },
+      "created_at": "2026-08-23T03:26:15.119Z",
+      "updated_at": "2026-08-23T03:43:06.992Z",
+      "test_files": null,
+      "modified_by": null,
+      "version": 1,
+      "evolution_reason": null,
+      "evolution_count": 0
+    },
+    {
+      "id": "node_da33db15e3ec",
+      "project_id": "proj_282c9f0b9dfb",
+      "type": "task",
+      "title": "#A.3 scheduler.py 每 100 chunks 触发反思 (auto-pilot 5/7)",
+      "description": "v6.5.0 Phase 1 direction #A.3 (续 consolidation). scheduler.py 每 100 chunks 触发反思 (rolling window), 复用 #A.1 extract() + #A.2 conflict_resolve(). 配套 ADR-068 后台 job.",
+      "status": "done",
+      "priority": 3,
+      "xp_size": null,
+      "estimate_minutes": null,
+      "tags": {},
+      "parent_id": "node_v6_5_0_phase_1_epic",
+      "sprint": null,
+      "source_file": null,
+      "source_start_line": null,
+      "source_end_line": null,
+      "source_confidence": null,
+      "acceptance_criteria": {},
+      "blocked": false,
+      "metadata": {
+        "provenance": {
+          "source": "cli",
+          "actor": "user",
+          "cmd": "mcp-graph add task",
+          "ts": "2026-08-23T03:47:14.943Z"
+        }
+      },
+      "created_at": "2026-08-23T03:47:14.943Z",
+      "updated_at": "2026-08-23T03:57:22.996Z",
+      "test_files": null,
+      "modified_by": null,
+      "version": 1,
+      "evolution_reason": null,
+      "evolution_count": 0
+    },
+    {
+      "id": "node_068b77fea072",
+      "project_id": "proj_282c9f0b9dfb",
+      "type": "task",
+      "title": "#B graph index 社区检测 + HippoRAG PPR (auto-pilot 6/7)",
+      "description": "v6.5.0 Phase 1 direction #B (新增, ROI 8). graph index 社区检测 (Leiden) + HippoRAG PPR (Personalized PageRank) 实现. 3-5 人天 spec. 学术锚点: HippoRAG arXiv:2406.01348 ICLR 2025, GraphRAG arXiv:2404.16130.",
+      "status": "done",
+      "priority": 3,
+      "xp_size": null,
+      "estimate_minutes": null,
+      "tags": {},
+      "parent_id": "node_v6_5_0_phase_1_epic",
+      "sprint": null,
+      "source_file": null,
+      "source_start_line": null,
+      "source_end_line": null,
+      "source_confidence": null,
+      "acceptance_criteria": {},
+      "blocked": false,
+      "metadata": {
+        "provenance": {
+          "source": "cli",
+          "actor": "user",
+          "cmd": "mcp-graph add task",
+          "ts": "2026-08-23T04:01:54.946Z"
+        }
+      },
+      "created_at": "2026-08-23T04:01:54.946Z",
+      "updated_at": "2026-08-23T04:16:53.842Z",
+      "test_files": null,
+      "modified_by": null,
+      "version": 1,
+      "evolution_reason": null,
+      "evolution_count": 0
+    },
+    {
+      "id": "node_4cd220af7a96",
+      "project_id": "proj_282c9f0b9dfb",
+      "type": "task",
+      "title": "#C 长对话 summary compaction (auto-pilot 7/7)",
+      "description": "v6.5.0 Phase 1 direction #C. 长对话 summary compaction 减少 memory_chunks 数量, 保留关键信息. 2-3 人天. 配套 consolidation pipeline.",
+      "status": "done",
+      "priority": 3,
+      "xp_size": null,
+      "estimate_minutes": null,
+      "tags": {},
+      "parent_id": "node_v6_5_0_phase_1_epic",
+      "sprint": null,
+      "source_file": null,
+      "source_start_line": null,
+      "source_end_line": null,
+      "source_confidence": null,
+      "acceptance_criteria": {},
+      "blocked": false,
+      "metadata": {
+        "provenance": {
+          "source": "cli",
+          "actor": "user",
+          "cmd": "mcp-graph add task",
+          "ts": "2026-08-23T04:01:57.604Z"
+        }
+      },
+      "created_at": "2026-08-23T04:01:57.604Z",
+      "updated_at": "2026-08-23T04:19:24.855Z",
+      "test_files": null,
+      "modified_by": null,
+      "version": 1,
+      "evolution_reason": null,
+      "evolution_count": 0
+    },
+    {
+      "id": "node_b5b0ba3cca64",
+      "project_id": "proj_282c9f0b9dfb",
+      "type": "task",
+      "title": "#NEW3 LLM-extracted fact 质量监控 (Phase 2)",
+      "description": "Phase 2 direction NEW3 (ROI 6, 0.5 人天). LLM-extracted fact hallucination rate 监控. 配套 consolidation pipeline (#A.1 extract.py). 监控 fact_confidence 分布, 标记 low-quality fact, A/B 灰度时优先过滤. 学术锚点: Mem0 fact quality monitoring.",
+      "status": "done",
+      "priority": 3,
+      "xp_size": null,
+      "estimate_minutes": null,
+      "tags": {},
+      "parent_id": "node_v6_5_0_phase_1_epic",
+      "sprint": null,
+      "source_file": null,
+      "source_start_line": null,
+      "source_end_line": null,
+      "source_confidence": null,
+      "acceptance_criteria": {},
+      "blocked": false,
+      "metadata": {
+        "provenance": {
+          "source": "cli",
+          "actor": "user",
+          "cmd": "mcp-graph add task",
+          "ts": "2026-08-23T04:22:58.586Z"
+        }
+      },
+      "created_at": "2026-08-23T04:22:58.586Z",
+      "updated_at": "2026-08-23T04:29:13.141Z",
+      "test_files": null,
+      "modified_by": null,
+      "version": 1,
+      "evolution_reason": null,
+      "evolution_count": 0
+    },
+    {
+      "id": "node_8a0cbc4dcc9b",
+      "project_id": "proj_282c9f0b9dfb",
+      "type": "task",
+      "title": "#6 FastAPI OpenTelemetry observability (Phase 2)",
+      "description": "Phase 2 direction #6 (ROI 7, 4 人天). FastAPI OpenTelemetry 集成 + trace/metrics + 2638 chunks monitoring. debug +30% via traces. arXiv:2006.04614 OpenTelemetry spec.",
+      "status": "done",
+      "priority": 3,
+      "xp_size": null,
+      "estimate_minutes": null,
+      "tags": {},
+      "parent_id": "node_v6_5_0_phase_1_epic",
+      "sprint": null,
+      "source_file": null,
+      "source_start_line": null,
+      "source_end_line": null,
+      "source_confidence": null,
+      "acceptance_criteria": {},
+      "blocked": false,
+      "metadata": {
+        "provenance": {
+          "source": "cli",
+          "actor": "user",
+          "cmd": "mcp-graph add task",
+          "ts": "2026-08-23T04:23:40.887Z"
+        }
+      },
+      "created_at": "2026-08-23T04:23:40.887Z",
+      "updated_at": "2026-08-23T04:41:41.169Z",
+      "test_files": null,
+      "modified_by": null,
+      "version": 1,
+      "evolution_reason": null,
+      "evolution_count": 0
+    },
+    {
+      "id": "node_00eddafac007",
+      "project_id": "proj_282c9f0b9dfb",
+      "type": "task",
+      "title": "#9 RAPTOR 递归摘要层 (Phase 2, auto-pilot 9/?)",
+      "description": "Phase 2 direction #9 (ROI 6, 7 人天). RAPTOR 递归摘要层 (Sarthi et al. Stanford ICLR 2024 arXiv:2401.18059). 多层 cluster + recursive summarization, 提升 QuALITY +20%.",
+      "status": "done",
+      "priority": 3,
+      "xp_size": null,
+      "estimate_minutes": null,
+      "tags": {},
+      "parent_id": "node_v6_5_0_phase_1_epic",
+      "sprint": null,
+      "source_file": null,
+      "source_start_line": null,
+      "source_end_line": null,
+      "source_confidence": null,
+      "acceptance_criteria": {},
+      "blocked": false,
+      "metadata": {
+        "provenance": {
+          "source": "cli",
+          "actor": "user",
+          "cmd": "mcp-graph add task",
+          "ts": "2026-08-23T04:38:23.641Z"
+        }
+      },
+      "created_at": "2026-08-23T04:38:23.641Z",
+      "updated_at": "2026-08-23T04:56:24.268Z",
+      "test_files": null,
+      "modified_by": null,
+      "version": 1,
+      "evolution_reason": null,
+      "evolution_count": 0
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge_v6_5_0_e2t",
+      "project_id": "proj_282c9f0b9dfb",
+      "from_node": "node_v6_5_0_phase_1_epic",
+      "to_node": "node_v6_5_0_d2_recall_fix",
+      "relation_type": "parent_of",
+      "weight": 1.0,
+      "reason": "Phase 1 包含 #2 召回公式",
+      "metadata": "{\"created_during\":\"v6.5.0 sprint dispatch\",\"task_dir\":\"workflow-graph/tasks/v6.5.0-phase-1-implementation/\"}",
+      "created_at": "2026-08-22T18:07:01Z",
+      "modified_by": null,
+      "version": 1
+    },
+    {
+      "id": "edge_v6_5_0_t2s1",
+      "project_id": "proj_282c9f0b9dfb",
+      "from_node": "node_v6_5_0_d2_recall_fix",
+      "to_node": "node_v6_5_0_subtask_2_1_formula",
+      "relation_type": "parent_of",
+      "weight": 1.0,
+      "reason": "#2 拆 #2.1",
+      "metadata": "{\"created_during\":\"v6.5.0 sprint dispatch\",\"task_dir\":\"workflow-graph/tasks/v6.5.0-phase-1-implementation/\"}",
+      "created_at": "2026-08-22T18:07:01Z",
+      "modified_by": null,
+      "version": 1
+    },
+    {
+      "id": "edge_v6_5_0_t2s2",
+      "project_id": "proj_282c9f0b9dfb",
+      "from_node": "node_v6_5_0_d2_recall_fix",
+      "to_node": "node_v6_5_0_subtask_2_2_cold_start",
+      "relation_type": "parent_of",
+      "weight": 1.0,
+      "reason": "#2 拆 #2.2",
+      "metadata": "{\"created_during\":\"v6.5.0 sprint dispatch\",\"task_dir\":\"workflow-graph/tasks/v6.5.0-phase-1-implementation/\"}",
+      "created_at": "2026-08-22T18:07:01Z",
+      "modified_by": null,
+      "version": 1
+    },
+    {
+      "id": "edge_v6_5_0_t2s3",
+      "project_id": "proj_282c9f0b9dfb",
+      "from_node": "node_v6_5_0_d2_recall_fix",
+      "to_node": "node_v6_5_0_subtask_2_3_pydantic",
+      "relation_type": "parent_of",
+      "weight": 1.0,
+      "reason": "#2 拆 #2.3",
+      "metadata": "{\"created_during\":\"v6.5.0 sprint dispatch\",\"task_dir\":\"workflow-graph/tasks/v6.5.0-phase-1-implementation/\"}",
+      "created_at": "2026-08-22T18:07:01Z",
+      "modified_by": null,
+      "version": 1
+    },
+    {
+      "id": "edge_v6_5_0_t2s4",
+      "project_id": "proj_282c9f0b9dfb",
+      "from_node": "node_v6_5_0_d2_recall_fix",
+      "to_node": "node_v6_5_0_subtask_2_4_related",
+      "relation_type": "parent_of",
+      "weight": 1.0,
+      "reason": "#2 拆 #2.4",
+      "metadata": "{\"created_during\":\"v6.5.0 sprint dispatch\",\"task_dir\":\"workflow-graph/tasks/v6.5.0-phase-1-implementation/\"}",
+      "created_at": "2026-08-22T18:07:01Z",
+      "modified_by": null,
+      "version": 1
+    },
+    {
+      "id": "edge_v6_5_0_s1s2",
+      "project_id": "proj_282c9f0b9dfb",
+      "from_node": "node_v6_5_0_subtask_2_1_formula",
+      "to_node": "node_v6_5_0_subtask_2_2_cold_start",
+      "relation_type": "depends_on",
+      "weight": 1.0,
+      "reason": "#2.2 依赖 #2.1 公式先定",
+      "metadata": "{\"created_during\":\"v6.5.0 sprint dispatch\",\"task_dir\":\"workflow-graph/tasks/v6.5.0-phase-1-implementation/\"}",
+      "created_at": "2026-08-22T18:07:01Z",
+      "modified_by": null,
+      "version": 1
+    },
+    {
+      "id": "edge_v6_5_0_s2s3",
+      "project_id": "proj_282c9f0b9dfb",
+      "from_node": "node_v6_5_0_subtask_2_2_cold_start",
+      "to_node": "node_v6_5_0_subtask_2_3_pydantic",
+      "relation_type": "depends_on",
+      "weight": 1.0,
+      "reason": "#2.3 在 #2.2 之后改 Pydantic 字段",
+      "metadata": "{\"created_during\":\"v6.5.0 sprint dispatch\",\"task_dir\":\"workflow-graph/tasks/v6.5.0-phase-1-implementation/\"}",
+      "created_at": "2026-08-22T18:07:01Z",
+      "modified_by": null,
+      "version": 1
+    },
+    {
+      "id": "edge_v6_5_0_s3s4",
+      "project_id": "proj_282c9f0b9dfb",
+      "from_node": "node_v6_5_0_subtask_2_3_pydantic",
+      "to_node": "node_v6_5_0_subtask_2_4_related",
+      "relation_type": "depends_on",
+      "weight": 1.0,
+      "reason": "#2.4 在 #2.3 之后改邻居参数",
+      "metadata": "{\"created_during\":\"v6.5.0 sprint dispatch\",\"task_dir\":\"workflow-graph/tasks/v6.5.0-phase-1-implementation/\"}",
+      "created_at": "2026-08-22T18:07:01Z",
+      "modified_by": null,
+      "version": 1
+    },
+    {
+      "id": "edge_9f7cd9f32e30",
+      "project_id": "proj_282c9f0b9dfb",
+      "from_node": "node_v6_5_0_phase_1_epic",
+      "to_node": "node_0620546ff0f9",
+      "relation_type": "parent_of",
+      "weight": null,
+      "reason": null,
+      "metadata": null,
+      "created_at": "2026-08-22T18:15:38.623Z",
+      "modified_by": null,
+      "version": 1
+    },
+    {
+      "id": "edge_56b22f8db93f",
+      "project_id": "proj_282c9f0b9dfb",
+      "from_node": "node_0620546ff0f9",
+      "to_node": "node_v6_5_0_phase_1_epic",
+      "relation_type": "child_of",
+      "weight": null,
+      "reason": null,
+      "metadata": null,
+      "created_at": "2026-08-22T18:15:38.623Z",
+      "modified_by": null,
+      "version": 1
+    },
+    {
+      "id": "edge_a669d7004b25",
+      "project_id": "proj_282c9f0b9dfb",
+      "from_node": "node_0620546ff0f9",
+      "to_node": "node_v6_5_0_d2_recall_fix",
+      "relation_type": "depends_on",
+      "weight": null,
+      "reason": "Auto-sequenced",
+      "metadata": null,
+      "created_at": "2026-08-22T18:15:38.623Z",
+      "modified_by": null,
+      "version": 1
+    },
+    {
+      "id": "edge_361803500f7f",
+      "project_id": "proj_282c9f0b9dfb",
+      "from_node": "node_0620546ff0f9",
+      "to_node": "node_e0fcb00af751",
+      "relation_type": "parent_of",
+      "weight": null,
+      "reason": null,
+      "metadata": null,
+      "created_at": "2026-08-22T18:21:33.905Z",
+      "modified_by": null,
+      "version": 1
+    },
+    {
+      "id": "edge_8800914583bf",
+      "project_id": "proj_282c9f0b9dfb",
+      "from_node": "node_e0fcb00af751",
+      "to_node": "node_0620546ff0f9",
+      "relation_type": "child_of",
+      "weight": null,
+      "reason": null,
+      "metadata": null,
+      "created_at": "2026-08-22T18:21:33.905Z",
+      "modified_by": null,
+      "version": 1
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+"""Marker so `python -m connector.claude.scripts.claude_smoke` works."""

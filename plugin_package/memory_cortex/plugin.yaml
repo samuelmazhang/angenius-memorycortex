@@ -1,0 +1,11 @@
+name: memory-cortex
+version: "5.3.9"
+description: "Memory Cortex V5.3 PostgreSQL/pgvector provider for Hermes"
+provides_hooks:
+  - pre_llm_call
+  - post_tool_call
+  - on_session_end
+  - on_memory_write
+provides_tools:
+  - cortex_search
+  - cortex_health

@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Memory Cortex Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f4f6f8; color: #1a202c; }
+  header { background: #1a365d; color: #fff; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+  header h1 { font-size: 20px; font-weight: 600; }
+  header .badge { background: #2d3748; padding: 4px 12px; border-radius: 12px; font-size: 12px; }
+  header .api-bar { background: #2d3748; padding: 4px 12px; border-radius: 12px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; }
+  header .api-bar code { color: #90cdf4; font-family: ui-monospace, monospace; }
+  header .api-bar .api-edit { background: transparent; color: #cbd5e0; border: 1px solid #4a5568; border-radius: 6px; padding: 0 6px; cursor: pointer; font-size: 11px; line-height: 18px; }
+  header .api-bar .api-edit:hover { background: #4a5568; color: #fff; }
+  nav { background: #2d3748; color: #cbd5e0; display: flex; gap: 4px; padding: 0 24px; }
+  nav button { background: transparent; color: #cbd5e0; border: 0; padding: 14px 20px; cursor: pointer; font-size: 14px; border-bottom: 3px solid transparent; }
+  nav button:hover { color: #fff; background: #1a202c; }
+  nav button.active { color: #fff; background: #1a202c; border-bottom-color: #4299e1; }
+  main { padding: 24px; max-width: 1400px; margin: 0 auto; }
+  .panel { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 20px; }
+  .panel h2 { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: #2d3748; }
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+  .stat-card { background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%); color: #fff; padding: 20px; border-radius: 8px; }
+  .stat-card.green { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); }
+  .stat-card.purple { background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%); }
+  .stat-card.orange { background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%); }
+  .stat-card .num { font-size: 32px; font-weight: 700; line-height: 1; }
+  .stat-card .lbl { font-size: 12px; opacity: 0.9; margin-top: 8px; text-transform: uppercase; }
+  .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 768px) { .charts-grid { grid-template-columns: 1fr; } }
+  .chart-container { position: relative; height: 300px; }
+  .search-box { display: flex; gap: 8px; margin-bottom: 16px; }
+  .search-box input { flex: 1; padding: 10px 14px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 14px; }
+  .search-box button { padding: 10px 20px; background: #4299e1; color: #fff; border: 0; border-radius: 6px; cursor: pointer; font-size: 14px; }
+  .search-box button:hover { background: #3182ce; }
+  .search-box button:disabled { background: #a0aec0; cursor: not-allowed; }
+  .result-item { padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 8px; cursor: pointer; }
+  .result-item:hover { background: #f7fafc; border-color: #4299e1; }
+  .result-item .title { font-weight: 600; color: #2d3748; margin-bottom: 4px; }
+  .result-item .meta { font-size: 12px; color: #718096; }
+  .result-item .score { float: right; background: #4299e1; color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 11px; }
+  .graph-container { height: 600px; border: 1px solid #e2e8f0; border-radius: 6px; }
+  .hidden { display: none; }
+  .loading { text-align: center; color: #718096; padding: 40px; }
+  .error { background: #fed7d7; color: #742a2a; padding: 12px; border-radius: 6px; margin-bottom: 16px; }
+  .pill { display: inline-block; background: #edf2f7; padding: 2px 8px; border-radius: 10px; font-size: 11px; color: #2d3748; margin-right: 4px; }
+  .config-bar { background: #fff; padding: 10px 20px; border-bottom: 1px solid #e2e8f0; display: flex; gap: 12px; align-items: center; }
+  .config-bar label { font-size: 13px; color: #4a5568; }
+  .config-bar input { padding: 4px 8px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 13px; width: 280px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🧠 Memory Cortex Dashboard</h1>
+  <span class="badge" id="cortex-status">connecting...</span>
+  <span class="api-bar" id="api-bar" title="后端地址 (URL ?api= 覆盖 或 localStorage.cortex_api)">
+    API: <code id="api-host">detecting...</code>
+    <button class="api-edit" id="api-edit" title="手动覆盖">✎</button>
+  </span>
+</header>
+<nav>
+  <button class="tab-btn active" data-tab="overview">📊 总览</button>
+  <button class="tab-btn" data-tab="stats">📈 分类统计</button>
+  <button class="tab-btn" data-tab="search">🔍 检索</button>
+  <button class="tab-btn" data-tab="graph">🕸 图谱</button>
+  <button class="tab-btn" data-tab="api">🧪 API测试</button>
+</nav>
+<main>
+  <!-- Tab 1: Overview -->
+  <div id="tab-overview" class="tab-content">
+    <div class="panel">
+      <h2>总体统计</h2>
+      <div class="stats-grid" id="overview-stats">
+        <div class="loading">加载中...</div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>最近记忆 (最新 10 条)</h2>
+      <div id="recent-list"><div class="loading">加载中...</div></div>
+    </div>
+  </div>
+
+  <!-- Tab 2: Stats by Type -->
+  <div id="tab-stats" class="tab-content hidden">
+    <div class="charts-grid">
+      <div class="panel">
+        <h2>按类型分布 (Type)</h2>
+        <div class="chart-container"><canvas id="chart-type"></canvas></div>
+      </div>
+      <div class="panel">
+        <h2>按重要性分布 (Importance)</h2>
+        <div class="chart-container"><canvas id="chart-importance"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 3: Search -->
+  <div id="tab-search" class="tab-content hidden">
+    <div class="panel">
+      <h2>语义检索</h2>
+      <div class="search-box">
+        <input id="search-q" placeholder="输入查询词 (e.g. 'langgraph', 'memory', 'cortex')" />
+        <button id="search-btn" onclick="doSearch()">搜索</button>
+      </div>
+      <div id="search-results"><div class="loading">输入查询词开始</div></div>
+    </div>
+  </div>
+
+  <!-- Tab 4: Graph -->
+  <div id="tab-graph" class="tab-content hidden">
+    <div class="panel">
+      <h2>🕸 知识图谱 (借鉴 neo4j browser 设计)</h2>
+      <div class="search-box">
+        <select id="graph-mode" onchange="reloadGraph()">
+          <option value="sample">🎯 全图采样 (默认, 50 节点)</option>
+          <option value="all">🌐 全部节点 (前 200, 按重要性)</option>
+          <option value="khop">🎯 中心展开 (输入 memory_id)</option>
+        </select>
+        <input id="graph-q" placeholder="memory_id (khop 模式用, 留空=全部)" disabled>
+        <select id="graph-limit">
+          <option value="30">30 节点</option>
+          <option value="50" selected>50 节点</option>
+          <option value="100">100 节点</option>
+          <option value="200">200 节点</option>
+        </select>
+        <select id="graph-type">
+          <option value="">所有类型</option>
+          <option value="general">general</option>
+          <option value="preference">preference</option>
+          <option value="requirement">requirement</option>
+          <option value="knowledge">knowledge</option>
+          <option value="skill">skill</option>
+        </select>
+        <button onclick="reloadGraph()">🔄 加载</button>
+        <span id="graph-stats" style="margin-left:8px;color:#4299e1;font-weight:600;"></span>
+      </div>
+      <!-- 图本体 + 详情面板 -->
+      <div style="display:grid; grid-template-columns: 1fr 320px; gap: 12px; height: 600px; min-height: 600px;">
+        <div class="graph-container" id="graph-canvas" style="height:580px; width:100%; border:1px solid #e2e8f0; border-radius:6px; background:#fff;"></div>
+        <div id="graph-detail" style="background:#fff; border:1px solid #e2e8f0; border-radius:6px; padding:14px; overflow-y:auto; font-size:13px;">
+          <div style="color:#718096; text-align:center; padding:40px 0;">
+            👆 点击图中的节点<br>查看详情
+          </div>
+        </div>
+      </div>
+      <!-- 图例 + 交互提示 -->
+      <div style="margin-top:8px; display:flex; gap:16px; font-size:11px; color:#718096; flex-wrap:wrap;">
+        <span><span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#48bb78; margin-right:4px;"></span>general</span>
+        <span><span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#4299e1; margin-right:4px;"></span>preference</span>
+        <span><span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#ed8936; margin-right:4px;"></span>requirement</span>
+        <span><span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#9f7aea; margin-right:4px;"></span>knowledge</span>
+        <span><span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#f56565; margin-right:4px;"></span>skill</span>
+        <span style="margin-left:auto;">🖱 拖动节点 / 滚轮缩放 / 点击节点看详情</span>
+      </div>
+    </div>
+  </div>
+  <!-- Tab 5: API Test -->
+  <div id="tab-api" class="tab-content hidden">
+    <div class="panel">
+      <h2>所有 API 端点 (88 总) - 状态检查</h2>
+      <div class="search-box">
+        <input id="api-filter" placeholder="过滤 path 或 category (例如: search / chunks / 1)" onkeyup="renderApiList()">
+        <select id="api-method-filter" onchange="renderApiList()">
+          <option value="">所有方法</option>
+          <option value="GET">GET</option>
+          <option value="POST">POST</option>
+          <option value="PUT">PUT</option>
+          <option value="DELETE">DELETE</option>
+        </select>
+        <select id="api-cat-filter" onchange="renderApiList()">
+          <option value="">所有分类</option>
+        </select>
+        <button onclick="probeAllEndpoints(true)" id="probe-all-btn">▶ 测试全部</button>
+        <button onclick="loadEndpointList()">🔄 刷新列表</button>
+        <span id="api-status" style="margin-left:12px; color:#718096; font-size:12px;"></span>
+      </div>
+      <div style="overflow-x:auto;">
+        <table id="api-table" style="width:100%; border-collapse:collapse; font-size:13px;">
+          <thead>
+            <tr style="background:#f7fafc; border-bottom:2px solid #e2e8f0; text-align:left;">
+              <th style="padding:8px;">状态</th>
+              <th style="padding:8px;">方法</th>
+              <th style="padding:8px;">路径</th>
+              <th style="padding:8px;">分类</th>
+              <th style="padding:8px;">响应</th>
+              <th style="padding:8px;">耗时</th>
+              <th style="padding:8px;">操作</th>
+            </tr>
+          </thead>
+          <tbody id="api-tbody">
+            <tr><td colspan="7" class="loading">加载中...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => document.querySelectorAll(s);
+// 后端地址自动探测 (2026-08-06): 优先用 URL 上的 host:port, 同源走相对路径,
+// 允许 ?api=... 或 localStorage.cortex_api 手动覆盖 (例如开发机反向代理场景)
+const API = (() => {
+  try {
+    const qs = new URLSearchParams(window.location.search).get('api');
+    if (qs) return qs.replace(/\/+$/, '');
+    const ls = localStorage.getItem('cortex_api');
+    if (ls) return ls.replace(/\/+$/, '');
+    // 默认: 当前浏览器访问的主机 + 1880 端口 (HTTP, 假设同协议)
+    // 如果是 file:// 或异常情况, fallback localhost
+    if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
+      return `${window.location.protocol}//${window.location.hostname}:1880`;
+    }
+    return 'http://localhost:1880';
+  } catch (e) {
+    return 'http://localhost:1880';
+  }
+})();
+console.info('[cortex-ui] API =', API);
+// 顶部 API 地址栏 (2026-08-06): 一眼看出当前后端, 手动覆盖入口
+try {
+  const _host = document.getElementById('api-host');
+  if (_host) _host.textContent = API;
+  const _btn = document.getElementById('api-edit');
+  if (_btn) _btn.addEventListener('click', () => {
+    const cur = localStorage.getItem('cortex_api') || API;
+    const next = prompt('后端地址 (留空 = 跟随当前 host):', cur);
+    if (next === null) return;
+    if (next.trim() === '') localStorage.removeItem('cortex_api');
+    else localStorage.setItem('cortex_api', next.trim());
+    location.reload();
+  });
+} catch (e) { /* noop */ }
+
+
+
+async function api(path, opts = {}) {
+  const url = API + path;
+  const r = await fetch(url, opts);
+  if (!r.ok) throw new Error(`HTTP ${r.status}: ${await r.text()}`);
+  return r.json();
+}
+
+async function loadOverview() {
+  try {
+    const d = await api("/dashboard");
+    $("#cortex-status").textContent = "🟢 online";
+    $("#cortex-status").style.background = "#38a169";
+    const html = `
+      <div class="stat-card"><div class="num">${(d.total_memories||0).toLocaleString()}</div><div class="lbl">总记忆数</div></div>
+      <div class="stat-card green"><div class="num">${(d.total_relations||0).toLocaleString()}</div><div class="lbl">关系数</div></div>
+      <div class="stat-card purple"><div class="num">${(d.total_vectors||0).toLocaleString()}</div><div class="lbl">向量数</div></div>
+      <div class="stat-card orange"><div class="num">${(d.average_importance||0).toFixed(2)}</div><div class="lbl">平均重要性</div></div>
+    `;
+    $("#overview-stats").innerHTML = html;
+    // Recent list
+    const recents = (d.recent_chunks || []).slice(0, 10);
+    if (recents.length === 0) {
+      $("#recent-list").innerHTML = '<div class="loading">无数据</div>';
+    } else {
+      $("#recent-list").innerHTML = recents.map(c => `
+        <div class="result-item">
+          <span class="score">imp ${c.importance||0}</span>
+          <div class="title">${escapeHtml((c.content||"").slice(0, 100))}${c.content && c.content.length>100?'...':''}</div>
+          <div class="meta">
+            <span class="pill">${c.type||'general'}</span>
+            <span>id: ${c.id||'-'}</span>
+            <span style="margin-left:12px;">${(c.created_at||'').replace('T',' ').slice(0,19)}</span>
+          </div>
+        </div>
+      `).join("");
+    }
+  } catch (e) {
+    $("#cortex-status").textContent = "🔴 offline";
+    $("#cortex-status").style.background = "#e53e3e";
+    $("#overview-stats").innerHTML = `<div class="error">❌ ${e.message}<br><br>请检查 cortex 后端是否在 <code>${API}</code></div>`;
+  }
+}
+
+let chartType, chartImp;
+async function loadStats() {
+  try {
+    const d = await api("/stats/by-type");
+    const labels = Object.keys(d);
+    const values = Object.values(d);
+    if (chartType) chartType.destroy();
+    chartType = new Chart($("#chart-type"), {
+      type: "doughnut",
+      data: { labels, datasets: [{ data: values, backgroundColor: ["#4299e1","#48bb78","#ed8936","#9f7aea","#f56565","#38b2ac","#d69e2e"] }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: "right" } } }
+    });
+  } catch (e) {
+    console.warn("by-type 端点未实现, 用 recent_chunks 推算", e);
+    // Fallback: 用 dashboard 数据推算
+    try {
+      const d = await api("/dashboard");
+      const counts = {};
+      (d.recent_chunks || []).forEach(c => { counts[c.type||'general'] = (counts[c.type||'general']||0) + 1; });
+      const labels = Object.keys(counts);
+      const values = Object.values(counts);
+      if (chartType) chartType.destroy();
+      chartType = new Chart($("#chart-type"), {
+        type: "doughnut",
+        data: { labels, datasets: [{ data: values, backgroundColor: ["#4299e1","#48bb78","#ed8936","#9f7aea"] }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: "right" } } }
+      });
+    } catch (e2) { console.error(e2); }
+  }
+
+  // Importance distribution (用 recent + dashboard 推算 + 通用 fallback)
+  try {
+    const d = await api("/stats/by-importance");
+    const ranges = d.ranges || {};
+    if (chartImp) chartImp.destroy();
+    chartImp = new Chart($("#chart-importance"), {
+      type: "bar",
+      data: {
+        labels: Object.keys(ranges),
+        datasets: [{ label: "记忆数", data: Object.values(ranges), backgroundColor: "#9f7aea" }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+    });
+  } catch (e) {
+    // Fallback: 用 dashboard
+    try {
+      const d = await api("/dashboard");
+      const ranges = {"0-2":0,"3-5":0,"6-8":0,"9-10":0};
+      (d.recent_chunks || []).forEach(c => {
+        const v = c.importance||0;
+        if (v<=2) ranges["0-2"]++;
+        else if (v<=5) ranges["3-5"]++;
+        else if (v<=8) ranges["6-8"]++;
+        else ranges["9-10"]++;
+      });
+      if (chartImp) chartImp.destroy();
+      chartImp = new Chart($("#chart-importance"), {
+        type: "bar",
+        data: { labels: Object.keys(ranges), datasets: [{ label: "记忆数", data: Object.values(ranges), backgroundColor: "#9f7aea" }] },
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+      });
+    } catch (e2) { console.error(e2); }
+  }
+}
+
+async function doSearch() {
+  const q = $("#search-q").value.trim();
+  if (!q) return;
+  const btn = $("#search-btn");
+  btn.disabled = true; btn.textContent = "搜索中...";
+  try {
+    const d = await api("/search", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: q, top_k: 20 })
+    });
+    const results = d.results || d.chunks || d.memories || [];
+    if (results.length === 0) {
+      $("#search-results").innerHTML = `<div class="loading">无结果 (查询: ${escapeHtml(q)})</div>`;
+    } else {
+      $("#search-results").innerHTML = `<div style="margin-bottom:8px;color:#718096;font-size:12px;">找到 ${results.length} 条结果</div>` + results.map(r => `
+        <div class="result-item">
+          <span class="score">${(r.score||r.similarity||0).toFixed(3)}</span>
+          <div class="title">${escapeHtml((r.content||r.text||r.summary||"").slice(0,200))}${(r.content||r.text||"").length>200?'...':''}</div>
+          <div class="meta">
+            <span class="pill">${r.type||'general'}</span>
+            <span>id: ${r.id||'-'}</span>
+            <span style="margin-left:12px;">imp ${r.importance||0}</span>
+            <span style="margin-left:12px;">${(r.created_at||'').replace('T',' ').slice(0,19)}</span>
+          </div>
+        </div>
+      `).join("");
+    }
+  } catch (e) {
+    $("#search-results").innerHTML = `<div class="error">❌ ${e.message}</div>`;
+  } finally {
+    btn.disabled = false; btn.textContent = "搜索";
+  }
+}
+
+let network;
+const TYPE_COLORS = {
+  general: "#48bb78", preference: "#4299e1", requirement: "#ed8936",
+  knowledge: "#9f7aea", skill: "#f56565", default: "#a0aec0"
+};
+
+// 模式切换: khop 模式时启用 input
+$("#graph-mode").addEventListener("change", () => {
+  const mode = $("#graph-mode").value;
+  $("#graph-q").disabled = mode !== "khop";
+  $("#graph-q").placeholder = mode === "khop" ? "memory_id (留空=返回整个图)" : "khop 模式才用";
+});
+
+async function reloadGraph() {
+  const mode = $("#graph-mode").value;
+  const limit = parseInt($("#graph-limit").value);
+  const typeFilter = $("#graph-type").value;
+  const startId = $("#graph-q").value.trim();
+
+  $("#graph-stats").textContent = "⏳ 加载...";
+  $("#graph-canvas").innerHTML = '<div class="loading">⏳ 加载图中...</div>';
+
+  try {
+    let d;
+    if (mode === "khop") {
+      // khop 模式: 必须有 startId; 没有就退到 sample
+      if (startId) {
+        d = await api(`/graph/khop?memory_id=${encodeURIComponent(startId)}&k=2&limit=${limit}`);
+        d = { nodes: d.nodes || [], edges: d.edges || [], stats: { sampled: (d.nodes||[]).length, edges: (d.edges||[]).length, mode: "khop", from: startId } };
+      } else {
+        // 没填 memory_id 退到 sample
+        d = await api(`/graph/sample?limit=${limit}${typeFilter ? "&type=" + encodeURIComponent(typeFilter) : ""}`);
+        d.stats.mode = "khop-fallback-sample";
+      }
+    } else {
+      // sample / all 模式
+      d = await api(`/graph/sample?limit=${limit}${typeFilter ? "&type=" + encodeURIComponent(typeFilter) : ""}`);
+      d.stats.mode = mode;
+    }
+
+    // 渲染
+    renderGraph(d);
+    const stats = d.stats || {};
+    $("#graph-stats").textContent = `✅ ${stats.sampled || d.nodes.length} 节点, ${stats.edges || d.edges.length} 关系, 总 ${stats.total || "?"}`;
+    // 重置详情面板
+    $("#graph-detail").innerHTML = '<div style="color:#718096; text-align:center; padding:40px 0;">👆 点击图中的节点<br>查看详情</div>';
+  } catch (e) {
+    $("#graph-canvas").innerHTML = `<div class="error">❌ ${e.message}</div>`;
+    $("#graph-stats").textContent = "❌";
+  }
+}
+
+function renderGraph(d) {
+  const nodes = (d.nodes || []).map(n => {
+    const color = TYPE_COLORS[n.type] || TYPE_COLORS.default;
+    // 节点大小按 importance 缩放 (5-20)
+    const size = 8 + (n.importance || 0) * 1.2;
+    return {
+      id: n.id,
+      label: n.label || n.id.substring(0, 20),
+      group: n.type || "default",
+      title: (n.content || '').slice(0, 200),
+      value: n.importance || 1,
+      color: { background: color, border: color, highlight: { background: "#FFD700", border: "#FFA500" } },
+      size: size,
+      font: { size: 11, color: "#1a202c" },
+      borderWidth: 2,
+    };
+  });
+  const edges = (d.edges || []).map(e => ({
+    from: e.from,
+    to: e.to,
+    label: e.type || "",
+    arrows: "to",
+    color: { color: "#cbd5e0", highlight: "#4299e1" },
+    width: 1 + (e.strength || 0) * 1.5,  // 边粗细按 strength
+    font: { size: 9, color: "#718096", strokeWidth: 3, strokeColor: "#fff" },
+    smooth: { enabled: true, type: "continuous", roundness: 0.2 },
+  }));
+
+  $("#graph-canvas").innerHTML = "";
+
+  if (nodes.length === 0) {
+    $("#graph-canvas").innerHTML = '<div class="loading">无节点 (可能类型过滤无结果)</div>';
+    return;
+  }
+
+  const data = { nodes: new vis.DataSet(nodes), edges: new vis.DataSet(edges) };
+  const options = {
+    nodes: {
+      shape: "dot",
+      size: 16,
+      font: { size: 11, face: "Inter, system-ui, sans-serif" },
+      borderWidth: 2,
+      shadow: { enabled: true, color: "rgba(0,0,0,0.1)", size: 3, x: 0, y: 1 },
+    },
+    edges: {
+      width: 1.2,
+      color: { color: "#cbd5e0", highlight: "#4299e1", hover: "#4299e1" },
+      smooth: { enabled: true, type: "continuous", roundness: 0.2 },
+      arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+    },
+    physics: {
+      enabled: true,
+      barnesHut: {
+        gravitationalConstant: -3000,
+        centralGravity: 0.3,
+        springLength: 120,
+        springConstant: 0.04,
+        damping: 0.09,
+      },
+      stabilization: { enabled: true, iterations: 200, fit: true },
+    },
+    interaction: {
+      hover: true,
+      tooltipDelay: 200,
+      zoomView: true,
+      dragView: true,
+      dragNodes: true,
+      navigationButtons: true,
+      keyboard: true,
+    },
+    layout: {
+      improvedLayout: true,
+    },
+  };
+  if (network) network.destroy();
+  network = new vis.Network($("#graph-canvas"), data, options);
+
+  // 节点点击 → 详情面板
+  network.on("click", (params) => {
+    if (params.nodes.length > 0) {
+      const nodeId = params.nodes[0];
+      const node = data.nodes.get(nodeId);
+      showNodeDetail(node, d);
+    } else {
+      $("#graph-detail").innerHTML = '<div style="color:#718096; text-align:center; padding:40px 0;">👆 点击图中的节点<br>查看详情</div>';
+    }
+  });
+}
+
+function showNodeDetail(node, d) {
+  if (!node) return;
+  const color = TYPE_COLORS[node.group] || TYPE_COLORS.default;
+  const incoming = (d.edges || []).filter(e => e.to === node.id).slice(0, 10);
+  const outgoing = (d.edges || []).filter(e => e.from === node.id).slice(0, 10);
+
+  $("#graph-detail").innerHTML = `
+    <div style="border-bottom:2px solid ${color}; padding-bottom:8px; margin-bottom:12px;">
+      <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:${color}; margin-right:6px;"></span>
+      <span style="font-weight:600; color:#2d3748;">${escapeHtml(node.group || 'general')}</span>
+      <span style="float:right; background:${color}; color:#fff; padding:2px 6px; border-radius:10px; font-size:11px;">imp ${node.value}</span>
+    </div>
+    <div style="font-size:11px; color:#718096; margin-bottom:8px; font-family:monospace;">${escapeHtml(node.id)}</div>
+    <div style="background:#f7fafc; padding:10px; border-radius:4px; max-height:280px; overflow-y:auto; white-space:pre-wrap; font-size:12px; line-height:1.5;">${escapeHtml(node.title || node.label || '')}</div>
+    <div style="margin-top:12px;">
+      <div style="font-size:11px; color:#4a5568; font-weight:600; margin-bottom:4px;">⬅ 入边 (${incoming.length})</div>
+      ${incoming.length === 0 ? '<div style="color:#a0aec0; font-size:11px;">无</div>' :
+        incoming.map(e => `<div style="font-size:11px; padding:3px 0; color:#4a5568;">
+          <span class="pill">${escapeHtml(e.type || 'related')}</span>
+          <span style="font-family:monospace; font-size:10px;">${escapeHtml((e.from || '').substring(0, 30))}</span>
+        </div>`).join('')}
+    </div>
+    <div style="margin-top:8px;">
+      <div style="font-size:11px; color:#4a5568; font-weight:600; margin-bottom:4px;">➡ 出边 (${outgoing.length})</div>
+      ${outgoing.length === 0 ? '<div style="color:#a0aec0; font-size:11px;">无</div>' :
+        outgoing.map(e => `<div style="font-size:11px; padding:3px 0; color:#4a5568;">
+          <span class="pill">${escapeHtml(e.type || 'related')}</span>
+          <span style="font-family:monospace; font-size:10px;">${escapeHtml((e.to || '').substring(0, 30))}</span>
+        </div>`).join('')}
+    </div>
+  `;
+}
+
+function escapeHtml(s) { return String(s||'').replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+// Tab switching
+$$(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    $$(".tab-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const tab = btn.dataset.tab;
+    $$(".tab-content").forEach(c => c.classList.add("hidden"));
+    $(`#tab-${tab}`).classList.remove("hidden");
+    if (tab === "stats") loadStats();
+    if (tab === "graph") {
+      // 切到 graph tab 时自动加载全图 (避免空白)
+      reloadGraph();
+    }
+    if (tab === "api") loadEndpointList();
+  });
+});
+
+$("#search-q").addEventListener("keypress", e => { if (e.key === "Enter") doSearch(); });
+$("#graph-q").addEventListener("keypress", e => { if (e.key === "Enter") doGraph(); });
+
+// === Tab 5: API Test ===
+let _apiList = [];  // [{path, method, category}]
+let _apiResults = {};  // path -> {status, ms, body}
+
+// 加载所有端点 (用 /endpoints 端点)
+async function loadEndpointList() {
+  $("#api-status").textContent = "⏳ 加载列表...";
+  try {
+    const r = await fetch(API + "/endpoints");
+    const d = await r.json();
+    _apiList = d.endpoints || [];
+    // 填充 category filter
+    const cats = [...new Set(_apiList.map(e => e.category))].sort();
+    const sel = $("#api-cat-filter");
+    sel.innerHTML = '<option value="">所有分类</option>' + cats.map(c => `<option>${escapeHtml(c)}</option>`).join("");
+    $("#api-status").textContent = `✅ ${_apiList.length} 个端点`;
+    renderApiList();
+  } catch (e) {
+    $("#api-status").textContent = "❌ " + e.message;
+  }
+}
+
+// 过滤渲染
+function renderApiList() {
+  const q = ($("#api-filter").value || "").toLowerCase();
+  const m = $("#api-method-filter").value;
+  const c = $("#api-cat-filter").value;
+  const filtered = _apiList.filter(ep => {
+    if (m && ep.method !== m) return false;
+    if (c && ep.category !== c) return false;
+    if (q && !ep.path.toLowerCase().includes(q) && !ep.category.toLowerCase().includes(q)) return false;
+    return true;
+  });
+  const tbody = $("#api-tbody");
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" class="loading">无匹配端点</td></tr>';
+    return;
+  }
+  tbody.innerHTML = filtered.map(ep => {
+    const r = _apiResults[ep.method + " " + ep.path];
+    let statusCell = '<span class="pill" style="background:#e2e8f0;">待测</span>';
+    let respCell = '-';
+    let msCell = '-';
+    if (r) {
+      const s = r.status;
+      if (s >= 200 && s < 300) statusCell = `<span class="pill" style="background:#48bb78;color:#fff;">${s}</span>`;
+      else if (s >= 400) statusCell = `<span class="pill" style="background:#f56565;color:#fff;">${s}</span>`;
+      else statusCell = `<span class="pill" style="background:#ed8936;color:#fff;">${s}</span>`;
+      respCell = `<code style="font-size:11px;color:#718096;">${escapeHtml((r.body||'').slice(0,40))}${(r.body||'').length>40?'...':''}</code>`;
+      msCell = `<span style="color:#4299e1;">${r.ms}ms</span>`;
+    }
+    return `<tr style="border-bottom:1px solid #edf2f7;">
+      <td style="padding:6px;">${statusCell}</td>
+      <td style="padding:6px;"><span class="pill" style="background:${ep.method==='GET'?'#4299e1':ep.method==='POST'?'#48bb78':'#ed8936'};color:#fff;">${ep.method}</span></td>
+      <td style="padding:6px;"><code style="font-size:12px;">${escapeHtml(ep.path)}</code></td>
+      <td style="padding:6px;"><span class="pill">${ep.category||'?'}</span></td>
+      <td style="padding:6px;">${respCell}</td>
+      <td style="padding:6px;">${msCell}</td>
+      <td style="padding:6px;"><button style="padding:2px 8px;background:#4299e1;color:#fff;border:0;border-radius:4px;cursor:pointer;font-size:11px;" onclick="probeOne('${ep.method}','${escapeHtml(ep.path).replace(/'/g,"\\'")}')">测试</button></td>
+    </tr>`;
+  }).join("");
+}
+
+// 测试单个端点 (用 sample values for path params)
+async function probeOne(method, path) {
+  // 替换 {param} 为 sample 值
+  const realPath = path.replace(/\{(\w+)\}/g, (m, name) => {
+    if (name.includes("memory_id") || name.includes("chunk_id")) return "mem_20260803_110449_786060_2de872";
+    if (name.includes("source_id")) return "mem_20260803_110449_786060_2de872";
+    if (name.includes("target_id")) return "mem_20260803_104636_239456_fd2db2";
+    if (name.includes("session_id")) return "test-session";
+    if (name.includes("key")) return "test-key";
+    if (name.includes("scenario")) return "code_review";
+    return "test";
+  });
+  const start = performance.now();
+  try {
+    const opts = { method, headers: { "Accept": "application/json" } };
+    if (method === "POST" || method === "PUT") opts.headers["Content-Type"] = "application/json";
+    if (method === "POST" || method === "PUT" || method === "DELETE") {
+      opts.body = method === "POST" ? JSON.stringify({}) : undefined;
+    }
+    const r = await fetch(API + realPath, opts);
+    const body = await r.text();
+    const ms = Math.round(performance.now() - start);
+    _apiResults[method + " " + path] = { status: r.status, body, ms };
+  } catch (e) {
+    const ms = Math.round(performance.now() - start);
+    _apiResults[method + " " + path] = { status: 0, body: e.message, ms };
+  }
+  renderApiList();
+}
+
+// 测试所有 (顺序)
+async function probeAllEndpoints() {
+  const btn = $("#probe-all-btn");
+  btn.disabled = true; btn.textContent = "⏳ 测试中...";
+  _apiResults = {};
+  $("#api-status").textContent = `⏳ 0/${_apiList.length}`;
+  for (let i = 0; i < _apiList.length; i++) {
+    const ep = _apiList[i];
+    await probeOne(ep.method, ep.path);
+    $("#api-status").textContent = `⏳ ${i+1}/${_apiList.length} (${ep.method} ${ep.path})`;
+    renderApiList();
+  }
+  // 汇总
+  const ok = Object.values(_apiResults).filter(r => r.status >= 200 && r.status < 300).length;
+  const total = Object.keys(_apiResults).length;
+  $("#api-status").textContent = `✅ 测试完成: ${ok}/${total} 成功`;
+  btn.disabled = false; btn.textContent = "▶ 测试全部";
+}
+
+// Auto-load overview
+loadOverview();
+</script>
+</body>
+</html>

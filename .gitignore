@@ -1,0 +1,99 @@
+# Memory Cortex v5.2.x
+# Conservative: 默认排除大数据集, opt-in 选择跟踪
+
+# 临时文件 (lock / download transient)
+._____temp/
+*.tmp
+*.partial
+*.lock
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 本地配置 (sensitive)
+.env
+.env.local
+.env.bak
+*.log
+logs/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Tools 缓存
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# 大数据集 (按 user 2026-07-26 指令: backup 不要包含)
+backups/
+
+# 嵌入模型 (SBert, 4.4 GB, 单独下载不入仓)
+models/
+
+# SSH 主机密钥备份 (ssh-keyscan 误生成到 NUL, 留作 trust 备份,不入仓)
+NUL
+*.pub
+!id_*.pub
+# workflow-graph/ 大部分不入仓(graph.db 是本地状态)
+# 但 workflow-graph/tasks/ 是主 hermes 中心 task 中控副本,应该入仓
+workflow-graph/*
+!workflow-graph/tasks/
+!workflow-graph/tasks/**
+
+# 跨项目污染: DragonQuant Identity wave-任务 (2026-08-24 from c:\wt-id-wave*)
+# 来自其他项目的 subagent 工作目录, 不属于 cortex 仓库
+workflow-graph/tasks/identity-wt-id-*/
+
+# 占位空 task (来自 c:\wt-* worktree, 2026-08-23~24): identity / phase2 / w2-*
+# 同上, 不属于 cortex 仓库
+workflow-graph/tasks/phase2-impl-w2-*/
+
+# 本地 MCP 配置 (per-user, 不入仓)
+.mcp.json
+
+# MCP graph 本地状态库 (graph.db 是 per-project 本地状态,不入仓)
+.mcp-graph/
+
+# Sprint 验证工作区(本地 throwaway,不入仓)
+.worktrees/
+.sprint-review/
+
+# Node.js dependencies (added 2026-08-22, was untracked, ~340MB of onnxruntime-node binaries)
+node_modules/
+
+# 自动生成 by init-worktree.py — 安全红线 (codex M4 + S1.4)
+
+# 敏感配置 — 永远不 commit
+.env
+.env.*
+*.pem
+*.key
+*.secret
+
+# 子代理工作目录 — 报告 + 心跳
+# (每个 task 的产物,不入主仓库)
+.sprint/
+
+# 临时文件
+*.tmp
+*.log
+*.bak
+__pycache__/
+node_modules/
+
+# 工具产物
+.DS_Store
+Thumbs.db
+
+# Locally-cloned datasets (do not commit; users clone from source).
+# LOCOMO benchmark data lives at data/locomo/ -- see
+# server/tests/integration/_locomo_ingest.py for usage.
+data/

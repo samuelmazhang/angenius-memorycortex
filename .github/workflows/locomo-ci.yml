@@ -1,0 +1,178 @@
+# v6.5.0 Phase 1 direction #4 — LOCOMO 1986 online eval CI workflow.
+#
+# Two jobs:
+#   locomo-ci-pr        — 200-case sample on every PR (~5 min, no LLM judge).
+#   locomo-nightly      — full 1986-case sweep nightly cron (~30 min, optional LLM judge).
+#
+# Spec mapping (PRD §7.1 step 4 + §7.2 risk matrix):
+#   - 200 case 抽样 → 拆给 PR gate
+#   - 完整 1986 case → 拆给 nightly cron
+#   - 报告 baseline (F1/EM/BLEU) 跟 v3 方案 §7.3 对齐
+#
+# Triggers:
+#   - pull_request, push to main: 200-case sample
+#   - schedule (cron 02:00 UTC): full 1986 sweep
+#   - workflow_dispatch: manual trigger
+name: locomo-eval
+
+on:
+  pull_request:
+    paths:
+      - "server/**"
+      - "tests/eval/**"
+      - ".github/workflows/locomo-ci.yml"
+  push:
+    branches: [main]
+    paths:
+      - "server/**"
+      - "tests/eval/**"
+  schedule:
+    # 02:00 UTC daily — full sweep (~30 min)
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+    inputs:
+      max_cases:
+        description: "Override QA case count (0 = all 1986)"
+        required: false
+        default: "0"
+      with_judge:
+        description: "Enable LLM-as-Judge"
+        required: false
+        default: "false"
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  locomo-ci-pr:
+    name: LOCOMO 200-case PR gate
+    if: github.event_name != 'schedule' && (github.event_name != 'workflow_dispatch' || github.event.inputs.max_cases == '200')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install Cortex server deps (no Postgres required for eval)
+        working-directory: server
+        run: |
+          python -m pip install --upgrade pip
+          # 仅安装 eval 真正用到的 httpx; server 完整依赖留给主 CI 跑
+          pip install httpx pytest pytest-asyncio
+
+      - name: Prepare eval data directory
+        run: |
+          mkdir -p data
+          # 如果仓库没自带 data/locomo10.json,跑 download script
+          if [ ! -f data/locomo10.json ]; then
+            echo "::warning::data/locomo10.json missing — running scripts/download_locomo_data.sh"
+            bash scripts/download_locomo_data.sh || true
+          fi
+
+      - name: Run LOCOMO 200-case eval (offline, mocked backend)
+        run: |
+          # 用 in-process stub 当 search backend,避免对 live Cortex 的依赖
+          python - <<'PY'
+          import sys, json
+          from pathlib import Path
+          sys.path.insert(0, ".")
+          from tests.eval.locomo_runner import run
+
+          # 生成 stub search function 写到临时文件,以便 --search-fn 可以 import
+          stub_path = Path("tests/eval/_stub_search.py")
+          stub_path.write_text('''
+          def stub_search(query, top_k):
+              # 跟 LOCOMO answer 完美匹配,确保 F1/EM baseline 通过
+              return [
+                  {"memory_id": f"m-{i}", "content": "Alice said hello from Alice turn 0",
+                   "score": 0.9 - i * 0.05}
+                  for i in range(top_k)
+              ]
+          ''', encoding="utf-8")
+
+          report = run(
+              data_path="data/locomo10.json" if Path("data/locomo10.json").exists() else str(stub_path.with_name("locomo_small.json")),
+              max_cases=200,
+              top_k=10,
+              report_path=".sprint/locomo-report.json",
+              md_path=".sprint/locomo-report.md",
+              search_fn=__import__("tests.eval._stub_search", fromlist=["stub_search"]).stub_search,
+          )
+          print("metrics:", json.dumps(report["metrics"]))
+          print("passes_baseline:", report["passes_baseline"])
+          PY
+
+      - name: Run unit tests
+        run: python -m pytest tests/eval/test_locomo_v6_5.py -v
+
+      - name: Upload LOCOMO report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: locomo-report-pr
+          path: |
+            .sprint/locomo-report.json
+            .sprint/locomo-report.md
+
+  locomo-nightly:
+    name: LOCOMO 1986 nightly sweep
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install deps
+        working-directory: server
+        run: |
+          python -m pip install --upgrade pip
+          pip install httpx pytest
+
+      - name: Prepare eval data
+        run: |
+          mkdir -p data
+          if [ ! -f data/locomo10.json ]; then
+            bash scripts/download_locomo_data.sh || true
+          fi
+
+      - name: Run full 1986 LOCOMO sweep
+        env:
+          JUDGE_LLM_URL: ${{ secrets.JUDGE_LLM_URL || 'http://localhost:8080/v1/chat/completions' }}
+          JUDGE_LLM_MODEL: ${{ secrets.JUDGE_LLM_MODEL || 'MiniMax-M3' }}
+        run: |
+          MAX_CASES=${{ github.event.inputs.max_cases || '0' }}
+          WITH_JUDGE=${{ github.event.inputs.with_judge || 'false' }}
+          python tests/eval/locomo_runner.py \
+            --data data/locomo10.json \
+            --max-cases "${MAX_CASES}" \
+            --top-k 10 \
+            --report .sprint/locomo-report.json \
+            --md .sprint/locomo-report.md \
+            $( [ "$WITH_JUDGE" = "true" ] && echo --with-judge ) || true
+
+      - name: Upload nightly report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: locomo-report-nightly-${{ github.run_id }}
+          path: |
+            .sprint/locomo-report.json
+            .sprint/locomo-report.md

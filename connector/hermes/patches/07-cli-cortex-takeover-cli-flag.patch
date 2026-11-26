@@ -1,0 +1,25 @@
+diff --git a/cli.py b/cli.py
+index c4a3b0ae56..06b0338641 100644
+--- a/cli.py
++++ b/cli.py
+@@ -2745,7 +2745,19 @@ class HermesCLI(CLIProcessNotificationsMixin, CLIAgentSetupMixin, CLICommandsMix
+         if toolsets and "all" not in toolsets and "*" not in toolsets:
+             # MCP server names only resolve after discover_mcp_tools runs; skip them here.
+             mcp_names = set((CLI_CONFIG.get("mcp_servers") or {}).keys())
+-            invalid = [t for t in toolsets if not validate_toolset(t) and t not in mcp_names]
++            # Plugin-provided toolsets (e.g. 'a2a', 'spotify') are only registered after
++            # plugin discovery runs. Use the cached/non-blocking registry so we don't stall
++            # startup; a stale snapshot here is harmless because plugin tools still load
++            # at runtime via _enabled_plugin_toolsets() in tools_config.py.
++            try:
++                from hermes_cli.plugins import get_plugin_toolset_keys_nowait
++                plugin_keys = get_plugin_toolset_keys_nowait()
++            except Exception:
++                plugin_keys = set()
++            invalid = [
++                t for t in toolsets
++                if not validate_toolset(t) and t not in mcp_names and t not in plugin_keys
++            ]
+             if invalid:
+                 self._console_print(f"[bold red]Warning: Unknown toolsets: {', '.join(invalid)}[/]")
+ 

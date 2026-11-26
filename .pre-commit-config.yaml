@@ -1,0 +1,73 @@
+# Pre-commit hooks for memory-cortex-clean
+# Install: pip install pre-commit && pre-commit install
+# Run manually: pre-commit run --all-files
+#
+# These hooks run in <30s. Full E2E tests live in CI (see .gitlab-ci.yml).
+
+repos:
+  # YAML / JSON validation (built-in, no extra deps)
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-yaml
+        args: [--allow-multiple-documents]
+        files: '\.ya?ml$'
+      - id: check-json
+        files: '\.json$'
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: check-added-large-files
+        args: [--maxkb=5000]
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+        exclude: '\.sql$|server/src/.*\.py$'
+      - id: mixed-line-ending
+
+  # Shell script lint — only our new scripts (V5.2 era)
+  # Legacy scripts (scripts/save-docker-images.sh etc.) excluded since
+  # they predate this work and aren't the focus of this fix
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+        files: '^(server/scripts/run_docker_stack_unified\.sh|server/docker/unified/entrypoint\.sh|\.githooks/.*\.sh)$'
+
+  # Project-specific hooks (local, no remote — works offline)
+  - repo: local
+    hooks:
+      - id: pyflakes
+        name: pyflakes (test scripts only)
+        entry: python3 .githooks/pyflakes_check.py
+        language: python
+        files: '^(server/tests/|server/scripts/|server/docker/unified/e2e_).+\.py$'
+        additional_dependencies: [pyflakes]
+        pass_filenames: true
+
+      - id: schema-sql-syntax
+        name: schema.sql syntax (parse with sqlparse)
+        entry: python3 .githooks/schema_sql_syntax.py
+        language: python
+        files: 'server/docker/unified/schema\.sql$'
+        additional_dependencies: [sqlparse]
+        pass_filenames: true
+
+      - id: dockerfile-syntax
+        name: Dockerfile basic syntax
+        entry: python3 .githooks/dockerfile_syntax.py
+        language: python
+        files: '(^|/)Dockerfile$'
+        pass_filenames: true
+
+      - id: consistency-check
+        name: version + endpoint-catalog consistency
+        entry: python3 .githooks/consistency_check.py
+        language: system
+        files: '(^VERSION$|^README\.md$|^docs/(文档索引|架构总览)\.md$|^server/src/api_pg\.py$)'
+        pass_filenames: false
+
+      - id: compose-config-validates
+        name: docker-compose config validates
+        entry: bash .githooks/compose_validate.sh
+        language: system
+        files: '(^|/)docker-compose.*\.yaml$'
+        pass_filenames: true

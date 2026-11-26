@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "test": "python -m pytest server/tests -v --tb=short",
+    "test:blast": "python -m pytest server/tests -q -x --timeout=60",
+    "test:node": "python -m pytest server/tests -q --timeout=180",
+    "test:eval": "cd tests/eval && python -m pytest test_locomo_v6_5.py -v --tb=long",
+    "test:v65": "python -m pytest server/tests/test_recall_v6_5.py server/tests/test_embedding_v6_5.py server/tests/test_hnsw_v6_5.py server/tests/test_compact_v6_5.py server/tests/test_conflict_resolve_v6_5.py server/tests/test_consolidate_v6_5.py server/tests/test_scheduler_v6_5.py server/tests/test_graph_v6_5.py server/tests/test_otel_v6_5.py server/tests/test_raptor_v6_5.py server/tests/test_quality_v6_5.py server/tests/test_mcp_tags_coercion.py -v --tb=short"
+  },
+  "dependencies": {
+    "onnxruntime-node": "^1.29.0"
+  }
+}

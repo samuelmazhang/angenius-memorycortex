@@ -1,0 +1,160 @@
+# GitLab CI for memory-cortex-clean
+# Runs pre-commit checks + full E2E suite on every push to main.
+#
+# Requirements (the runner is expected to have):
+#   - docker (with privileges for DinD or socket mount)
+#   - python3.11+ with pip install pre-commit
+#   - shellcheck, pyflakes (installed via pip)
+
+stages:
+  - lint
+  - test
+  - build
+  - e2e
+
+variables:
+  IMAGE_NAME: "memory-cortex-stack"
+  IMAGE_TAG: "ci-${CI_COMMIT_SHORT_SHA}"
+  CONTAINER_NAME: "memory-cortex-ci"
+
+# ──── Lint stage: pre-commit hooks (fast, <30s) ────
+pre-commit:
+  stage: lint
+  image: python:3.11-slim
+  before_script:
+    - pip install pre-commit sqlparse
+  script:
+    - pre-commit run --all-files
+  cache:
+    key: pre-commit-cache
+    paths:
+      - .cache/pre-commit
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_TAG
+
+# ──── Test stage: pyflakes on Python + yaml/json lint ────
+python-lint:
+  stage: test
+  image: python:3.11-slim
+  before_script:
+    - pip install pyflakes
+  script:
+    - pyflakes server/tests/ server/scripts/ server/docker/unified/e2e_smoke.py
+    - python3 .githooks/consistency_check.py
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "main"
+
+shellcheck:
+  stage: test
+  image: koalaman/shellcheck:v0.10.0.1
+  script:
+    - shellcheck server/scripts/*.sh server/docker/unified/entrypoint.sh .githooks/*.sh
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "main"
+
+compose-validate:
+  stage: test
+  image: docker/compose:alpine-1.29.2
+  script:
+    - cd server/docker
+    - docker-compose -f docker-compose.yaml config > /dev/null
+    - docker-compose -f docker-compose.no-port.yaml config > /dev/null
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "main"
+
+# ──── Build stage: docker build unified image ────
+build-image:
+  stage: build
+  image: docker:24-dind
+  services:
+    - docker:24-dind
+  before_script:
+    - docker info
+  script:
+    - cd server/docker/unified
+    - docker build -t "${IMAGE_NAME}:${IMAGE_TAG}" -f Dockerfile ../..
+    - docker tag "${IMAGE_NAME}:${IMAGE_TAG}" "${IMAGE_NAME}:latest"
+    - docker save "${IMAGE_NAME}:${IMAGE_TAG}" > "${IMAGE_NAME}-${IMAGE_TAG}.tar"
+  artifacts:
+    paths:
+      - "${IMAGE_NAME}-${IMAGE_TAG}.tar"
+    expire_in: 1 hour
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
+# ──── E2E stage: bring up container + run e2e_smoke.py ────
+e2e:
+  stage: e2e
+  image: docker:24-dind
+  services:
+    - docker:24-dind
+  before_script:
+    - docker info
+    - pip install psycopg2-binary  # for any in-test db ops
+  script:
+    # Build image from current commit
+    - cd server/docker/unified
+    - docker build -t "${IMAGE_NAME}:${IMAGE_TAG}" -f Dockerfile ../..
+
+    # Clean any previous run
+    - docker rm -f "${CONTAINER_NAME}" || true
+
+    # Bring up the unified container
+    - |
+      docker run -d \
+        --name "${CONTAINER_NAME}" \
+        --hostname "${CONTAINER_NAME}" \
+        --user "0:0" \
+        -p 1880:1880 \
+        -p 5432:5432 \
+        -v "${IMAGE_NAME}-data:/var/lib/postgresql/data" \
+        "${IMAGE_NAME}:${IMAGE_TAG}"
+
+    # Wait for healthy
+    - |
+      for i in $(seq 1 60); do
+        sleep 2
+        if docker exec "${CONTAINER_NAME}" python3 -c \
+          "import urllib.request; urllib.request.urlopen('http://localhost:1880/health', timeout=3).read()" >/dev/null 2>&1; then
+          echo "Healthy at iter ${i}"
+          break
+        fi
+        if [ "$i" -eq 60 ]; then
+          echo "ERROR: not healthy after 120s"
+          docker logs --tail 50 "${CONTAINER_NAME}"
+          exit 1
+        fi
+      done
+
+    # Apply schema
+    - docker cp server/docker/unified/schema.sql "${CONTAINER_NAME}:/tmp/schema.sql"
+    - docker exec "${CONTAINER_NAME}" bash -c 'PGPASSWORD=change_me psql -U postgres -d postgres -h localhost -f /tmp/schema.sql'
+
+    # Run E2E
+    - pip install requests  # if e2e uses requests instead of urllib
+    - python3 server/tests/e2e_smoke.py
+  artifacts:
+    when: always
+    paths:
+      - /tmp/e2e_results.json
+    reports:
+      junit: /tmp/e2e_results.xml  # would need e2e_smoke.py to output JUnit
+    expire_in: 7 days
+  needs:
+    - build-image
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+# ──── Cleanup (manual, runs on demand) ────
+cleanup-e2e:
+  stage: e2e
+  when: manual
+  script:
+    - docker rm -f "${CONTAINER_NAME}" || true
+    - docker volume rm "${IMAGE_NAME}-data" || true
